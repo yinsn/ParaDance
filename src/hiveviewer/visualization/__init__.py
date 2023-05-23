@@ -1,3 +1,3 @@
-from .lorenz_curve import LorenzCurve
+from .lorenz_curve import LorenzCurveGini
 
-__all__ = ["LorenzCurve"]
+__all__ = ["LorenzCurveGini"]
