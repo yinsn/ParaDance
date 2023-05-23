@@ -16,6 +16,7 @@ class LorenzCurveGini:
         :param data: a list of floats
         """
         self.data = sorted(data)
+        self.unique_data = list(set(self.data))
 
     def slice_data(
         self, lower_bound: Optional[float], upper_bound: Optional[float]
@@ -82,3 +83,60 @@ class LorenzCurveGini:
         data = self.slice_data(lower_bound, upper_bound)
         self.plot_lorenz_curve(data)
         return self.gini_coefficient(lower_bound, upper_bound)
+
+    def get_bounds(
+        self,
+        num_quantiles: int,
+        lower_bound: Optional[float] = None,
+        upper_bound: Optional[float] = None,
+    ) -> List[float]:
+        """
+        Get bounds from the data according to quantiles.
+
+        :param num_quantiles: number of quantiles
+        :return: a list of floats
+        """
+        bounds = []
+        data = self.slice_data(lower_bound, upper_bound)
+        for i in range(1, num_quantiles):
+            bounds.append(np.quantile(data, i / 100))
+        return bounds
+
+    def cal_gini_from_quantile(self, quantile: float) -> float:
+        """
+        Calculate Gini coefficient from quantile.
+
+        :param quantile: quantile of the data
+        :return: Gini coefficient as a float.
+        """
+        lower_bound = np.quantile(self.data, quantile)
+        return self.gini_coefficient(lower_bound, upper_bound=None)
+
+    def gini_from_lower_bounds(
+        self, num_quantiles: int = 100, lower_bounds: Optional[List[float]] = None
+    ) -> List[float]:
+        """
+        Calculate and plot Gini coefficient from lower_bounds list.
+
+        :param lower_bounds: a list of lower bounds
+        :return: a list of Gini coefficients
+        """
+        gini_list = []
+        if lower_bounds is None:
+            lower_bounds = self.get_bounds(num_quantiles)
+        for lower_bound in lower_bounds:
+            gini_list.append(self.gini_coefficient(lower_bound, upper_bound=None))
+        indice = np.arange(1, len(lower_bounds) + 1)
+
+        _, ax1 = plt.subplots()
+        ax1_color, ax2_color = "orange", "green"
+        ax1.plot(indice, gini_list, color=ax1_color)
+        ax2 = ax1.twinx()
+        ax2.plot(indice, lower_bounds, color=ax2_color)
+        ax1.tick_params(axis="y", colors=f"tab:{ax1_color}")
+        ax2.tick_params(axis="y", colors=f"tab:{ax2_color}")
+        ax1.set_xlabel("Quantiles")
+        ax1.set_ylabel("Gini Coefficients", color=f"tab:{ax1_color}")
+        ax2.set_ylabel("Lower Bounds", color=f"tab:{ax2_color}")
+        plt.show()
+        return gini_list
