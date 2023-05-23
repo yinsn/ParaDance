@@ -9,7 +9,9 @@ with (SETUP_DIRECTORY / "README.md").open() as ifs:
 
 install_requires = (
     [
-        "pandas",
+        "pandas==2.0.1",
+        "numpy==1.24.3",
+        "matplotlib==3.7.1",
     ],
 )
 
