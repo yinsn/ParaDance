@@ -1,5 +1,7 @@
-from typing import List, Optional, Union
+import os
+from typing import List, Optional, Tuple, Union
 
+import imageio
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -76,12 +78,15 @@ class LorenzCurveGini:
         return float(gini)
 
     @staticmethod
-    def plot_lorenz_curve(data: List[float], save_fig: bool = False) -> None:
+    def plot_lorenz_curve(
+        data: List[float], save_fig: bool = False, file_type: str = "pdf"
+    ) -> None:
         """
         Plot Lorenz curve.
 
         :param data: a list of floats
         :param save_fig: whether to save the figure
+        :param file_type: file type to save the figure
         :return: None
         """
         n = len(data)
@@ -89,7 +94,7 @@ class LorenzCurveGini:
         index = np.arange(1, n + 1) / n
         lorenz_curve = np.cumsum(data) / np.sum(data)
         plt.plot(index, lorenz_curve, color="orange", label="Lorenz Curve")
-        plt.fill_between(index, lorenz_curve, index, color="orange", alpha=0.05)
+        plt.fill_between(index, lorenz_curve, index, color="orange", alpha=0.3)
         plt.xlabel(f"Cumulative Share of Population (truncated from {min_value})")
         plt.ylabel("Cumulative Share of Target Variable")
         gini = LorenzCurveGini.gini_coefficient(data)
@@ -103,23 +108,25 @@ class LorenzCurveGini:
             verticalalignment="top",
         )
         if save_fig:
-            plt.savefig(f"gini_from_{min_value}.pdf", format="pdf")
+            plt.savefig(f"gini_from_{min_value}.{file_type}", format=file_type)
 
     def lorenz_gini_from_to(
         self,
         lower_bound: Optional[float] = None,
         upper_bound: Optional[float] = None,
         save_fig: bool = False,
+        file_type: str = "pdf",
     ) -> float:
         """
         Plot Lorenz curve from lower_bound to upper_bound.
 
         :param lower_bound: lower bound of the data
         :param upper_bound: upper bound of the data
+        :param save_fig: whether to save the figure
         :return: Gini coefficient as a float.
         """
         data = self.slice_data(lower_bound, upper_bound)
-        self.plot_lorenz_curve(data=data, save_fig=save_fig)
+        self.plot_lorenz_curve(data=data, save_fig=save_fig, file_type=file_type)
         return self.gini_coefficient(data=data)
 
     def plot_lorenz_curves_with_lower_bounds(
@@ -127,13 +134,42 @@ class LorenzCurveGini:
         num_quantiles: int = 10,
         lower_bounds: Optional[List[float]] = None,
         slice_from: int = 0,
-    ) -> List[float]:
+    ) -> Tuple[List[float], List[Union[float, int]]]:
+        """
+        Plot Lorenz curves with lower bounds.
+
+        :param num_quantiles: number of quantiles
+        :param lower_bounds: lower bounds of the data
+        :param slice_from: lower bound of the data
+        :return: a tuple of lists of floats and ints
+        """
         if lower_bounds is None:
             bounds = self.get_bounds(num_quantiles, lower_bound=slice_from)
         gini_list = []
+        filenames = []
         for bound in bounds:
-            gini_list.append(self.lorenz_gini_from_to(lower_bound=bound))
-        return gini_list
+            filename: str = f"gini_from_{bound}.png"
+            filenames.append(filename)
+
+            gini_list.append(
+                self.lorenz_gini_from_to(
+                    lower_bound=bound, save_fig=True, file_type="png"
+                )
+            )
+            plt.close()
+
+        with imageio.get_writer(
+            f"lorenz_bounds_from_{bounds[0]}_to_{bounds[-1]}.gif",
+            mode="I",
+            duration=1.5,
+            loop=0,
+        ) as writer:
+            for filename in filenames:
+                image = imageio.imread(filename, pilmode="RGBA")
+                writer.append_data(image)
+        for filename in set(filenames):
+            os.remove(filename)
+        return (gini_list, bounds)
 
     def cal_gini_from_quantile(self, quantile: float) -> float:
         """
