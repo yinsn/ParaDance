@@ -62,40 +62,54 @@ class LorenzCurveGini:
             bounds = list(sorted(set(bounds)))
         return bounds
 
-    def gini_coefficient(
-        self, lower_bound: Optional[float] = None, upper_bound: Optional[float] = None
-    ) -> float:
+    @staticmethod
+    def gini_coefficient(data: List[float]) -> float:
         """
         Compute Gini coefficient.
 
-        :param lower_bound: lower bound of the data
-        :param upper_bound: upper bound of the data
+        :param data: a list of floats
         :return: Gini coefficient as a float.
         """
-        data = self.slice_data(lower_bound, upper_bound)
         n = len(data)
         index = np.arange(1, n + 1)
         gini = (2 * np.sum(index * data) - (n + 1) * np.sum(data)) / (n * np.sum(data))
         return float(gini)
 
     @staticmethod
-    def plot_lorenz_curve(data: List[float]) -> None:
+    def plot_lorenz_curve(data: List[float], save_fig: bool = False) -> None:
         """
         Plot Lorenz curve.
 
+        :param data: a list of floats
+        :param save_fig: whether to save the figure
         :return: None
         """
         n = len(data)
+        min_value = data[0]
         index = np.arange(1, n + 1) / n
         lorenz_curve = np.cumsum(data) / np.sum(data)
         plt.plot(index, lorenz_curve, color="orange", label="Lorenz Curve")
         plt.fill_between(index, lorenz_curve, index, color="orange", alpha=0.05)
-        plt.xlabel("Cumulative Share of Population")
+        plt.xlabel("Cumulative Share of Population truncated from: " + str(min_value))
         plt.ylabel("Cumulative Share of Target Variable")
-        plt.show()
+        gini = LorenzCurveGini.gini_coefficient(data)
+        text_str = f"Gini: {gini:.4f}"
+        plt.text(
+            0.05,
+            0.95,
+            text_str,
+            transform=plt.gca().transAxes,
+            fontsize=14,
+            verticalalignment="top",
+        )
+        if save_fig:
+            plt.savefig(f"gini_from_{min_value}.pdf", format="pdf")
 
     def lorenz_gini_from_to(
-        self, lower_bound: Optional[float] = None, upper_bound: Optional[float] = None
+        self,
+        lower_bound: Optional[float] = None,
+        upper_bound: Optional[float] = None,
+        save_fig: bool = False,
     ) -> float:
         """
         Plot Lorenz curve from lower_bound to upper_bound.
@@ -105,8 +119,21 @@ class LorenzCurveGini:
         :return: Gini coefficient as a float.
         """
         data = self.slice_data(lower_bound, upper_bound)
-        self.plot_lorenz_curve(data)
-        return self.gini_coefficient(lower_bound, upper_bound)
+        self.plot_lorenz_curve(data=data, save_fig=save_fig)
+        return self.gini_coefficient(data=data)
+
+    def plot_lorenz_curves_with_lower_bounds(
+        self,
+        num_quantiles: int = 10,
+        lower_bounds: Optional[List[float]] = None,
+        slice_from: int = 0,
+    ) -> List[float]:
+        if lower_bounds is None:
+            bounds = self.get_bounds(num_quantiles, lower_bound=slice_from)
+        gini_list = []
+        for bound in bounds:
+            gini_list.append(self.lorenz_gini_from_to(lower_bound=bound))
+        return gini_list
 
     def cal_gini_from_quantile(self, quantile: float) -> float:
         """
@@ -116,7 +143,8 @@ class LorenzCurveGini:
         :return: Gini coefficient as a float.
         """
         lower_bound = np.quantile(self.data, quantile)
-        return self.gini_coefficient(lower_bound, upper_bound=None)
+        data = self.slice_data(lower_bound, upper_bound=None)
+        return self.gini_coefficient(data=data)
 
     def gini_lower_bounds_curve(
         self,
@@ -136,7 +164,8 @@ class LorenzCurveGini:
         if lower_bounds is None:
             lower_bounds = self.get_bounds(num_quantiles, lower_bound=slice_from)
         for lower_bound in lower_bounds:
-            gini_list.append(self.gini_coefficient(lower_bound, upper_bound=None))
+            data = self.slice_data(lower_bound, upper_bound=None)
+            gini_list.append(self.gini_coefficient(data=data))
         indice = np.arange(1, len(lower_bounds) + 1)
 
         _, ax1 = plt.subplots()
