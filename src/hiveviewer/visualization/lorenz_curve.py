@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -89,17 +89,23 @@ class LorenzCurveGini:
         num_quantiles: int,
         lower_bound: Optional[float] = None,
         upper_bound: Optional[float] = None,
-    ) -> List[float]:
+        unique_bounds: bool = False,
+    ) -> List[Union[int, float]]:
         """
         Get bounds from the data according to quantiles.
 
         :param num_quantiles: number of quantiles
+        :param lower_bound: lower bound of the data
+        :param upper_bound: upper bound of the data
+        :param unique_bounds: whether to return unique bounds
         :return: a list of floats
         """
-        bounds = []
+        bounds: List[Union[int, float]] = []
         data = self.slice_data(lower_bound, upper_bound)
         for i in range(1, num_quantiles):
-            bounds.append(np.quantile(data, i / 100))
+            bounds.append(int(np.quantile(data, i / num_quantiles)))
+        if unique_bounds:
+            bounds = list(sorted(set(bounds)))
         return bounds
 
     def cal_gini_from_quantile(self, quantile: float) -> float:
@@ -113,17 +119,22 @@ class LorenzCurveGini:
         return self.gini_coefficient(lower_bound, upper_bound=None)
 
     def gini_from_lower_bounds(
-        self, num_quantiles: int = 100, lower_bounds: Optional[List[float]] = None
+        self,
+        num_quantiles: int = 100,
+        lower_bounds: Optional[List[float]] = None,
+        slice_from: int = 0,
     ) -> List[float]:
         """
         Calculate and plot Gini coefficient from lower_bounds list.
 
+        :param num_quantiles: number of quantiles
         :param lower_bounds: a list of lower bounds
+        :param slice_from: slice data from slice_from
         :return: a list of Gini coefficients
         """
         gini_list = []
         if lower_bounds is None:
-            lower_bounds = self.get_bounds(num_quantiles)
+            lower_bounds = self.get_bounds(num_quantiles, lower_bound=slice_from)
         for lower_bound in lower_bounds:
             gini_list.append(self.gini_coefficient(lower_bound, upper_bound=None))
         indice = np.arange(1, len(lower_bounds) + 1)
