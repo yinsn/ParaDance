@@ -38,6 +38,30 @@ class LorenzCurveGini:
             data = [x for x in self.data if lower_bound <= x <= upper_bound]
         return data
 
+    def get_bounds(
+        self,
+        num_quantiles: int,
+        lower_bound: Optional[float] = None,
+        upper_bound: Optional[float] = None,
+        unique_bounds: bool = False,
+    ) -> List[Union[int, float]]:
+        """
+        Get bounds from the data according to quantiles.
+
+        :param num_quantiles: number of quantiles
+        :param lower_bound: lower bound of the data
+        :param upper_bound: upper bound of the data
+        :param unique_bounds: whether to return unique bounds
+        :return: a list of floats
+        """
+        bounds: List[Union[int, float]] = []
+        data = self.slice_data(lower_bound, upper_bound)
+        for i in range(1, num_quantiles):
+            bounds.append(int(np.quantile(data, i / num_quantiles)))
+        if unique_bounds:
+            bounds = list(sorted(set(bounds)))
+        return bounds
+
     def gini_coefficient(
         self, lower_bound: Optional[float] = None, upper_bound: Optional[float] = None
     ) -> float:
@@ -84,30 +108,6 @@ class LorenzCurveGini:
         self.plot_lorenz_curve(data)
         return self.gini_coefficient(lower_bound, upper_bound)
 
-    def get_bounds(
-        self,
-        num_quantiles: int,
-        lower_bound: Optional[float] = None,
-        upper_bound: Optional[float] = None,
-        unique_bounds: bool = False,
-    ) -> List[Union[int, float]]:
-        """
-        Get bounds from the data according to quantiles.
-
-        :param num_quantiles: number of quantiles
-        :param lower_bound: lower bound of the data
-        :param upper_bound: upper bound of the data
-        :param unique_bounds: whether to return unique bounds
-        :return: a list of floats
-        """
-        bounds: List[Union[int, float]] = []
-        data = self.slice_data(lower_bound, upper_bound)
-        for i in range(1, num_quantiles):
-            bounds.append(int(np.quantile(data, i / num_quantiles)))
-        if unique_bounds:
-            bounds = list(sorted(set(bounds)))
-        return bounds
-
     def cal_gini_from_quantile(self, quantile: float) -> float:
         """
         Calculate Gini coefficient from quantile.
@@ -118,14 +118,14 @@ class LorenzCurveGini:
         lower_bound = np.quantile(self.data, quantile)
         return self.gini_coefficient(lower_bound, upper_bound=None)
 
-    def gini_from_lower_bounds(
+    def gini_lower_bounds_curve(
         self,
         num_quantiles: int = 100,
         lower_bounds: Optional[List[float]] = None,
         slice_from: int = 0,
     ) -> List[float]:
         """
-        Calculate and plot Gini coefficient from lower_bounds list.
+        Calculate and plot Gini coefficients with lower_bounds list.
 
         :param num_quantiles: number of quantiles
         :param lower_bounds: a list of lower bounds
