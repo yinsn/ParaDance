@@ -90,7 +90,7 @@ class LorenzCurveGini:
         lorenz_curve = np.cumsum(data) / np.sum(data)
         plt.plot(index, lorenz_curve, color="orange", label="Lorenz Curve")
         plt.fill_between(index, lorenz_curve, index, color="orange", alpha=0.05)
-        plt.xlabel("Cumulative Share of Population truncated from: " + str(min_value))
+        plt.xlabel(f"Cumulative Share of Population (truncated from {min_value})")
         plt.ylabel("Cumulative Share of Target Variable")
         gini = LorenzCurveGini.gini_coefficient(data)
         text_str = f"Gini: {gini:.4f}"
@@ -99,7 +99,7 @@ class LorenzCurveGini:
             0.95,
             text_str,
             transform=plt.gca().transAxes,
-            fontsize=14,
+            fontsize=10,
             verticalalignment="top",
         )
         if save_fig:
