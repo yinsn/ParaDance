@@ -58,7 +58,7 @@ class LorenzCurveGini:
         """
 
         data: np.ndarray = self.slice_data(slice_from, slice_to)
-        quantiles = np.linspace(0, 1, num_quantiles + 1)[1:-1]
+        quantiles = np.linspace(0, 1, num_quantiles + 2)[1:-1]
         bounds = np.percentile(data, quantiles * 100).astype(int)
 
         if unique_bounds:
