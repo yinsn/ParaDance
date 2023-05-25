@@ -56,13 +56,15 @@ class LorenzCurveGini:
         :param unique_bounds: whether to return unique bounds
         :return: a list of floats
         """
-        bounds: List[Union[int, float]] = []
+
         data: np.ndarray = self.slice_data(slice_from, slice_to)
-        for i in range(1, num_quantiles):
-            bounds.append(int(np.quantile(data, i / num_quantiles)))
+        quantiles = np.linspace(0, 1, num_quantiles)[1:]
+        bounds = np.percentile(data, quantiles * 100).astype(int)
+
         if unique_bounds:
-            bounds = list(sorted(set(bounds)))
-        return bounds
+            bounds = np.unique(bounds)
+
+        return List(bounds)
 
     @staticmethod
     def gini_coefficient(data: List[float]) -> float:
