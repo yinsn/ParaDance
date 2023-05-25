@@ -58,13 +58,13 @@ class LorenzCurveGini:
         """
 
         data: np.ndarray = self.slice_data(slice_from, slice_to)
-        quantiles = np.linspace(0, 1, num_quantiles)[1:]
+        quantiles = np.linspace(0, 1, num_quantiles + 1)[1:-1]
         bounds = np.percentile(data, quantiles * 100).astype(int)
 
         if unique_bounds:
             bounds = np.unique(bounds)
 
-        return List(bounds)
+        return list(bounds)
 
     @staticmethod
     def gini_coefficient(data: List[float]) -> float:
@@ -186,6 +186,19 @@ class LorenzCurveGini:
         for filename in set(filenames):
             os.remove(filename)
         return (gini_list, bounds)
+
+    def get_gini_list_from_bounds(self, bounds: List[float]) -> List[float]:
+        """
+        Calculate Gini coefficients from bounds.
+
+        :param bounds: a list of lower bounds
+        :return: a list of Gini coefficients
+        """
+        gini_list = []
+        for bound in bounds:
+            data = self.slice_data(bound, upper_bound=None)
+            gini_list.append(self.gini_coefficient(data=data))
+        return gini_list
 
     def cal_gini_from_quantile(self, quantile: float) -> float:
         """
