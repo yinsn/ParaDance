@@ -26,6 +26,12 @@ class CSVLoader(BaseDataLoader):
                 columns.append(column.split(delimiter)[-1])
             self.df.columns = columns
 
+    def add_one_smoothing(self, column: str) -> None:
+        """Add one smoothing to a column."""
+        if self.df is not None:
+            self.df.fillna(0)
+            self.df[column] = self.df[column] + 1
+
     def clean_one_label_users(
         self,
         user_column: str = "user_id",
@@ -41,7 +47,6 @@ class CSVLoader(BaseDataLoader):
             )
             valid_df = self.df[self.df[user_column].isin(valid_users)].copy()
             valid_df.reset_index(drop=True, inplace=True)
-            valid_df.fillna(0)
             if inline:
                 self.df = valid_df
             else:
