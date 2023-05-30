@@ -40,6 +40,8 @@ class CSVLoader(BaseDataLoader):
                 .unique()
             )
             valid_df = self.df[self.df[user_column].isin(valid_users)].copy()
+            valid_df.reset_index(drop=True, inplace=True)
+            valid_df.fillna(0)
             if inline:
                 self.df = valid_df
             else:
