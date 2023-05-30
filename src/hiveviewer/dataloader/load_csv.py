@@ -29,7 +29,6 @@ class CSVLoader(BaseDataLoader):
     def add_one_smoothing(self, column: str) -> None:
         """Add one smoothing to a column."""
         if self.df is not None:
-            self.df.fillna(0)
             self.df[column] = self.df[column] + 1
 
     def clean_one_label_users(
@@ -40,6 +39,7 @@ class CSVLoader(BaseDataLoader):
     ) -> None:
         """Remove users with only one label."""
         if self.df is not None:
+            self.df = self.df.fillna(0)
             valid_users = (
                 self.df.groupby(user_column)
                 .filter(lambda x: x[label_column].nunique() > 1)[user_column]
