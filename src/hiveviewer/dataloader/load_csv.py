@@ -46,7 +46,7 @@ class CSVLoader(BaseDataLoader):
             threshold = self.df["live_gift_count"].quantile(0.999)
             self.df["clipped"] = self.df[clip_column].clip(upper=threshold)
             grouped = self.df.groupby(groupby)["clipped"].sum()
-            return grouped
+            return grouped + 1  # add one smoothing
         else:
             return None
 
