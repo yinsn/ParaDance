@@ -27,9 +27,28 @@ class CSVLoader(BaseDataLoader):
             self.df.columns = columns
 
     def add_one_smoothing(self, column: str) -> None:
-        """Add one smoothing to a column."""
+        """Add one smoothing to a column.
+
+        :param column: column name
+        """
         if self.df is not None:
             self.df[column] = self.df[column] + 1
+
+    def clip_and_sum_with_group(
+        self, groupby: str, clip_column: str
+    ) -> Optional[pd.Series]:
+        """Clip and sum with group.
+
+        :param groupby: groupby column
+        :param clip_column: column to clip
+        """
+        if self.df is not None:
+            threshold = self.df["live_gift_count"].quantile(0.999)
+            self.df["clipped"] = self.df[clip_column].clip(upper=threshold)
+            grouped = self.df.groupby(groupby)["clipped"].sum()
+            return grouped
+        else:
+            return None
 
     def clean_one_label_users(
         self,
