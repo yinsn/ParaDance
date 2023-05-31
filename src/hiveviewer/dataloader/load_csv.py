@@ -34,18 +34,19 @@ class CSVLoader(BaseDataLoader):
         if self.df is not None:
             self.df[column] = self.df[column] + 1
 
+    @staticmethod
     def clip_and_sum_with_group(
-        self, groupby: str, clip_column: str
+        df: pd.DataFrame, groupby: str, clip_column: str
     ) -> Optional[pd.Series]:
         """Clip and sum with group.
 
         :param groupby: groupby column
         :param clip_column: column to clip
         """
-        if self.df is not None:
-            threshold = self.df["live_gift_count"].quantile(0.999)
-            self.df["clipped"] = self.df[clip_column].clip(upper=threshold)
-            grouped = self.df.groupby(groupby)["clipped"].sum()
+        if df is not None:
+            threshold = df[clip_column].quantile(0.999)
+            df["clipped"] = df[clip_column].clip(upper=threshold)
+            grouped = df.groupby(groupby)["clipped"].sum()
             return grouped + 1  # add one smoothing
         else:
             return None
