@@ -40,6 +40,7 @@ class CSVLoader(BaseDataLoader):
     ) -> Optional[pd.Series]:
         """Clip and sum with group.
 
+        :param df: dataframe
         :param groupby: groupby column
         :param clip_column: column to clip
         """
@@ -51,23 +52,27 @@ class CSVLoader(BaseDataLoader):
         else:
             return None
 
+    @staticmethod
     def clean_one_label_users(
-        self,
+        df: pd.DataFrame,
         user_column: str = "user_id",
         label_column: str = "label",
-        inline: bool = True,
-    ) -> None:
-        """Remove users with only one label."""
-        if self.df is not None:
-            self.df = self.df.fillna(0)
+    ) -> Optional[pd.DataFrame]:
+        """Remove users with only one label.
+
+        :param df: dataframe
+        :param user_column: user column name
+        :param label_column: label column name
+        """
+        if df is not None:
+            df = df.fillna(0)
             valid_users = (
-                self.df.groupby(user_column)
+                df.groupby(user_column)
                 .filter(lambda x: x[label_column].nunique() > 1)[user_column]
                 .unique()
             )
-            valid_df = self.df[self.df[user_column].isin(valid_users)].copy()
+            valid_df = df[df[user_column].isin(valid_users)].copy()
             valid_df.reset_index(drop=True, inplace=True)
-            if inline:
-                self.df = valid_df
-            else:
-                self.valid_df = valid_df
+            return valid_df
+        else:
+            return None
