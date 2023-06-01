@@ -5,6 +5,7 @@ import imageio
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 
 
 class LorenzCurveGini:
@@ -199,7 +200,7 @@ class LorenzCurveGini:
         :return: a list of Gini coefficients
         """
         gini_list = []
-        for bound in bounds:
+        for bound in tqdm(bounds, desc="Processing bounds"):
             data = self.slice_data(bound, upper_bound=None)
             gini_list.append(self.gini_coefficient(data=data))
         return gini_list
