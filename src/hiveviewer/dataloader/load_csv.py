@@ -16,7 +16,7 @@ class CSVLoader(BaseDataLoader):
     def load_data(self) -> Optional[pd.DataFrame]:
         """Load data from CSV file."""
         file_url = os.path.join(self.file_path, self.file_name) + ".csv"
-        return pd.read_csv(file_url)
+        return pd.read_csv(file_url, low_memory=False)
 
     def column_name_spliting(self, delimiter: str = ".") -> None:
         """Split column names by delimiter."""
