@@ -73,3 +73,22 @@ class CSVLoader(BaseDataLoader):
         valid_df = df[df[user_column].isin(valid_users)].copy()
         valid_df.reset_index(drop=True, inplace=True)
         return valid_df
+
+    @staticmethod
+    def clip_clean_count_with_group(
+        df: pd.DataFrame, groupby: str, clip_column: str, label_column: str
+    ) -> tuple:
+        """Clip and count with group.
+
+        :param df: dataframe
+        :param groupby: groupby column
+        :param clip_column: column to clip
+        :param label_column: label column
+        """
+        df_clean = CSVLoader.clean_one_label_users(
+            df=df, user_column=groupby, label_column=label_column
+        )
+        counts_df = CSVLoader.clip_and_sum_with_group(
+            df=df_clean, groupby=groupby, clip_column=clip_column
+        )
+        return df_clean, counts_df
