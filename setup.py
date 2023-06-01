@@ -13,6 +13,8 @@ install_requires = (
         "numpy==1.24.3",
         "matplotlib==3.7.1",
         "imageio==2.29.0",
+        "tqdm==4.65.0",
+        "scikit-learn==1.2.2",
     ],
 )
 
