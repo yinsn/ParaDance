@@ -57,22 +57,19 @@ class CSVLoader(BaseDataLoader):
         df: pd.DataFrame,
         user_column: str = "user_id",
         label_column: str = "label",
-    ) -> Optional[pd.DataFrame]:
+    ) -> pd.DataFrame:
         """Remove users with only one label.
 
         :param df: dataframe
         :param user_column: user column name
         :param label_column: label column name
         """
-        if df is not None:
-            df = df.fillna(0)
-            valid_users = (
-                df.groupby(user_column)
-                .filter(lambda x: x[label_column].nunique() > 1)[user_column]
-                .unique()
-            )
-            valid_df = df[df[user_column].isin(valid_users)].copy()
-            valid_df.reset_index(drop=True, inplace=True)
-            return valid_df
-        else:
-            return None
+        df = df.fillna(0)
+        valid_users = (
+            df.groupby(user_column)
+            .filter(lambda x: x[label_column].nunique() > 1)[user_column]
+            .unique()
+        )
+        valid_df = df[df[user_column].isin(valid_users)].copy()
+        valid_df.reset_index(drop=True, inplace=True)
+        return valid_df
