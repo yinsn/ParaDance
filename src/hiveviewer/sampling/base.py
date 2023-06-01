@@ -1,5 +1,7 @@
 from abc import ABCMeta, abstractmethod
-from typing import List, Optional
+from typing import List, Optional, Union
+
+import pandas as pd
 
 
 class BaseSampler(metaclass=ABCMeta):
@@ -10,7 +12,7 @@ class BaseSampler(metaclass=ABCMeta):
     def __init__(
         self,
         sample_size: int,
-        data: List[float],
+        data: Union[pd.Series, List[float]],
         slice_from: Optional[float] = None,
         slice_to: Optional[float] = None,
     ) -> None:

@@ -1,6 +1,7 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import numpy as np
+import pandas as pd
 
 from ..visualization.lorenz_curve import LorenzCurveGini
 from .base import BaseSampler
@@ -14,7 +15,7 @@ class GiniSampler(BaseSampler):
     def __init__(
         self,
         sample_size: int,
-        data: List[float],
+        data: Union[pd.Series, List[float]],
         slice_from: Optional[float] = None,
         slice_to: Optional[float] = None,
         bounds_num: Optional[int] = None,

@@ -4,6 +4,7 @@ from typing import List, Optional, Tuple, Union
 import imageio
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 
 class LorenzCurveGini:
@@ -11,7 +12,7 @@ class LorenzCurveGini:
     This class provides methods to compute Gini coefficient and plot Lorenz curve.
     """
 
-    def __init__(self, data: List[float]):
+    def __init__(self, data: Union[pd.Series, List[float]]):
         """
         Initialize with a list of data.
 
@@ -22,7 +23,7 @@ class LorenzCurveGini:
 
     def slice_data(
         self, lower_bound: Optional[float], upper_bound: Optional[float]
-    ) -> List[float]:
+    ) -> Union[pd.Series, List[float]]:
         """
         Slice data from lower_bound to upper_bound.
 
@@ -30,6 +31,7 @@ class LorenzCurveGini:
         :param upper_bound: upper bound of the data
         :return: a list of floats
         """
+        data = []
         if lower_bound is None and upper_bound is None:
             data = self.data
         elif lower_bound is None and upper_bound is not None:
@@ -57,7 +59,7 @@ class LorenzCurveGini:
         :return: a list of floats
         """
 
-        data: np.ndarray = self.slice_data(slice_from, slice_to)
+        data = self.slice_data(slice_from, slice_to)
         quantiles = np.linspace(0, 1, num_quantiles + 2)[1:-1]
         bounds = np.percentile(data, quantiles * 100).astype(int)
 
@@ -67,7 +69,7 @@ class LorenzCurveGini:
         return list(bounds)
 
     @staticmethod
-    def gini_coefficient(data: List[float]) -> float:
+    def gini_coefficient(data: Union[pd.Series, List[float]]) -> float:
         """
         Compute Gini coefficient.
 
@@ -81,7 +83,7 @@ class LorenzCurveGini:
 
     @staticmethod
     def plot_lorenz_curve(
-        data: List[float],
+        data: Union[pd.Series, List[float]],
         save_fig: bool = False,
         file_tag: Optional[float] = None,
         file_type: str = "pdf",
@@ -102,8 +104,8 @@ class LorenzCurveGini:
             file_tag = file_tag
         n: int = len(data)
 
-        index: np.ndarray = np.arange(1, n + 1) / n
-        lorenz_curve: np.ndarray = np.cumsum(data) / np.sum(data)
+        index = np.arange(1, n + 1) / n
+        lorenz_curve = np.cumsum(data) / np.sum(data)
         plt.plot(index, lorenz_curve, color="orange", label="Lorenz Curve")
         plt.fill_between(index, lorenz_curve, index, color="orange", alpha=0.3)
         plt.xlabel(f"Cumulative Share of Population (truncated from {min_value})")
@@ -162,6 +164,8 @@ class LorenzCurveGini:
             bounds = self.get_bounds(
                 num_quantiles, slice_from=slice_from, unique_bounds=True
             )
+        elif lower_bounds is not None:
+            bounds = lower_bounds
         gini_list: List[float] = []
         filenames: List[str] = []
         for bound in bounds:
@@ -208,7 +212,7 @@ class LorenzCurveGini:
         :return: Gini coefficient as a float.
         """
         lower_bound = np.quantile(self.data, quantile)
-        data = self.slice_data(lower_bound, upper_bound=None)
+        data = self.slice_data(float(lower_bound), upper_bound=None)
         return self.gini_coefficient(data=data)
 
     def gini_lower_bounds_curve(
