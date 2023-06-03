@@ -15,6 +15,7 @@ install_requires = (
         "imageio==2.29.0",
         "tqdm==4.65.0",
         "scikit-learn==1.2.2",
+        "matplotlib_venn==0.11.9",
     ],
 )
 
