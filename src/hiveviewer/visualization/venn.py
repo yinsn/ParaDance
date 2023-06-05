@@ -89,9 +89,20 @@ class VennPloter:
             float(both1_sum_ratio),
         )
 
-    def plot_ratio_venn(self, ratios: tuple) -> None:
+    def plot_ratio_venn(
+        self,
+        ratios: tuple,
+        save_fig: bool = False,
+        file_tag: Optional[float] = None,
+        file_type: str = "pdf",
+    ) -> None:
         """
         Plots the venn diagram with the ratios
+
+        ratios: ratios of the groups
+        save_fig: whether to save the figure
+        file_tag: tag to add to the file name
+        file_type: file type to save the figure
         """
         both0_ratio, only_column1_ratio, only_column2_ratio, both1_ratio = ratios
         v = venn3(
@@ -124,7 +135,14 @@ class VennPloter:
         v.get_patch_by_id("111").set_color("yellowgreen")
         v.get_patch_by_id("001").set_color("skyblue")
 
-        plt.show()
+        if save_fig:
+            if file_tag is None:
+                file_name = (
+                    f"ratio_venn_{self.column1_name}_{self.column2_name}.{file_type}"
+                )
+            else:
+                file_name = f"ratio_venn_{self.column1_name}_{self.column2_name}_{file_tag}.{file_type}"
+            plt.savefig(file_name, format=file_type)
 
     def plot_count_ratio_venn(self) -> None:
         """
@@ -138,11 +156,21 @@ class VennPloter:
         value_column_name: str,
         lower_bound: Optional[float] = None,
         upper_bound: Optional[float] = None,
+        save_fig: bool = False,
+        file_type: str = "pdf",
     ) -> None:
         """
         Plots the venn diagram with the value ratios
+
+        value_column_name: name of the column with the values
+        lower_bound: lower bound of the values
+        upper_bound: upper bound of the values
+        save_fig: whether to save the figure
         """
+
         ratios = self.get_group_value_ratios(
             value_column_name, lower_bound=lower_bound, upper_bound=upper_bound
         )
-        self.plot_ratio_venn(ratios)
+        self.plot_ratio_venn(
+            ratios, save_fig=save_fig, file_tag=upper_bound, file_type=file_type
+        )
