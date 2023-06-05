@@ -1,3 +1,5 @@
+from typing import Optional
+
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib_venn import venn3
@@ -44,16 +46,38 @@ class VennPloter:
         both1_ratio = sum(both1) / self.df_len
         return (both0_ratio, only_column1_ratio, only_column2_ratio, both1_ratio)
 
-    def get_group_value_ratios(self, value_column_name: str) -> tuple:
+    def get_group_value_ratios(
+        self,
+        value_column_name: str,
+        lower_bound: Optional[float] = None,
+        upper_bound: Optional[float] = None,
+    ) -> tuple:
         """
-        Returns the ratios of the groups based on the value column
+        Returns the ratios of the groups based on the value
+
+        value_column_name: name of the column with the values
+        lower_bound: lower bound of the values
+        upper_bound: upper bound of the values
         """
+        if lower_bound is None:
+            greater_than_lower_bound = True
+        else:
+            greater_than_lower_bound = self.df[value_column_name] > lower_bound
+        if upper_bound is None:
+            lower_than_upper_bound = True
+        else:
+            lower_than_upper_bound = self.df[value_column_name] < upper_bound
+
         both0, only_column1, only_column2, both1 = self.get_conditions()
+        both0 = both0 & greater_than_lower_bound & lower_than_upper_bound
+        only_column1 = only_column1 & greater_than_lower_bound & lower_than_upper_bound
+        only_column2 = only_column2 & greater_than_lower_bound & lower_than_upper_bound
+        both1 = both1 & greater_than_lower_bound & lower_than_upper_bound
         both0_sum = self.df[both0][value_column_name].sum()
         only_column1_sum = self.df[only_column1][value_column_name].sum()
         only_column2_sum = self.df[only_column2][value_column_name].sum()
         both1_sum = self.df[both1][value_column_name].sum()
-        value_sum = self.df[value_column_name].sum()
+        value_sum = both0_sum + only_column1_sum + only_column2_sum + both1_sum
         both0_sum_ratio = both0_sum / value_sum
         only_column1_sum_ratio = only_column1_sum / value_sum
         only_column2_sum_ratio = only_column2_sum / value_sum
@@ -109,9 +133,16 @@ class VennPloter:
         ratios = self.get_group_count_ratios()
         self.plot_ratio_venn(ratios)
 
-    def plot_value_ratio_venn(self, value_column_name: str) -> None:
+    def plot_value_ratio_venn(
+        self,
+        value_column_name: str,
+        lower_bound: Optional[float] = None,
+        upper_bound: Optional[float] = None,
+    ) -> None:
         """
         Plots the venn diagram with the value ratios
         """
-        ratios = self.get_group_value_ratios(value_column_name)
+        ratios = self.get_group_value_ratios(
+            value_column_name, lower_bound=lower_bound, upper_bound=upper_bound
+        )
         self.plot_ratio_venn(ratios)
