@@ -1,5 +1,7 @@
-from typing import Optional
+import os
+from typing import List, Optional
 
+import imageio
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib_venn import venn3
@@ -137,11 +139,18 @@ class VennPloter:
 
         if save_fig:
             if file_tag is None:
-                file_name = (
-                    f"ratio_venn_{self.column1_name}_{self.column2_name}.{file_type}"
-                )
+                file_name = f"ratio_venn.{file_type}"
             else:
-                file_name = f"ratio_venn_{self.column1_name}_{self.column2_name}_{file_tag}.{file_type}"
+                text_str: str = f"upper bound: {file_tag}"
+                plt.text(
+                    0.90,
+                    0.05,
+                    text_str,
+                    transform=plt.gca().transAxes,
+                    fontsize=10,
+                    verticalalignment="top",
+                )
+                file_name = f"ratio_venn_{file_tag}.{file_type}"
             plt.savefig(file_name, format=file_type)
 
     def plot_count_ratio_venn(self) -> None:
@@ -174,3 +183,35 @@ class VennPloter:
         self.plot_ratio_venn(
             ratios, save_fig=save_fig, file_tag=upper_bound, file_type=file_type
         )
+
+    def plot_value_ratio_venn_with_upper_bounds(
+        self,
+        value_column_name: str,
+        upper_bounds: List[float],
+        duration: Optional[int] = 300,
+    ) -> None:
+        filenames: List[str] = []
+        for upper_bound in upper_bounds:
+            filename = f"ratio_venn_{upper_bound}.png"
+            filenames.append(filename)
+
+        for upper_bound in upper_bounds:
+            self.plot_value_ratio_venn(
+                value_column_name,
+                lower_bound=None,
+                upper_bound=upper_bound,
+                save_fig=True,
+                file_type="png",
+            )
+            plt.close()
+        with imageio.get_writer(
+            f"ratio_venn_bounds_from_{upper_bounds[0]}_to_{upper_bounds[-1]}.gif",
+            mode="I",
+            duration=duration,
+            loop=0,
+        ) as writer:
+            for filename in filenames:
+                image = imageio.v2.imread(filename, pilmode="RGBA")
+                writer.append_data(image)
+        for filename in set(filenames):
+            os.remove(filename)
