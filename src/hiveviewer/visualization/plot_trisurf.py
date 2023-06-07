@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import matplotlib.patches as mpatches
 import numpy as np
@@ -10,7 +10,7 @@ class TrisurfPloter:
 
     def __init__(
         self,
-        surf_data_group: List[tuple[np.ndarray, np.ndarray, np.ndarray]],
+        surf_data_group: List[Tuple[np.ndarray, np.ndarray, np.ndarray]],
         surf_labels: List[str],
         xyz_labels: List[str],
         cmap_colors: List[str] = ["Blues", "Greens", "Oranges"],
