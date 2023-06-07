@@ -1,5 +1,5 @@
 import os
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import imageio
 import matplotlib.pyplot as plt
@@ -53,7 +53,7 @@ class VennPloter:
         value_column_name: str,
         lower_bound: Optional[float] = None,
         upper_bound: Optional[float] = None,
-    ) -> tuple:
+    ) -> Tuple:
         """
         Returns the ratios of the groups based on the value
 

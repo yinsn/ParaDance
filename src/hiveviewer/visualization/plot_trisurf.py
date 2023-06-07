@@ -16,7 +16,7 @@ class TrisurfPloter:
         cmap_colors: List[str] = ["Blues", "Greens", "Oranges"],
         alphas: List[float] = [0.5, 0.6, 0.7],
         legend_loc: str = "lower center",
-        view_init: tuple[float, float] = (10, 35),
+        view_init: Tuple[float, float] = (10, 35),
         save_fig: bool = False,
         file_tag: Optional[float] = None,
         file_type: str = "pdf",

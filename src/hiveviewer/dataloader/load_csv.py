@@ -1,5 +1,5 @@
 import os
-from typing import Optional
+from typing import Optional, Tuple
 
 import pandas as pd
 
@@ -77,7 +77,7 @@ class CSVLoader(BaseDataLoader):
     @staticmethod
     def clip_clean_count_with_group(
         df: pd.DataFrame, groupby: str, clip_column: str, label_column: str
-    ) -> tuple:
+    ) -> Tuple:
         """Clip and count with group.
 
         :param df: dataframe
