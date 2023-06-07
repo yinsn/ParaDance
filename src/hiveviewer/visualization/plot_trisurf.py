@@ -3,7 +3,6 @@ from typing import List, Optional
 import matplotlib.patches as mpatches
 import numpy as np
 from matplotlib import pyplot as plt
-from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 
 class TrisurfPloter:
