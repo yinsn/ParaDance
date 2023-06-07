@@ -9,7 +9,7 @@ with (SETUP_DIRECTORY / "README.md").open() as ifs:
 
 install_requires = (
     [
-        "pandas==2.0.1",
+        "pandas",
         "numpy==1.24.3",
         "matplotlib==3.7.1",
         "imageio==2.29.0",
