@@ -16,6 +16,7 @@ install_requires = (
         "tqdm",
         "scikit-learn",
         "matplotlib_venn",
+        "openpyxl",
     ],
 )
 
