@@ -7,9 +7,9 @@ import pandas as pd
 from matplotlib_venn import venn3
 
 
-class VennPloter:
+class Venn3Ploter:
     """
-    Class to plot venn diagrams
+    Class to plot a venn diagram with 4 groups
     """
 
     def __init__(
