@@ -7,7 +7,7 @@ HiveViewer is a comprehensive Python toolkit designed to streamline data analysi
 You can install HiveViewer using pip:
 
 ```bash
-pip install hiveviewer
+pip install git+https://github.com/yinsn/hiveviewer.git
 ```
 
 ## Contributing
