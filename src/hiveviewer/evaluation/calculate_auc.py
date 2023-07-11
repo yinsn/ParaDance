@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 import pandas as pd
@@ -13,7 +13,7 @@ class CalculatorAUC:
         self,
         df: pd.DataFrame,
         selected_columns: List[str],
-        weights_for_groups: pd.Series,
+        weights_for_groups: Optional[pd.Series] = None,
     ) -> None:
         """Initialize CalculatorAUC.
 
@@ -23,7 +23,12 @@ class CalculatorAUC:
         """
         self.df = df
         self.selected_values = self.df[selected_columns].values
-        self.weights_for_groups = weights_for_groups
+        if not weights_for_groups:
+            self.weights_for_groups = pd.Series(
+                np.ones(len(self.df)), index=self.df.index
+            )
+        else:
+            self.weights_for_groups = weights_for_groups
 
     def get_overall_score(self, weights_for_equation: np.ndarray) -> None:
         """Calculate overall score.
