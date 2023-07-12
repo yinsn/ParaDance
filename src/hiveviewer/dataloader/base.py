@@ -76,7 +76,10 @@ class BaseDataLoader(ABC):
 
     @staticmethod
     def clip_clean_count_with_group(
-        df: pd.DataFrame, groupby: str, clip_column: str, label_column: str
+        df: pd.DataFrame,
+        groupby: str,
+        label_column: str,
+        clip_column: Optional[str] = None,
     ) -> Tuple:
         """Clip and count with group.
 
@@ -88,7 +91,10 @@ class BaseDataLoader(ABC):
         df_clean = BaseDataLoader.clean_one_label_users(
             df=df, user_column=groupby, label_column=label_column
         )
-        counts_df = BaseDataLoader.clip_and_sum_with_group(
-            df=df_clean, groupby=groupby, clip_column=clip_column
-        )
+        if clip_column is not None:
+            counts_df = BaseDataLoader.clip_and_sum_with_group(
+                df=df_clean, groupby=groupby, clip_column=clip_column
+            )
+        else:
+            counts_df = None
         return df_clean, counts_df
