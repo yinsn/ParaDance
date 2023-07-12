@@ -43,7 +43,7 @@ class CalculatorAUC:
         self,
         groupby: str,
         weights_for_equation: np.ndarray,
-        weights_for_groups: pd.Series,
+        weights_for_groups: Optional[pd.Series] = None,
         label_column: str = "label",
     ) -> float:
         """Calculate weighted user AUC.
@@ -58,8 +58,11 @@ class CalculatorAUC:
         grouped = self.df.groupby(groupby).apply(
             lambda x: float(roc_auc_score(x[label_column], x["overall_score"]))
         )
-        counts_sorted = weights_for_groups.loc[grouped.index]
-        wuauc = float(np.average(grouped, weights=counts_sorted.values))
+        if weights_for_groups:
+            counts_sorted = weights_for_groups.loc[grouped.index]
+            wuauc = float(np.average(grouped, weights=counts_sorted.values))
+        else:
+            wuauc = float(np.mean(grouped))
         return wuauc
 
     def calculate_auc_triple_parameters(self, grid_interval: int) -> tuple:
