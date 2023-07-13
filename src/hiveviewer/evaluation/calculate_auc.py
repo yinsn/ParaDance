@@ -23,7 +23,7 @@ class CalculatorAUC:
         """
         self.df = df
         self.selected_values = self.df[selected_columns].values
-        if not weights_for_groups:
+        if weights_for_groups is None:
             self.weights_for_groups = pd.Series(
                 np.ones(len(self.df)), index=self.df.index
             )
