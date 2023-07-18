@@ -30,14 +30,25 @@ class CalculatorAUC:
         else:
             self.weights_for_groups = weights_for_groups
 
-    def get_overall_score(self, weights_for_equation: np.ndarray) -> None:
+    def get_overall_score(
+        self,
+        powers_for_equation: np.ndarray,
+        first_order_weights: Optional[np.ndarray] = None,
+    ) -> None:
         """Calculate overall score.
 
-        :param weights_for_equation: weights for equation
+        :param powers_for_equation: powers for equation
+        :param first_order_weights: first order weights
         """
-        self.df["overall_score"] = np.product(
-            self.selected_values**weights_for_equation, axis=1
-        )
+        if first_order_weights is not None:
+            self.df["overall_score"] = np.product(
+                (1 + self.selected_values * first_order_weights) ** powers_for_equation,
+                axis=1,
+            )
+        else:
+            self.df["overall_score"] = np.product(
+                self.selected_values**powers_for_equation, axis=1
+            )
 
     def calculate_wuauc(
         self,
