@@ -33,16 +33,16 @@ class CalculatorAUC:
     def get_overall_score(
         self,
         powers_for_equation: np.ndarray,
-        first_order_weights: Optional[np.ndarray] = None,
+        zero_order_weights: Optional[np.ndarray] = None,
     ) -> None:
         """Calculate overall score.
 
         :param powers_for_equation: powers for equation
-        :param first_order_weights: first order weights
+        :param zero_order_weights: zero order weights
         """
-        if first_order_weights is not None:
+        if zero_order_weights is not None:
             self.df["overall_score"] = np.product(
-                (1 + self.selected_values * first_order_weights) ** powers_for_equation,
+                (zero_order_weights + self.selected_values) ** powers_for_equation,
                 axis=1,
             )
         else:
