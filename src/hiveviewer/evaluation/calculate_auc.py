@@ -57,6 +57,7 @@ class CalculatorAUC:
         weights_for_equation: np.ndarray,
         weights_for_groups: Optional[pd.Series] = None,
         label_column: str = "label",
+        auc: bool = False,
     ) -> float:
         """Calculate weighted user AUC.
 
@@ -64,18 +65,23 @@ class CalculatorAUC:
         :param weights_for_equation: weights for equation
         :param weights_for_groups: weights for group
         :param label_column: label column
-        :return: weighted user AUC
+        :return: weighted user AUC/WUAUC/UAUC
         """
         self.get_overall_score(weights_for_equation)
-        grouped = self.df.groupby(groupby).apply(
-            lambda x: float(roc_auc_score(x[label_column], x["overall_score"]))
-        )
-        if weights_for_groups:
-            counts_sorted = weights_for_groups.loc[grouped.index]
-            wuauc = float(np.average(grouped, weights=counts_sorted.values))
+        if auc:
+            result = float(
+                roc_auc_score(self.df[label_column], self.df["overall_score"])
+            )
         else:
-            wuauc = float(np.mean(grouped))
-        return wuauc
+            grouped = self.df.groupby(groupby).apply(
+                lambda x: float(roc_auc_score(x[label_column], x["overall_score"]))
+            )
+            if weights_for_groups:
+                counts_sorted = weights_for_groups.loc[grouped.index]
+                result = float(np.average(grouped, weights=counts_sorted.values))
+            else:
+                result = float(np.mean(grouped))
+        return result
 
     def calculate_portfolio_concentration(
         self, target_column: str, expected_return: float = 0.95
