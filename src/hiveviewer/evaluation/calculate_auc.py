@@ -22,6 +22,7 @@ class CalculatorAUC:
         :param weights_for_groups: weights for group
         """
         self.df = df
+        self.df_len = len(self.df)
         self.selected_values = self.df[selected_columns].values
         if weights_for_groups is None:
             self.weights_for_groups = pd.Series(
@@ -75,6 +76,22 @@ class CalculatorAUC:
         else:
             wuauc = float(np.mean(grouped))
         return wuauc
+
+    def calculate_portfolio_concentration(
+        self, target_column: str, expected_return: float = 0.95
+    ) -> tuple[float, float]:
+        """Calculate portfolio concentration.
+
+        :param target_column: target column
+        :param expected_return: expected return
+        """
+        df = self.df.sort_values("overall_score", ascending=False)
+        sum_all = df[target_column].sum()
+        df["cumulative_sum"] = df[target_column].cumsum()
+        df["cumulative_ratio"] = df["cumulative_sum"] / sum_all
+        threshold = df[df["cumulative_ratio"] > expected_return]["overall_score"].max()
+        concentration = df[df["overall_score"] > threshold].shape[0] / self.df_len
+        return threshold, concentration
 
     def calculate_auc_triple_parameters(self, grid_interval: int) -> tuple:
         """Calculate AUC triple parameters.
