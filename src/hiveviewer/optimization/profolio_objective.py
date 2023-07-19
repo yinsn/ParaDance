@@ -1,6 +1,8 @@
-from typing import List, Literal
+import logging
+from typing import List, Literal, Optional
 
 import numpy as np
+import optuna
 from optuna.trial import Trial
 
 from ..evaluation.calculate_auc import Calculator
@@ -18,6 +20,7 @@ class ProfolioObjective(BaseObjective):
         weights_num: int,
         formula: str,
         dirichlet: bool = True,
+        log_file: Optional[str] = None,
     ) -> None:
         """
         Initialize with direction, weights_num, formula and dirichlet.
@@ -35,6 +38,15 @@ class ProfolioObjective(BaseObjective):
         self.weights_num = weights_num
         self.formula = formula
         self.dirichlet = dirichlet
+        if log_file:
+            self.build_logger(log_file)
+
+    def build_logger(self, log_file: str) -> None:
+        """Build logger to log the results of each trial."""
+        file_handler = logging.FileHandler(log_file)
+        file_handler.setLevel(logging.INFO)
+        self.logger = optuna.logging.get_logger("optuna")
+        self.logger.addHandler(file_handler)
 
     def add_calculator(
         self,
@@ -89,6 +101,11 @@ class ProfolioObjective(BaseObjective):
                     weights_for_equation=np.array(weights),
                 )
                 targets.append(wuauc)
+
         local_vars = {"targets": targets, "sum": sum}
         result = float(eval(self.formula, {"__builtins__": None}, local_vars))
+        if self.logger:
+            self.logger.info(f"Trial {trial.number} finished with result: {result}")
+            self.logger.info(f"targets: {targets}")
+            self.logger.info(f"weights: {weights}")
         return result

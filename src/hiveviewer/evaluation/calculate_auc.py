@@ -15,7 +15,7 @@ class Calculator:
         selected_columns: List[str],
         weights_for_groups: Optional[pd.Series] = None,
     ) -> None:
-        """Initialize CalculatorAUC.
+        """Initialize Calculator.
 
         :param df: dataframe
         :param selected_columns: selected columns
