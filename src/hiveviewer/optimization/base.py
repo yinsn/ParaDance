@@ -17,3 +17,12 @@ class BaseObjective(metaclass=ABCMeta):
         log_file: Optional[str] = None,
     ) -> None:
         self.study = optuna.create_study(direction=direction)
+
+    @abstractmethod
+    def objective(self, trial: optuna.trial.Trial) -> float:
+        """Objective function to optimize."""
+        raise NotImplementedError
+
+    def optimize(self, n_trials: int) -> None:
+        """Optimize the objective."""
+        self.study.optimize(self.objective, n_trials=n_trials)
