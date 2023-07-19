@@ -6,8 +6,8 @@ from sklearn.metrics import roc_auc_score
 from tqdm import tqdm
 
 
-class CalculatorAUC:
-    """CalculatorAUC class for calculating AUC."""
+class Calculator:
+    """Calculator class for calculating AUC."""
 
     def __init__(
         self,
