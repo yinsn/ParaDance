@@ -34,6 +34,7 @@ class ProfolioObjective(BaseObjective):
         super().__init__(direction, formula, dirichlet)
         self.calculators: List[Calculator] = []
         self.calculator_flags: List[Literal["wuauc", "profolio"]] = []
+        self.hyperparameters: List[Optional[float]] = []
         self.target_columns: List[str] = []
         self.weights_num = weights_num
         self.formula = formula
@@ -52,6 +53,7 @@ class ProfolioObjective(BaseObjective):
         self,
         calculator: Calculator,
         flag: Literal["wuauc", "profolio"],
+        hyperparameter: Optional[float],
         target_column: str,
     ) -> None:
         """Add calculators to the objective.
@@ -64,6 +66,10 @@ class ProfolioObjective(BaseObjective):
         self.calculators.append(calculator)
         self.calculator_flags.append(flag)
         self.target_columns.append(target_column)
+        if hyperparameter:
+            self.hyperparameters.append(hyperparameter)
+        else:
+            self.hyperparameters.append(None)
 
     def objective(
         self,
@@ -86,13 +92,17 @@ class ProfolioObjective(BaseObjective):
 
         targets: List[float] = []
 
-        for calculator, flag, target_column in zip(
-            self.calculators, self.calculator_flags, self.target_columns
+        for calculator, flag, hyperparameter, target_column in zip(
+            self.calculators,
+            self.calculator_flags,
+            self.hyperparameters,
+            self.target_columns,
         ):
             calculator.get_overall_score(np.array(weights))
             if flag == "profolio":
                 _, concentration = calculator.calculate_portfolio_concentration(
                     target_column=target_column,
+                    expected_return=hyperparameter,
                 )
                 targets.append(concentration)
             elif flag == "wuauc":

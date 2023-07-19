@@ -84,13 +84,15 @@ class Calculator:
         return result
 
     def calculate_portfolio_concentration(
-        self, target_column: str, expected_return: float = 0.95
+        self, target_column: str, expected_return: Optional[float] = None
     ) -> tuple[float, float]:
         """Calculate portfolio concentration.
 
         :param target_column: target column
         :param expected_return: expected return
         """
+        if expected_return is None:
+            expected_return = 0.95
         df = self.df.sort_values("overall_score", ascending=False)
         sum_all = df[target_column].sum()
         df["cumulative_sum"] = df[target_column].cumsum()
