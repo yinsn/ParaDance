@@ -19,6 +19,9 @@ class ProfolioObjective(BaseObjective):
         direction: Literal["minimize", "maximize"],
         weights_num: int,
         formula: str,
+        first_order: bool = False,
+        first_order_lower_bound: float = 1e-3,
+        first_order_upper_bound: float = 1e6,
         dirichlet: bool = True,
         log_file: Optional[str] = None,
     ) -> None:
@@ -31,13 +34,16 @@ class ProfolioObjective(BaseObjective):
             formula (str): formula of targets to calculate the objective.
             dirichlet (bool, optional): Use dirichlet distribution or not. Defaults to True.
         """
-        super().__init__(direction, formula, dirichlet)
+        super().__init__(direction, formula, first_order, dirichlet)
         self.calculators: List[Calculator] = []
         self.calculator_flags: List[Literal["wuauc", "profolio"]] = []
         self.hyperparameters: List[Optional[float]] = []
         self.target_columns: List[str] = []
         self.weights_num = weights_num
         self.formula = formula
+        self.first_order = first_order
+        self.first_order_lower_bound = first_order_lower_bound
+        self.first_order_upper_bound = first_order_upper_bound
         self.dirichlet = dirichlet
         if log_file:
             self.build_logger(log_file)
@@ -90,15 +96,31 @@ class ProfolioObjective(BaseObjective):
             for i in range(self.weights_num):
                 weights.append(trial.suggest_float(f"w{i+1}", 0, 1))
 
-        targets: List[float] = []
+        if self.first_order:
+            first_order_weights = []
+            for i in range(self.weights_num):
+                first_order_weights.append(
+                    trial.suggest_float(
+                        f"w{self.weights_num+i+1}",
+                        self.first_order_lower_bound,
+                        self.first_order_upper_bound,
+                        log=True,
+                    )
+                )
+        else:
+            first_order_weights = None
 
+        targets: List[float] = []
         for calculator, flag, hyperparameter, target_column in zip(
             self.calculators,
             self.calculator_flags,
             self.hyperparameters,
             self.target_columns,
         ):
-            calculator.get_overall_score(np.array(weights))
+            calculator.get_overall_score(
+                powers_for_equation=np.array(weights),
+                first_order_weights=first_order_weights,
+            )
             if flag == "profolio":
                 _, concentration = calculator.calculate_portfolio_concentration(
                     target_column=target_column,
@@ -118,4 +140,6 @@ class ProfolioObjective(BaseObjective):
             self.logger.info(f"Trial {trial.number} finished with result: {result}")
             self.logger.info(f"targets: {targets}")
             self.logger.info(f"weights: {weights}")
+            if self.first_order:
+                self.logger.info(f"first_order_weights: {first_order_weights}")
         return result

@@ -13,6 +13,7 @@ class BaseObjective(metaclass=ABCMeta):
         self,
         direction: str,
         formula: str,
+        fist_order: bool = False,
         dirichlet: bool = True,
         log_file: Optional[str] = None,
     ) -> None:
