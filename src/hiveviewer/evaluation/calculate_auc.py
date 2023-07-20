@@ -76,7 +76,7 @@ class Calculator:
             grouped = self.df.groupby(groupby).apply(
                 lambda x: float(roc_auc_score(x[label_column], x["overall_score"]))
             )
-            if weights_for_groups:
+            if weights_for_groups is not None:
                 counts_sorted = weights_for_groups.loc[grouped.index]
                 result = float(np.average(grouped, weights=counts_sorted.values))
             else:
