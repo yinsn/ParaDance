@@ -13,7 +13,7 @@ class CSVLoader(BaseDataLoader):
         super().__init__(file_path, **kwargs)
         self.column_name_spliting()
 
-    def load_data(self) -> Optional[pd.DataFrame]:
+    def load_data(self) -> pd.DataFrame:
         """Load data from CSV file."""
         file_url = os.path.join(self.file_path, self.file_name) + ".csv"
         return pd.read_csv(file_url, low_memory=False)

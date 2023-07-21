@@ -13,7 +13,7 @@ class ExcelLoader(BaseDataLoader):
         super().__init__(file_path, **kwargs)
         self.column_name_spliting()
 
-    def load_data(self) -> Optional[pd.DataFrame]:
+    def load_data(self) -> pd.DataFrame:
         """Load data from excel file."""
         file_url = os.path.join(self.file_path, self.file_name) + ".xlsx"
         return pd.read_excel(file_url)

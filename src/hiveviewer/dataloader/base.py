@@ -14,7 +14,7 @@ class BaseDataLoader(ABC):
         self.df = self.load_data()
 
     @abstractmethod
-    def load_data(self) -> Optional[pd.DataFrame]:
+    def load_data(self) -> pd.DataFrame:
         """Load data from file."""
         raise NotImplementedError("load_data() not implemented")
 

@@ -55,7 +55,7 @@ class Calculator:
     def calculate_wuauc(
         self,
         groupby: str,
-        weights_for_equation: List[float],
+        weights_for_equation: List,
         weights_for_groups: Optional[pd.Series] = None,
         label_column: str = "label",
         auc: bool = False,
