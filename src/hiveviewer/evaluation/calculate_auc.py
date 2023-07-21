@@ -43,7 +43,8 @@ class Calculator:
         """
         if first_order_weights is not None:
             self.df["overall_score"] = np.product(
-                (1 + first_order_weights * self.selected_values) ** powers_for_equation,
+                (1 + np.asarray(first_order_weights) * np.asarray(self.selected_values))
+                ** powers_for_equation,
                 axis=1,
             )
         else:
