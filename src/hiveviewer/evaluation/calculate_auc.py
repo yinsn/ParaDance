@@ -54,7 +54,7 @@ class Calculator:
     def calculate_wuauc(
         self,
         groupby: str,
-        weights_for_equation: np.ndarray,
+        weights_for_equation: List[float],
         weights_for_groups: Optional[pd.Series] = None,
         label_column: str = "label",
         auc: bool = False,
@@ -122,7 +122,7 @@ class Calculator:
                 else:
                     WUAUC[i, j] = self.calculate_wuauc(
                         groupby="user_id",
-                        weights_for_equation=np.array([w1, w2, w3]),
+                        weights_for_equation=[w1, w2, w3],
                         weights_for_groups=self.weights_for_groups,
                     )
         return W1, W2, WUAUC

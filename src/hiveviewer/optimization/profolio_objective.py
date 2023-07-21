@@ -118,7 +118,7 @@ class ProfolioObjective(BaseObjective):
             self.target_columns,
         ):
             calculator.get_overall_score(
-                powers_for_equation=np.array(weights),
+                powers_for_equation=weights,
                 first_order_weights=first_order_weights,
             )
             if flag == "profolio":
@@ -130,7 +130,7 @@ class ProfolioObjective(BaseObjective):
             elif flag == "wuauc":
                 wuauc = calculator.calculate_wuauc(
                     groupby=target_column,
-                    weights_for_equation=np.array(weights),
+                    weights_for_equation=weights,
                 )
                 targets.append(wuauc)
 
