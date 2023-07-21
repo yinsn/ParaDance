@@ -14,7 +14,7 @@ class BaseDataLoader(ABC):
         self.df = self.load_data()
 
     @abstractmethod
-    def load_data(self) -> pd.DataFrame:
+    def load_data(self) -> Optional[pd.DataFrame]:
         """Load data from file."""
         raise NotImplementedError("load_data() not implemented")
 
@@ -24,7 +24,7 @@ class BaseDataLoader(ABC):
         if self.df is not None:
             for column in self.df.columns:
                 columns.append(column.split(delimiter)[-1])
-            self.df.columns = columns
+            self.df.columns = pd.Index(columns)
 
     def add_one_smoothing(self, column: str) -> None:
         """Add one smoothing to a column.
