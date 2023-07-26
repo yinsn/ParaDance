@@ -1,3 +1,3 @@
-from .calculate_auc import Calculator
+from .calculator import Calculator
 
 __all__ = ["Calculator"]
