@@ -5,7 +5,7 @@ import numpy as np
 import optuna
 from optuna.trial import Trial
 
-from ..evaluation.calculate_auc import Calculator
+from ..evaluation.calculator import Calculator
 from .base import BaseObjective
 
 
