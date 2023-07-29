@@ -18,8 +18,8 @@ class GiniSampler(BaseSampler):
         data: Union[pd.Series, List[float]],
         slice_from: Optional[float] = None,
         slice_to: Optional[float] = None,
-        log_scale: bool = False,
-        laplace_smoothing: bool = False,
+        log_scale: Optional[bool] = True,
+        laplace_smoothing: Optional[bool] = True,
         bounds_num: Optional[int] = None,
     ) -> None:
         """

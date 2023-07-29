@@ -16,8 +16,8 @@ class BaseSampler(metaclass=ABCMeta):
         data: Union[pd.Series, List[float]],
         slice_from: Optional[float] = None,
         slice_to: Optional[float] = None,
-        log_scale: bool = True,
-        laplace_smoothing: bool = True,
+        log_scale: Optional[bool] = True,
+        laplace_smoothing: Optional[bool] = True,
     ) -> None:
         self.sample_size = sample_size
         self.data = data

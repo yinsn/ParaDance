@@ -17,8 +17,8 @@ class FrequencySampler(BaseSampler):
         data: Union[pd.Series, List[float]],
         slice_from: Optional[float] = None,
         slice_to: Optional[float] = None,
-        log_scale: bool = False,
-        laplace_smoothing: bool = False,
+        log_scale: Optional[bool] = True,
+        laplace_smoothing: Optional[bool] = True,
     ) -> None:
         super().__init__(
             sample_size, data, slice_from, slice_to, log_scale, laplace_smoothing
