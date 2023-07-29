@@ -18,6 +18,8 @@ class GiniSampler(BaseSampler):
         data: Union[pd.Series, List[float]],
         slice_from: Optional[float] = None,
         slice_to: Optional[float] = None,
+        log_scale: bool = False,
+        laplace_smoothing: bool = False,
         bounds_num: Optional[int] = None,
     ) -> None:
         """
@@ -30,7 +32,9 @@ class GiniSampler(BaseSampler):
         :param bounds_num: number of bounds
         :return: a list of floats
         """
-        super().__init__(sample_size, data, slice_from, slice_to)
+        super().__init__(
+            sample_size, data, slice_from, slice_to, log_scale, laplace_smoothing
+        )
         self.lorenz_gini = LorenzCurveGini(self.data)
         if bounds_num is None:
             self.bounds_num = self.sample_size * 10
@@ -73,4 +77,4 @@ class GiniSampler(BaseSampler):
         gini_list = self.lorenz_gini.get_gini_list_from_bounds(self.bounds)
         segment_bounds = self.equidistant_indices(gini_list)
 
-        return sorted(list(set(segment_bounds)))
+        return sorted(list((segment_bounds)))

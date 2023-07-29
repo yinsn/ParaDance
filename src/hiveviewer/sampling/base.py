@@ -1,6 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from typing import List, Optional, Union
 
+import numpy as np
 import pandas as pd
 
 
@@ -15,11 +16,19 @@ class BaseSampler(metaclass=ABCMeta):
         data: Union[pd.Series, List[float]],
         slice_from: Optional[float] = None,
         slice_to: Optional[float] = None,
+        log_scale: bool = True,
+        laplace_smoothing: bool = True,
     ) -> None:
         self.sample_size = sample_size
         self.data = data
         self.slice_from = slice_from
         self.slice_to = slice_to
+        self.log_scale = log_scale
+        self.laplace_smoothing = laplace_smoothing
+        if self.laplace_smoothing:
+            self.data = [x + 1 for x in self.data]
+        if self.log_scale:
+            self.data = [np.log(x) for x in self.data]
 
     @abstractmethod
     def sample(self) -> List[float]:
