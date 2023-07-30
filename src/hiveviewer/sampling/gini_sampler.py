@@ -20,7 +20,7 @@ class GiniSampler(BaseSampler):
         slice_from: Optional[float] = None,
         slice_to: Optional[float] = None,
         log_scale: Optional[bool] = True,
-        laplace_smoothing: Optional[bool] = False,
+        laplace_smoothing: Optional[bool] = True,
         bounds_num: Optional[int] = None,
     ) -> None:
         """

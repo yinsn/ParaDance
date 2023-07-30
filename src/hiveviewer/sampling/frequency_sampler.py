@@ -19,7 +19,7 @@ class FrequencySampler(BaseSampler):
         slice_from: Optional[float] = None,
         slice_to: Optional[float] = None,
         log_scale: Optional[bool] = True,
-        laplace_smoothing: Optional[bool] = False,
+        laplace_smoothing: Optional[bool] = True,
     ) -> None:
         super().__init__(
             sample_size, data, slice_from, slice_to, log_scale, laplace_smoothing
@@ -37,6 +37,9 @@ class FrequencySampler(BaseSampler):
         ]  # exclude 0 and 100 percentile
         samples = np.percentile(self.data, percentiles)
         if self.log_scale:
-            return dict(Counter([int(np.exp(x)) for x in samples]))
+            samples = [int(np.exp(x)) for x in samples]
         else:
-            return dict(Counter([int(x) for x in samples]))
+            samples = [int(x) for x in samples]
+        if self.laplace_smoothing:
+            samples = [x - 1 for x in samples]
+        return dict(Counter(samples))
