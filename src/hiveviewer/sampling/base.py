@@ -17,7 +17,7 @@ class BaseSampler(metaclass=ABCMeta):
         slice_from: Optional[float] = None,
         slice_to: Optional[float] = None,
         log_scale: Optional[bool] = True,
-        laplace_smoothing: Optional[bool] = True,
+        laplace_smoothing: Optional[bool] = False,
     ) -> None:
         self.sample_size = sample_size
         self.data = data

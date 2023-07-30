@@ -19,7 +19,7 @@ class FrequencySampler(BaseSampler):
         slice_from: Optional[float] = None,
         slice_to: Optional[float] = None,
         log_scale: Optional[bool] = True,
-        laplace_smoothing: Optional[bool] = True,
+        laplace_smoothing: Optional[bool] = False,
     ) -> None:
         super().__init__(
             sample_size, data, slice_from, slice_to, log_scale, laplace_smoothing
