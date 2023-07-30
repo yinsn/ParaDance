@@ -1,3 +1,4 @@
+from collections import Counter
 from typing import List, Optional, Union
 
 import numpy as np
@@ -69,12 +70,11 @@ class GiniSampler(BaseSampler):
 
         return segment_bounds
 
-    def sample(self) -> List[float]:
+    def sample(self) -> dict:
         """
         Sample data according to Gini coefficient.
         """
 
         gini_list = self.lorenz_gini.get_gini_list_from_bounds(self.bounds)
         segment_bounds = self.equidistant_indices(gini_list)
-
-        return sorted(list((segment_bounds)))
+        return dict(Counter(segment_bounds))

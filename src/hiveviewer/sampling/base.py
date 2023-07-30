@@ -31,5 +31,5 @@ class BaseSampler(metaclass=ABCMeta):
             self.data = [np.log(x) for x in self.data]
 
     @abstractmethod
-    def sample(self) -> List[float]:
+    def sample(self) -> dict:
         raise NotImplementedError("Should implement sample()!")

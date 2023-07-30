@@ -1,3 +1,4 @@
+from collections import Counter
 from typing import List, Optional, Union
 
 import numpy as np
@@ -24,7 +25,7 @@ class FrequencySampler(BaseSampler):
             sample_size, data, slice_from, slice_to, log_scale, laplace_smoothing
         )
 
-    def sample(self) -> List[float]:
+    def sample(self) -> dict:
         if self.slice_from is not None:
             self.data = [x for x in self.data if x >= self.slice_from]
         if self.slice_to is not None:
@@ -36,6 +37,6 @@ class FrequencySampler(BaseSampler):
         ]  # exclude 0 and 100 percentile
         samples = np.percentile(self.data, percentiles)
         if self.log_scale:
-            return [np.exp(x) for x in samples]
+            return dict(Counter([int(np.exp(x)) for x in samples]))
         else:
-            return [float(x) for x in samples]
+            return dict(Counter([int(x) for x in samples]))
