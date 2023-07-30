@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 
 class Calculator:
-    """Calculator class for calculating AUC."""
+    """Calculator class for calculating various metrics."""
 
     def __init__(
         self,
@@ -83,6 +83,40 @@ class Calculator:
             else:
                 result = float(np.mean(grouped))
         return result
+
+    def create_score_columns(
+        self, boundary_dict: dict, score_column: str = "score"
+    ) -> None:
+        """Create score columns.
+
+        :param boundary_dict: boundary dict
+        :param score_column: score column to be converted
+        """
+        for k, _ in boundary_dict.items():
+            self.df[f"{score_column}_lt_{k}"] = (self.df[score_column] >= k).astype(int)
+
+    def calculate_wouauc(
+        self,
+        weights_for_equation: List,
+        boundary_dict: dict,
+        score_column: str = "score",
+    ) -> List[float]:
+        """Calculate weighted ordinal user AUC.
+
+        :param weights_for_equation: weights for equation
+        :param boundary_dict: boundary dict
+        :param score_column: score column
+        """
+        self.get_overall_score(weights_for_equation)
+        wouauc = []
+        for k, _ in boundary_dict.items():
+            paritial_auc = float(
+                roc_auc_score(
+                    self.df[f"{score_column}_lt_{k}"], self.df["overall_score"]
+                )
+            )
+            wouauc.append(paritial_auc)
+        return wouauc
 
     def calculate_portfolio_concentration(
         self, target_column: str, expected_return: Optional[float] = None

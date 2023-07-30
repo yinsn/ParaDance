@@ -32,9 +32,7 @@ class FrequencySampler(BaseSampler):
             self.data = [x for x in self.data if x <= self.slice_to]
 
         # calculate the percentiles that will give us the required sample size
-        percentiles = np.linspace(0, 100, self.sample_size + 2)[
-            1:-1
-        ]  # exclude 0 and 100 percentile
+        percentiles = np.linspace(0, 100, self.sample_size + 2)[1:-1]
         samples = np.percentile(self.data, percentiles)
         if self.log_scale:
             samples = [int(np.exp(x)) for x in samples]
