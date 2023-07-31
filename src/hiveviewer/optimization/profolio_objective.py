@@ -1,7 +1,6 @@
 import logging
-from typing import List, Literal, Optional
+from typing import List, Optional
 
-import numpy as np
 import optuna
 from optuna.trial import Trial
 
@@ -16,7 +15,7 @@ class ProfolioObjective(BaseObjective):
 
     def __init__(
         self,
-        direction: Literal["minimize", "maximize"],
+        direction: str,
         weights_num: int,
         formula: str,
         first_order: bool = False,
@@ -29,14 +28,14 @@ class ProfolioObjective(BaseObjective):
         Initialize with direction, weights_num, formula and dirichlet.
 
         Args:
-            direction (Literal["minimize", "maximize"]): direction to optimize.
+            direction (str ["minimize", "maximize"]): direction to optimize.
             weights_num (int): numbers of weights to search.
             formula (str): formula of targets to calculate the objective.
             dirichlet (bool, optional): Use dirichlet distribution or not. Defaults to True.
         """
         super().__init__(direction, formula, first_order, dirichlet)
         self.calculators: List[Calculator] = []
-        self.calculator_flags: List[Literal["wuauc", "profolio"]] = []
+        self.calculator_flags: List[str] = []
         self.hyperparameters: List[Optional[float]] = []
         self.target_columns: List[str] = []
         self.weights_num = weights_num
@@ -58,7 +57,7 @@ class ProfolioObjective(BaseObjective):
     def add_calculator(
         self,
         calculator: Calculator,
-        flag: Literal["wuauc", "profolio"],
+        flag: str,
         hyperparameter: Optional[float],
         target_column: str,
     ) -> None:
@@ -66,7 +65,7 @@ class ProfolioObjective(BaseObjective):
 
         Args:
             calculator (Calculator): calculator building blocks.
-            flag (Literal["wuauc", "profolio"]): type of calculation.
+            flag (str ["wuauc", "profolio"]): type of calculation.
             target_column (str): target column to calculate.
         """
         self.calculators.append(calculator)
