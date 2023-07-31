@@ -17,12 +17,13 @@ install_requires = (
         "scikit-learn",
         "matplotlib_venn",
         "openpyxl",
+        "optuna",
     ],
 )
 
 setup(
     name="hiveviewer",
-    version="0.1.11",
+    version="0.1.12",
     author="Yin Cheng",
     author_email="yin.sjtu@gmail.com",
     long_description=LONG_DESCRIPTION,
