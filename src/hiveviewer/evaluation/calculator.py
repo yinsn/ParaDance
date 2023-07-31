@@ -140,6 +140,16 @@ class Calculator:
             wouauc.append(paritial_auc)
         return wouauc
 
+    def calculate_log_mse(self, target_column: str) -> float:
+        """Calculate log mean squared error.
+
+        :param target_column: target column
+        """
+        log_true = np.log(self.df[target_column] + 1)
+        log_pred = np.log(self.df["overall_score"] + 1)
+        mse = np.mean((log_true - log_pred) ** 2)
+        return float(mse)
+
     def calculate_portfolio_concentration(
         self, target_column: str, expected_return: Optional[float] = None
     ) -> Tuple[float, float]:

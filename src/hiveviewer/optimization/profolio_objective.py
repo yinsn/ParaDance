@@ -132,6 +132,11 @@ class ProfolioObjective(BaseObjective):
                     weights_for_equation=weights,
                 )
                 targets.append(wuauc)
+            elif flag == "logmse":
+                mse = calculator.calculate_log_mse(
+                    target_column=target_column,
+                )
+                targets.append(mse)
 
         local_vars = {"targets": targets, "sum": sum}
         result = float(eval(self.formula, {"__builtins__": None}, local_vars))
