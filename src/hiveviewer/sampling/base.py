@@ -29,6 +29,7 @@ class BaseSampler(metaclass=ABCMeta):
             self.data = [x + 1 for x in self.data]
         if self.log_scale:
             self.data = [np.log(x) for x in self.data]
+        self.boundary_dict = self.sample()
 
     @abstractmethod
     def sample(self) -> dict:

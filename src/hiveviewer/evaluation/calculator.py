@@ -5,6 +5,8 @@ import pandas as pd
 from sklearn.metrics import roc_auc_score
 from tqdm import tqdm
 
+from ..sampling.frequency_sampler import FrequencySampler
+
 
 class Calculator:
     """Calculator class for calculating various metrics."""
@@ -95,24 +97,44 @@ class Calculator:
         for k, _ in boundary_dict.items():
             self.df[f"{score_column}_lt_{k}"] = (self.df[score_column] >= k).astype(int)
 
+    def initialize_fq_sampler(
+        self,
+        sample_size: int,
+        score_column: str,
+        slice_from: Optional[float] = None,
+        slice_to: Optional[float] = None,
+        log_scale: Optional[bool] = True,
+        laplace_smoothing: Optional[bool] = True,
+    ) -> None:
+        """Initialize frequency sampler."""
+        self.sampler = FrequencySampler(
+            sample_size=sample_size,
+            data=self.df[score_column],
+            slice_from=slice_from,
+            slice_to=slice_to,
+            log_scale=log_scale,
+            laplace_smoothing=laplace_smoothing,
+        )
+        self.score_column = score_column
+        self.create_score_columns(
+            boundary_dict=self.sampler.sample(), score_column=score_column
+        )
+
     def calculate_wouauc(
         self,
         weights_for_equation: List,
-        boundary_dict: dict,
-        score_column: str = "score",
     ) -> List[float]:
         """Calculate weighted ordinal user AUC.
 
         :param weights_for_equation: weights for equation
-        :param boundary_dict: boundary dict
         :param score_column: score column
         """
         self.get_overall_score(weights_for_equation)
         wouauc = []
-        for k, _ in boundary_dict.items():
+        for k, _ in self.sampler.boundary_dict.items():
             paritial_auc = float(
                 roc_auc_score(
-                    self.df[f"{score_column}_lt_{k}"], self.df["overall_score"]
+                    self.df[f"{self.score_column}_lt_{k}"], self.df["overall_score"]
                 )
             )
             wouauc.append(paritial_auc)
