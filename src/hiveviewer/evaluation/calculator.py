@@ -158,7 +158,7 @@ class Calculator:
         concentration = df[df["overall_score"] > threshold].shape[0] / self.df_len
         return threshold, concentration
 
-    def calculate_auc_triple_parameters(self, grid_interval: int) -> tuple:
+    def calculate_auc_triple_parameters(self, grid_interval: int) -> Tuple:
         """Calculate AUC triple parameters.
 
         :param grid_interval: grid interval
