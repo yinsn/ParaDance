@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
@@ -142,7 +142,7 @@ class Calculator:
 
     def calculate_portfolio_concentration(
         self, target_column: str, expected_return: Optional[float] = None
-    ) -> tuple[float, float]:
+    ) -> Tuple[float, float]:
         """Calculate portfolio concentration.
 
         :param target_column: target column
