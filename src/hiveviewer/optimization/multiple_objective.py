@@ -1,6 +1,7 @@
 import logging
 from typing import List, Optional
 
+import numpy as np
 import optuna
 from optuna.trial import Trial
 
@@ -58,8 +59,8 @@ class MultipleObjective(BaseObjective):
         self,
         calculator: Calculator,
         flag: str,
-        hyperparameter: Optional[float],
         target_column: str,
+        hyperparameter: Optional[float] = None,
     ) -> None:
         """Add calculators to the objective.
 
@@ -71,7 +72,7 @@ class MultipleObjective(BaseObjective):
         self.calculators.append(calculator)
         self.calculator_flags.append(flag)
         self.target_columns.append(target_column)
-        if hyperparameter:
+        if hyperparameter is not None:
             self.hyperparameters.append(hyperparameter)
         else:
             self.hyperparameters.append(None)
@@ -132,6 +133,11 @@ class MultipleObjective(BaseObjective):
                     weights_for_equation=weights,
                 )
                 targets.append(wuauc)
+            elif flag == "wouauc":
+                wouauc = calculator.calculate_wouauc(
+                    weights_for_equation=weights,
+                )
+                targets.append(sum(wouauc))
             elif flag == "logmse":
                 mse = calculator.calculate_log_mse(
                     target_column=target_column,
