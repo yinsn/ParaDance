@@ -133,11 +133,11 @@ class MultipleObjective(BaseObjective):
                     weights_for_equation=weights,
                 )
                 targets.append(wuauc)
-            elif flag == "wouauc":
-                wouauc = calculator.calculate_wouauc(
+            elif flag == "woauc":
+                woauc = calculator.calculate_woauc(
                     weights_for_equation=weights,
                 )
-                targets.append(sum(wouauc))
+                targets.append(sum(woauc))
             elif flag == "logmse":
                 mse = calculator.calculate_log_mse(
                     target_column=target_column,

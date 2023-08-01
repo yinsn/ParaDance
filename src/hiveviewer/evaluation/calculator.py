@@ -120,7 +120,7 @@ class Calculator:
             boundary_dict=self.sampler.sample(), score_column=score_column
         )
 
-    def calculate_wouauc(
+    def calculate_woauc(
         self,
         weights_for_equation: List,
     ) -> List[float]:
@@ -130,15 +130,15 @@ class Calculator:
         :param score_column: score column
         """
         self.get_overall_score(weights_for_equation)
-        wouauc = []
+        woauc = []
         for k, _ in self.sampler.boundary_dict.items():
             paritial_auc = float(
                 roc_auc_score(
                     self.df[f"{self.score_column}_lt_{k}"], self.df["overall_score"]
                 )
             )
-            wouauc.append(paritial_auc)
-        return wouauc
+            woauc.append(paritial_auc)
+        return woauc
 
     def calculate_log_mse(self, target_column: str) -> float:
         """Calculate log mean squared error.
