@@ -8,7 +8,7 @@ from ..evaluation.calculator import Calculator
 from .base import BaseObjective
 
 
-class ProfolioObjective(BaseObjective):
+class MultipleObjective(BaseObjective):
     """
     This class provides methods to optimize the profolio objective.
     """
@@ -65,7 +65,7 @@ class ProfolioObjective(BaseObjective):
 
         Args:
             calculator (Calculator): calculator building blocks.
-            flag (str ["wuauc", "profolio"]): type of calculation.
+            flag (str ["wuauc", "profolio", "logmse"]): type of calculation.
             target_column (str): target column to calculate.
         """
         self.calculators.append(calculator)

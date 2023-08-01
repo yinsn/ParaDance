@@ -1,4 +1,4 @@
 from .base import BaseObjective
-from .profolio_objective import ProfolioObjective
+from .multiple_objective import MultipleObjective
 
-all = ["BaseObjective", "ProfolioObjective"]
+all = ["BaseObjective", "MultipleObjective"]
