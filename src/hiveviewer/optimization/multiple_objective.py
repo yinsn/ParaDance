@@ -19,6 +19,7 @@ class MultipleObjective(BaseObjective):
         direction: str,
         weights_num: int,
         formula: str,
+        power: bool = False,
         first_order: bool = False,
         first_order_lower_bound: float = 1e-3,
         first_order_upper_bound: float = 1e6,
@@ -41,6 +42,7 @@ class MultipleObjective(BaseObjective):
         self.target_columns: List[str] = []
         self.weights_num = weights_num
         self.formula = formula
+        self.power = power
         self.first_order = first_order
         self.first_order_lower_bound = first_order_lower_bound
         self.first_order_upper_bound = first_order_upper_bound
@@ -84,30 +86,32 @@ class MultipleObjective(BaseObjective):
         """
         Calculate the objective value.
         """
-
         power_weights: List[float] = []
-        if self.dirichlet:
-            for i in range(self.weights_num - 1):
-                power_weights.append(
+        first_order_weights: List[float] = []
+
+        if self.power:
+            if self.dirichlet:
+                for i in range(self.weights_num - 1):
+                    power_weights.append(
+                        trial.suggest_float(
+                            f"w_po_{i+1}", 0, max((1 - sum(power_weights), 0.1))
+                        )
+                    )
+                power_weights.append(1 - sum(power_weights))
+            else:
+                for i in range(self.weights_num):
+                    power_weights.append(trial.suggest_float(f"w{i+1}", 0, 1))
+
+        if self.first_order:
+            for i in range(self.weights_num):
+                first_order_weights.append(
                     trial.suggest_float(
-                        f"w{i+1}", 0, max((1 - sum(power_weights), 0.1))
+                        f"w_fo_{i+1}",
+                        self.first_order_lower_bound,
+                        self.first_order_upper_bound,
+                        log=True,
                     )
                 )
-            power_weights.append(1 - sum(power_weights))
-        else:
-            for i in range(self.weights_num):
-                power_weights.append(trial.suggest_float(f"w{i+1}", 0, 1))
-
-        first_order_weights: List[float] = []
-        for i in range(self.weights_num):
-            first_order_weights.append(
-                trial.suggest_float(
-                    f"w{self.weights_num+i+1}",
-                    self.first_order_lower_bound,
-                    self.first_order_upper_bound,
-                    log=True,
-                )
-            )
 
         targets: List[float] = []
         for calculator, flag, hyperparameter, target_column in zip(
@@ -117,9 +121,9 @@ class MultipleObjective(BaseObjective):
             self.target_columns,
         ):
             weights: List[float] = []
-            if calculator.equation_type == "product":
+            if not (self.first_order):
                 weights = power_weights
-            elif calculator.equation_type == "product" and self.first_order:
+            elif calculator.equation_type == "product" and self.power:
                 weights = power_weights + first_order_weights
             elif calculator.equation_type == "sum":
                 weights = first_order_weights
