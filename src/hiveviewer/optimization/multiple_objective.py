@@ -42,6 +42,7 @@ class MultipleObjective(BaseObjective):
         self.target_columns: List[str] = []
         self.weights_num = weights_num
         self.formula = formula
+        self.groupbys: List[Optional[str]] = []
         self.power = power
         self.first_order = first_order
         self.first_order_lower_bound = first_order_lower_bound
@@ -63,6 +64,7 @@ class MultipleObjective(BaseObjective):
         flag: str,
         target_column: str,
         hyperparameter: Optional[float] = None,
+        groupby: Optional[str] = None,
     ) -> None:
         """Add calculators to the objective.
 
@@ -78,6 +80,10 @@ class MultipleObjective(BaseObjective):
             self.hyperparameters.append(hyperparameter)
         else:
             self.hyperparameters.append(None)
+        if groupby is not None:
+            self.groupbys.append(groupby)
+        else:
+            self.groupbys.append(None)
 
     def objective(
         self,
@@ -114,10 +120,11 @@ class MultipleObjective(BaseObjective):
                 )
 
         targets: List[float] = []
-        for calculator, flag, hyperparameter, target_column in zip(
+        for calculator, flag, hyperparameter, groupby, target_column in zip(
             self.calculators,
             self.calculator_flags,
             self.hyperparameters,
+            self.groupbys,
             self.target_columns,
         ):
             weights: List[float] = []
@@ -138,10 +145,19 @@ class MultipleObjective(BaseObjective):
                 targets.append(concentration)
             elif flag == "wuauc":
                 wuauc = calculator.calculate_wuauc(
-                    groupby=target_column,
+                    groupby=groupby,
+                    label_column=target_column,
                     weights_for_equation=weights,
                 )
                 targets.append(wuauc)
+            elif flag == "auc":
+                auc = calculator.calculate_wuauc(
+                    groupby=groupby,
+                    label_column=target_column,
+                    weights_for_equation=weights,
+                    auc=True,
+                )
+                targets.append(auc)
             elif flag == "woauc":
                 woauc = calculator.calculate_woauc(
                     weights_for_equation=weights,
@@ -153,7 +169,7 @@ class MultipleObjective(BaseObjective):
                 )
                 targets.append(mse)
 
-        local_vars = {"targets": targets, "sum": sum}
+        local_vars = {"targets": targets, "sum": sum, "max": max, "min": min}
         result = float(eval(self.formula, {"__builtins__": None}, local_vars))
         if self.logger:
             self.logger.info(f"Trial {trial.number} finished with result: {result}")

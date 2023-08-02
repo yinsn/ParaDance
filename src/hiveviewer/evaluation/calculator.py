@@ -63,7 +63,7 @@ class Calculator:
 
     def calculate_wuauc(
         self,
-        groupby: str,
+        groupby: Optional[str],
         weights_for_equation: List,
         weights_for_groups: Optional[pd.Series] = None,
         label_column: str = "label",
@@ -83,14 +83,15 @@ class Calculator:
                 roc_auc_score(self.df[label_column], self.df["overall_score"])
             )
         else:
-            grouped = self.df.groupby(groupby).apply(
-                lambda x: float(roc_auc_score(x[label_column], x["overall_score"]))
-            )
-            if weights_for_groups is not None:
-                counts_sorted = weights_for_groups.loc[grouped.index]
-                result = float(np.average(grouped, weights=counts_sorted.values))
-            else:
-                result = float(np.mean(grouped))
+            if groupby is not None:
+                grouped = self.df.groupby(groupby).apply(
+                    lambda x: float(roc_auc_score(x[label_column], x["overall_score"]))
+                )
+                if weights_for_groups is not None:
+                    counts_sorted = weights_for_groups.loc[grouped.index]
+                    result = float(np.average(grouped, weights=counts_sorted.values))
+                else:
+                    result = float(np.mean(grouped))
         return result
 
     def create_score_columns(
