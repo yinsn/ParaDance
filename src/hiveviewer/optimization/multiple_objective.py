@@ -85,30 +85,29 @@ class MultipleObjective(BaseObjective):
         Calculate the objective value.
         """
 
-        weights: List[float] = []
+        power_weights: List[float] = []
         if self.dirichlet:
             for i in range(self.weights_num - 1):
-                weights.append(
-                    trial.suggest_float(f"w{i+1}", 0, max((1 - sum(weights), 0.1)))
-                )
-            weights.append(1 - sum(weights))
-        else:
-            for i in range(self.weights_num):
-                weights.append(trial.suggest_float(f"w{i+1}", 0, 1))
-
-        if self.first_order:
-            first_order_weights = []
-            for i in range(self.weights_num):
-                first_order_weights.append(
+                power_weights.append(
                     trial.suggest_float(
-                        f"w{self.weights_num+i+1}",
-                        self.first_order_lower_bound,
-                        self.first_order_upper_bound,
-                        log=True,
+                        f"w{i+1}", 0, max((1 - sum(power_weights), 0.1))
                     )
                 )
+            power_weights.append(1 - sum(power_weights))
         else:
-            first_order_weights = None
+            for i in range(self.weights_num):
+                power_weights.append(trial.suggest_float(f"w{i+1}", 0, 1))
+
+        first_order_weights: List[float] = []
+        for i in range(self.weights_num):
+            first_order_weights.append(
+                trial.suggest_float(
+                    f"w{self.weights_num+i+1}",
+                    self.first_order_lower_bound,
+                    self.first_order_upper_bound,
+                    log=True,
+                )
+            )
 
         targets: List[float] = []
         for calculator, flag, hyperparameter, target_column in zip(
@@ -117,9 +116,15 @@ class MultipleObjective(BaseObjective):
             self.hyperparameters,
             self.target_columns,
         ):
+            weights: List[float] = []
+            if calculator.equation_type == "product":
+                weights = power_weights
+            elif calculator.equation_type == "product" and self.first_order:
+                weights = power_weights + first_order_weights
+            elif calculator.equation_type == "sum":
+                weights = first_order_weights
             calculator.get_overall_score(
-                powers_for_equation=weights,
-                first_order_weights=first_order_weights,
+                weights_for_equation=weights,
             )
             if flag == "profolio":
                 _, concentration = calculator.calculate_portfolio_concentration(

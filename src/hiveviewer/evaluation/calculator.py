@@ -15,6 +15,7 @@ class Calculator:
         self,
         df: pd.DataFrame,
         selected_columns: List[str],
+        equation_type: str = "product",
         weights_for_groups: Optional[pd.Series] = None,
     ) -> None:
         """Initialize Calculator.
@@ -25,7 +26,9 @@ class Calculator:
         """
         self.df = df
         self.df_len = len(self.df)
+        self.selected_columns = selected_columns
         self.selected_values = self.df[selected_columns].values
+        self.equation_type = equation_type
         if weights_for_groups is None:
             self.weights_for_groups = pd.Series(
                 np.ones(len(self.df)), index=self.df.index
@@ -35,24 +38,28 @@ class Calculator:
 
     def get_overall_score(
         self,
-        powers_for_equation: List[float],
-        first_order_weights: Optional[List[float]] = None,
+        weights_for_equation: List[float],
     ) -> None:
         """Calculate overall score.
 
         :param powers_for_equation: powers for equation
         :param first_order_weights: first order weights
         """
-        if first_order_weights is not None:
+        if len(weights_for_equation) == 2 * len(self.selected_columns):
+            powers_for_equation = weights_for_equation[: len(self.selected_columns)]
+            first_order_weights = weights_for_equation[len(self.selected_columns) :]
             self.df["overall_score"] = np.product(
                 (1 + np.asarray(first_order_weights) * np.asarray(self.selected_values))
                 ** powers_for_equation,
                 axis=1,
             )
-        else:
+        elif self.equation_type == "product":
             self.df["overall_score"] = np.product(
-                self.selected_values**powers_for_equation, axis=1
+                self.selected_values**weights_for_equation, axis=1
             )
+        elif self.equation_type == "sum":
+            weights_array = np.array(weights_for_equation).reshape(-1, 1)
+            self.df["overall_score"] = self.selected_values @ weights_array
 
     def calculate_wuauc(
         self,
