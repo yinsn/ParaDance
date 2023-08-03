@@ -1,5 +1,4 @@
 import os
-from typing import Optional
 
 import pandas as pd
 
@@ -15,5 +14,14 @@ class CSVLoader(BaseDataLoader):
 
     def load_data(self) -> pd.DataFrame:
         """Load data from CSV file."""
-        file_url = os.path.join(self.file_path, self.file_name) + ".csv"
-        return pd.read_csv(file_url, low_memory=False)
+        if self.file_name is not None:
+            file_url = os.path.join(self.file_path, self.file_name) + ".csv"
+            return pd.read_csv(file_url, low_memory=False)
+        else:
+            files = os.listdir(self.file_path)
+            df_list = []
+            for file in files:
+                if file.endswith(self.file_type):
+                    file_url = os.path.join(self.file_path, file)
+                    df_list.append(pd.read_csv(file_url, low_memory=False))
+            return pd.concat(df_list)

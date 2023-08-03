@@ -7,7 +7,9 @@ import pandas as pd
 class BaseDataLoader(ABC):
     """Base class for data loaders."""
 
-    def __init__(self, file_path: str, file_name: str, file_type: str = "csv") -> None:
+    def __init__(
+        self, file_path: str, file_name: Optional[str] = None, file_type: str = "csv"
+    ) -> None:
         self.file_path = file_path
         self.file_type = file_type
         self.file_name = file_name

@@ -1,7 +1,6 @@
 import logging
 from typing import List, Optional
 
-import numpy as np
 import optuna
 from optuna.trial import Trial
 
