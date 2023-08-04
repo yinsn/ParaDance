@@ -128,6 +128,18 @@ class Calculator:
             boundary_dict=self.sampler.sample(), score_column=score_column
         )
 
+        slice_from_condition = (
+            pd.Series(True, index=self.df.index)
+            if slice_from is None
+            else (self.df[score_column] >= slice_from)
+        )
+        slice_to_condition = (
+            pd.Series(True, index=self.df.index)
+            if slice_to is None
+            else (self.df[score_column] <= slice_to)
+        )
+        self.woauc_indices = self.df[slice_from_condition & slice_to_condition].index
+
     def calculate_woauc(
         self,
         weights_for_equation: List,
@@ -142,7 +154,8 @@ class Calculator:
         for k, _ in self.sampler.boundary_dict.items():
             paritial_auc = float(
                 roc_auc_score(
-                    self.df[f"{self.score_column}_lt_{k}"], self.df["overall_score"]
+                    self.df.loc[self.woauc_indices][f"{self.score_column}_lt_{k}"],
+                    self.df.loc[self.woauc_indices]["overall_score"],
                 )
             )
             woauc.append(paritial_auc)
