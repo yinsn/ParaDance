@@ -108,13 +108,17 @@ class MultipleObjective(BaseObjective):
                     power_weights.append(trial.suggest_float(f"w{i+1}", 0, 1))
 
         if self.first_order:
+            if self.first_order_lower_bound < 0:
+                log = False
+            else:
+                log = True
             for i in range(self.weights_num):
                 first_order_weights.append(
                     trial.suggest_float(
                         f"w_fo_{i+1}",
                         self.first_order_lower_bound,
                         self.first_order_upper_bound,
-                        log=True,
+                        log=log,
                     )
                 )
 
