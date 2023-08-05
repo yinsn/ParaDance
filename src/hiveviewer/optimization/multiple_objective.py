@@ -51,7 +51,11 @@ class MultipleObjective(BaseObjective):
             self.build_logger(log_file)
 
     def build_logger(self, log_file: str) -> None:
-        """Build logger to log the results of each trial."""
+        """Build logger for optuna.
+
+        Args:
+            log_file (str): log file path.
+        """
         file_handler = logging.FileHandler(log_file)
         file_handler.setLevel(logging.INFO)
         self.logger = optuna.logging.get_logger("optuna")
@@ -69,7 +73,7 @@ class MultipleObjective(BaseObjective):
 
         Args:
             calculator (Calculator): calculator building blocks.
-            flag (str ["wuauc", "profolio", "logmse"]): type of calculation.
+            flag (str ["wuauc", "profolio", "logmse", ..., ect.]): type of calculator.
             target_column (str): target column to calculate.
         """
         self.calculators.append(calculator)
@@ -88,8 +92,13 @@ class MultipleObjective(BaseObjective):
         self,
         trial: Trial,
     ) -> float:
-        """
-        Calculate the objective value.
+        """Objective function for optuna.
+
+        Args:
+            trial (Trial): optuna trial.
+
+        Returns:
+            float: objective value.
         """
         power_weights: List[float] = []
         first_order_weights: List[float] = []

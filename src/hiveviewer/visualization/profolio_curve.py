@@ -35,10 +35,7 @@ class ProfolioPlotter:
             target_column (str): target column for calculating the profolio.
             points_num (int, optional): sample points number. Defaults to 20.
             minimal_expected_return (float, optional): minimal expected return ratio. Defaults to 0.9.
-            colors (List[str], optional): colors for plotting. Defaults to [ "orange", "red", "green", "blue", "purple", "brown", "pink", "gray", "olive", "cyan", ].
-
-        Returns:
-            _type_: _description_
+            colors (List[str], optional): colors for plotting.
         """
         self.calculator = calculator
         self.target_column = target_column
