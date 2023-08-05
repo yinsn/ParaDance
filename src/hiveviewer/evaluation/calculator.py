@@ -5,8 +5,6 @@ import pandas as pd
 from sklearn.metrics import roc_auc_score
 from tqdm import tqdm
 
-from ..sampling.frequency_sampler import FrequencySampler
-
 
 class Calculator:
     """Calculator class for calculating various metrics."""
@@ -115,6 +113,8 @@ class Calculator:
         laplace_smoothing: Optional[bool] = True,
     ) -> None:
         """Initialize frequency sampler."""
+        from ..sampling.frequency_sampler import FrequencySampler
+
         self.sampler = FrequencySampler(
             sample_size=sample_size,
             data=self.df[score_column],
