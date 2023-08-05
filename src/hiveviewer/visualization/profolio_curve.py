@@ -3,10 +3,12 @@ from typing import Iterable, List, Union, cast
 import matplotlib.pyplot as plt
 import numpy as np
 
-from hiveviewer.evaluation.calculator import Calculator
+from ..evaluation.calculator import Calculator
 
 
 class ProfolioPlotter:
+    """ProfolioPlotter class for plotting profolio curve."""
+
     def __init__(
         self,
         calculator: Calculator,
@@ -26,6 +28,18 @@ class ProfolioPlotter:
             "cyan",
         ],
     ) -> None:
+        """Initialize ProfolioPlotter.
+
+        Args:
+            calculator (Calculator): Calculator instance for calculating the profolio.
+            target_column (str): target column for calculating the profolio.
+            points_num (int, optional): sample points number. Defaults to 20.
+            minimal_expected_return (float, optional): minimal expected return ratio. Defaults to 0.9.
+            colors (List[str], optional): colors for plotting. Defaults to [ "orange", "red", "green", "blue", "purple", "brown", "pink", "gray", "olive", "cyan", ].
+
+        Returns:
+            _type_: _description_
+        """
         self.calculator = calculator
         self.target_column = target_column
         self.points_num = points_num
@@ -33,6 +47,7 @@ class ProfolioPlotter:
         self.colors = colors
 
     def _generate_points(self) -> None:
+        """Generate points for plotting."""
         self.expected_returns = np.linspace(
             self.minimal_expected_return, 1, num=self.points_num, endpoint=True
         )
@@ -49,6 +64,12 @@ class ProfolioPlotter:
         self.top_ratios[0] = 0
 
     def _plot_single(self, weights_for_equation: List[float], color: str) -> None:
+        """Plot single profolio curve.
+
+        Args:
+            weights_for_equation (List[float]): weights for equation
+            color (str): color for plotting curve
+        """
         self.calculator.get_overall_score(weights_for_equation)
         self._generate_points()
         plt.plot(self.top_ratios, self.expected_returns, color=color)
@@ -63,6 +84,11 @@ class ProfolioPlotter:
     def plot(
         self, weights_for_equations: Union[List[float], List[List[float]]]
     ) -> None:
+        """Plot profolio curve.
+
+        Args:
+            weights_for_equations (Union[List[float], List[List[float]]]): weights for equations
+        """
         plt.figure(figsize=(10, 6))
         if isinstance(weights_for_equations[0], Iterable):
             weights_for_equations = cast(List[List[float]], weights_for_equations)
