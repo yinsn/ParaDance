@@ -1,13 +1,13 @@
 # HiveViewer
 
-HiveViewer is a comprehensive Python toolkit designed to streamline data analysis tasks. This toolkit is tailored for working with large datasets, providing a suite of functionalities ranging from flexible data loading and processing to advanced evaluation metrics, data sampling, and data visualization.
+HiveViewer is a comprehensive Python toolkit tailored for large-scale data analysis. It offers functionalities for data loading, processing, evaluation metrics, sampling, and visualization. Uniquely, HiveViewer features multi-objective Bayesian optimization, supporting various aggregation formulas and calculators. This flexibility in multi-objective settings positions HiveViewer as a valuable tool for data scientists and researchers.
 
 ## Installation
 
 You can install HiveViewer using pip:
 
 ```bash
-pip install git+https://github.com/yinsn/hiveviewer.git
+pip install hiveviewer
 ```
 
 ## Contributing
