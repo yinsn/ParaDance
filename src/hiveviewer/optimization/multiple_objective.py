@@ -22,6 +22,8 @@ class MultipleObjective(BaseObjective):
         first_order: bool = False,
         first_order_lower_bound: float = 1e-3,
         first_order_upper_bound: float = 1e6,
+        power_lower_bound: float = 0,
+        power_upper_bound: float = 1,
         dirichlet: bool = True,
         log_file: Optional[str] = None,
     ) -> None:
@@ -43,10 +45,15 @@ class MultipleObjective(BaseObjective):
         self.formula = formula
         self.groupbys: List[Optional[str]] = []
         self.power = power
+        self.power_lower_bound = power_lower_bound
+        self.power_upper_bound = power_upper_bound
         self.first_order = first_order
         self.first_order_lower_bound = first_order_lower_bound
         self.first_order_upper_bound = first_order_upper_bound
-        self.dirichlet = dirichlet
+        if self.power_lower_bound < 0:
+            self.dirichlet = False
+        else:
+            self.dirichlet = dirichlet
         if log_file:
             self.build_logger(log_file)
 
@@ -114,7 +121,11 @@ class MultipleObjective(BaseObjective):
                 power_weights.append(1 - sum(power_weights))
             else:
                 for i in range(self.weights_num):
-                    power_weights.append(trial.suggest_float(f"w{i+1}", 0, 1))
+                    power_weights.append(
+                        trial.suggest_float(
+                            f"w{i+1}", self.power_lower_bound, self.power_upper_bound
+                        )
+                    )
 
         if self.first_order:
             if self.first_order_lower_bound < 0:
