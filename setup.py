@@ -23,7 +23,7 @@ install_requires = (
 
 setup(
     name="hiveviewer",
-    version="0.2.5",
+    version="0.2.6",
     author="Yin Cheng",
     author_email="yin.sjtu@gmail.com",
     long_description=LONG_DESCRIPTION,
