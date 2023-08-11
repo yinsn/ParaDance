@@ -64,6 +64,10 @@ author = "Yin Cheng, Jie Cui"
 # import hiveviewer  # noqa
 
 # The full version, including alpha/beta/rc tags.
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath("../../"))
 from version import __version__
 
 release = __version__
