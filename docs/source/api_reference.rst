@@ -4,10 +4,22 @@ API References
 
 .. currentmodule:: hiveviewer.evaluation
 
-Recommenders
-------------
+Calculators
+-----------
 .. autosummary::
     :toctree: api_reference
     :nosignatures:
 
     Calculator
+
+
+.. currentmodule:: hiveviewer.optimization
+
+Optimizations
+-------------
+.. autosummary::
+    :toctree: api_reference
+    :nosignatures:
+
+    BaseObjective
+    MultipleObjective
