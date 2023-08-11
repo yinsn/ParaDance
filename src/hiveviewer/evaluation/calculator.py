@@ -73,8 +73,10 @@ class Calculator:
         :param weights_for_equation: weights for equation
         :param weights_for_groups: weights for group
         :param label_column: label column
-        :return AUC/WUAUC/UAUC
+        :param auc: bool, optional, default: False
+        :return: AUC/WUAUC/UAUC
         """
+
         self.get_overall_score(weights_for_equation)
         if auc:
             result = float(
