@@ -2,6 +2,8 @@ from pathlib import Path
 
 from setuptools import find_packages, setup
 
+from version import __version__
+
 SETUP_DIRECTORY = Path(__file__).resolve().parent
 
 with (SETUP_DIRECTORY / "README.md").open() as ifs:
@@ -23,7 +25,7 @@ install_requires = (
 
 setup(
     name="hiveviewer",
-    version="0.2.6",
+    version=__version__,
     author="Yin Cheng",
     author_email="yin.sjtu@gmail.com",
     long_description=LONG_DESCRIPTION,
