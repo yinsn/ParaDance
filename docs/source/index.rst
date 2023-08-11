@@ -1,6 +1,6 @@
 .. hiveviewer documentation master file
 
-hiveviewer - toolkit tailored for large-scale data analysis and optimizations
+HiveViewer - large-scale data analysis and optimizations
 =============================================================================
 
 .. toctree::
