@@ -2,8 +2,6 @@ from pathlib import Path
 
 from setuptools import find_packages, setup
 
-from version import __version__
-
 SETUP_DIRECTORY = Path(__file__).resolve().parent
 
 with (SETUP_DIRECTORY / "README.md").open() as ifs:
@@ -22,6 +20,8 @@ install_requires = (
         "optuna",
     ],
 )
+
+__version__ = "0.2.8"
 
 setup(
     name="hiveviewer",
