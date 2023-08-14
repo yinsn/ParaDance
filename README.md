@@ -1,6 +1,6 @@
 # HiveViewer
 
-[![Python](https://img.shields.io/badge/python3.6%7C3.8%7C3.9-red?logo=Python&logoColor=white)](https://www.python.org)
+[![Python](https://img.shields.io/badge/python3.6%7C3.7%7C3.8%7C3.9-red?logo=Python&logoColor=white)](https://www.python.org)
 [![PyPI](https://img.shields.io/pypi/v/hiveviewer?color=green)](https://pypi.org/project/hiveviewer/)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/yinsn/hiveviewer)
 [![Read the Docs](https://readthedocs.org/projects/hiveviewer/badge/?version=latest)](https://hiveviewer.readthedocs.io/en/latest/)
@@ -12,7 +12,7 @@ HiveViewer is a comprehensive Python toolkit tailored for large-scale data analy
 You can install HiveViewer using pip:
 
 ```bash
-pip install hiveviewer
+pip install --upgrade hiveviewer
 ```
 
 ## Contributing
