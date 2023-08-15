@@ -173,10 +173,10 @@ class Calculator:
         mse = np.mean((log_true - log_pred) ** 2)
         return float(mse)
 
-    def calculate_portfolio_concentration(
+    def calculate_profolio_concentration(
         self, target_column: str, expected_return: Optional[float] = 0.95
     ) -> Tuple[float, float]:
-        """Calculate portfolio concentration.
+        """Calculate profolio concentration.
 
         :param target_column: target column
         :param expected_return: expected return
@@ -187,6 +187,7 @@ class Calculator:
         df["cumulative_ratio"] = df["cumulative_sum"] / sum_all
         threshold = df[df["cumulative_ratio"] > expected_return]["overall_score"].max()
         concentration = df[df["overall_score"] > threshold].shape[0] / self.df_len
+        concentration = 1 if concentration == 0 else concentration
         return threshold, concentration
 
     def calculate_auc_triple_parameters(self, grid_interval: int) -> Tuple:

@@ -49,7 +49,7 @@ class ProfolioPlotter:
             self.minimal_expected_return, 1, num=self.points_num, endpoint=True
         )
         self.top_ratios = [
-            self.calculator.calculate_portfolio_concentration(
+            self.calculator.calculate_profolio_concentration(
                 target_column=self.target_column, expected_return=er
             )[1]
             for er in self.expected_returns

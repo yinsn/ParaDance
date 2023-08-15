@@ -161,7 +161,7 @@ class MultipleObjective(BaseObjective):
                 weights_for_equation=weights,
             )
             if flag == "profolio":
-                _, concentration = calculator.calculate_portfolio_concentration(
+                _, concentration = calculator.calculate_profolio_concentration(
                     target_column=target_column,
                     expected_return=hyperparameter,
                 )
