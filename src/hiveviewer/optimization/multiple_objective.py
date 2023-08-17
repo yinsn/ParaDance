@@ -157,6 +157,8 @@ class MultipleObjective(BaseObjective):
                 weights = power_weights + first_order_weights
             elif calculator.equation_type == "sum":
                 weights = first_order_weights
+            elif calculator.equation_type == "free_style":
+                weights = first_order_weights
             calculator.get_overall_score(
                 weights_for_equation=weights,
             )

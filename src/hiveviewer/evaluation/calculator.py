@@ -15,18 +15,21 @@ class Calculator:
         selected_columns: List[str],
         equation_type: str = "product",
         weights_for_groups: Optional[pd.Series] = None,
+        equation_eval_str: Optional[str] = None,
     ) -> None:
         """Initialize Calculator.
 
         :param df: dataframe
         :param selected_columns: selected columns
         :param weights_for_groups: weights for group
+        :param equation_eval_str: equation eval string
         """
         self.df = df
         self.df_len = len(self.df)
         self.selected_columns = selected_columns
         self.selected_values = self.df[selected_columns].values
         self.equation_type = equation_type
+        self.equation_eval_str = equation_eval_str
         if weights_for_groups is None:
             self.weights_for_groups = pd.Series(
                 np.ones(len(self.df)), index=self.df.index
@@ -58,6 +61,18 @@ class Calculator:
         elif self.equation_type == "sum":
             weights_array = np.array(weights_for_equation).reshape(-1, 1)
             self.df["overall_score"] = self.selected_values @ weights_array
+
+        elif self.equation_type == "free_style":
+            columns = [
+                self.selected_values[:, i] for i in range(self.selected_values.shape[1])
+            ]
+            local_dict = {"weights": weights_for_equation, "columns": columns}
+            if self.equation_eval_str is not None:
+                self.df["overall_score"] = eval(
+                    self.equation_eval_str, globals(), local_dict
+                )
+            else:
+                raise ValueError("equation_eval_str is not defined.")
 
     def calculate_wuauc(
         self,
