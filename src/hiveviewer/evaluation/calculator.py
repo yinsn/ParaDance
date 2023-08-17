@@ -26,10 +26,12 @@ class Calculator:
         """
         self.df = df
         self.df_len = len(self.df)
+        self.equation_eval_str = equation_eval_str
+        self.equation_type = equation_type
+        self.samplers: dict = {}
         self.selected_columns = selected_columns
         self.selected_values = self.df[selected_columns].values
-        self.equation_type = equation_type
-        self.equation_eval_str = equation_eval_str
+        self.woauc_dict: dict = {}
         if weights_for_groups is None:
             self.weights_for_groups = pd.Series(
                 np.ones(len(self.df)), index=self.df.index
@@ -132,7 +134,7 @@ class Calculator:
         """Initialize frequency sampler."""
         from ..sampling.frequency_sampler import FrequencySampler
 
-        self.sampler = FrequencySampler(
+        sampler = FrequencySampler(
             sample_size=sample_size,
             data=self.df[score_column],
             slice_from=slice_from,
@@ -140,11 +142,10 @@ class Calculator:
             log_scale=log_scale,
             laplace_smoothing=laplace_smoothing,
         )
-        self.score_column = score_column
         self.create_score_columns(
-            boundary_dict=self.sampler.sample(), score_column=score_column
+            boundary_dict=sampler.sample(), score_column=score_column
         )
-
+        self.samplers[score_column] = sampler
         slice_from_condition = (
             pd.Series(True, index=self.df.index)
             if slice_from is None
@@ -155,24 +156,29 @@ class Calculator:
             if slice_to is None
             else (self.df[score_column] <= slice_to)
         )
-        self.woauc_indices = self.df[slice_from_condition & slice_to_condition].index
+        self.woauc_dict[score_column] = self.df[
+            slice_from_condition & slice_to_condition
+        ].index
 
     def calculate_woauc(
         self,
+        target_column: str,
         weights_for_equation: List,
     ) -> List[float]:
         """Calculate weighted ordinal user AUC.
 
         :param weights_for_equation: weights for equation
-        :param score_column: score column
+        :param target_column: score column
         """
         self.get_overall_score(weights_for_equation)
+        woauc_indices = self.woauc_dict[target_column]
         woauc = []
-        for k, _ in self.sampler.boundary_dict.items():
+        sampler = self.samplers[target_column]
+        for k, _ in sampler.boundary_dict.items():
             paritial_auc = float(
                 roc_auc_score(
-                    self.df.loc[self.woauc_indices][f"{self.score_column}_lt_{k}"],
-                    self.df.loc[self.woauc_indices]["overall_score"],
+                    self.df.loc[woauc_indices][f"{target_column}_lt_{k}"],
+                    self.df.loc[woauc_indices]["overall_score"],
                 )
             )
             woauc.append(paritial_auc)

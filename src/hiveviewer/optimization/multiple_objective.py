@@ -37,19 +37,19 @@ class MultipleObjective(BaseObjective):
             dirichlet (bool, optional): Use dirichlet distribution or not. Defaults to True.
         """
         super().__init__(direction, formula, first_order, dirichlet)
-        self.calculators: List[Calculator] = []
         self.calculator_flags: List[str] = []
-        self.hyperparameters: List[Optional[float]] = []
-        self.target_columns: List[str] = []
-        self.weights_num = weights_num
-        self.formula = formula
-        self.groupbys: List[Optional[str]] = []
-        self.power = power
-        self.power_lower_bound = power_lower_bound
-        self.power_upper_bound = power_upper_bound
+        self.calculators: List[Calculator] = []
         self.first_order = first_order
         self.first_order_lower_bound = first_order_lower_bound
         self.first_order_upper_bound = first_order_upper_bound
+        self.formula = formula
+        self.groupbys: List[Optional[str]] = []
+        self.hyperparameters: List[Optional[float]] = []
+        self.power = power
+        self.power_lower_bound = power_lower_bound
+        self.power_upper_bound = power_upper_bound
+        self.target_columns: List[str] = []
+        self.weights_num = weights_num
         if self.power_lower_bound < 0:
             self.dirichlet = False
         else:
@@ -185,6 +185,7 @@ class MultipleObjective(BaseObjective):
                 targets.append(auc)
             elif flag == "woauc":
                 woauc = calculator.calculate_woauc(
+                    target_column=target_column,
                     weights_for_equation=weights,
                 )
                 targets.append(sum(woauc))

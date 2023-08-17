@@ -9,19 +9,19 @@ with (SETUP_DIRECTORY / "README.md").open() as ifs:
 
 install_requires = (
     [
-        "pandas",
-        "numpy",
-        "matplotlib",
         "imageio",
-        "tqdm",
-        "scikit-learn",
         "matplotlib_venn",
+        "matplotlib",
+        "numpy",
         "openpyxl",
         "optuna",
+        "pandas",
+        "scikit-learn",
+        "tqdm",
     ],
 )
 
-__version__ = "0.2.10"
+__version__ = "0.2.11"
 
 setup(
     name="hiveviewer",
