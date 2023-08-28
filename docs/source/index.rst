@@ -18,6 +18,7 @@ HiveViewer's unique optimization capabilities make it an essential tool for data
    :maxdepth: 1
 
    notebooks/optimize_single_target
+   notebooks/optimize_multiple_targets
 
 .. toctree::
    :maxdepth: 1
