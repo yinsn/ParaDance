@@ -6,8 +6,8 @@ import numpy as np
 from ..evaluation.calculator import Calculator
 
 
-class ProfolioPlotter:
-    """ProfolioPlotter class for plotting profolio curve."""
+class PortfolioPlotter:
+    """PortfolioPlotter class for plotting portfolio curve."""
 
     def __init__(
         self,
@@ -28,11 +28,11 @@ class ProfolioPlotter:
             "cyan",
         ],
     ) -> None:
-        """Initialize ProfolioPlotter.
+        """Initialize PortfolioPlotter.
 
         Args:
-            calculator (Calculator): Calculator instance for calculating the profolio.
-            target_column (str): target column for calculating the profolio.
+            calculator (Calculator): Calculator instance for calculating the portfolio.
+            target_column (str): target column for calculating the portfolio.
             points_num (int, optional): sample points number. Defaults to 20.
             minimal_expected_return (float, optional): minimal expected return ratio. Defaults to 0.9.
             colors (List[str], optional): colors for plotting.
@@ -49,7 +49,7 @@ class ProfolioPlotter:
             self.minimal_expected_return, 1, num=self.points_num, endpoint=True
         )
         self.top_ratios = [
-            self.calculator.calculate_profolio_concentration(
+            self.calculator.calculate_portfolio_concentration(
                 target_column=self.target_column, expected_return=er
             )[1]
             for er in self.expected_returns
@@ -61,7 +61,7 @@ class ProfolioPlotter:
         self.top_ratios[0] = 0
 
     def _plot_single(self, weights_for_equation: List[float], color: str) -> None:
-        """Plot single profolio curve.
+        """Plot single portfolio curve.
 
         Args:
             weights_for_equation (List[float]): weights for equation
@@ -81,7 +81,7 @@ class ProfolioPlotter:
     def plot(
         self, weights_for_equations: Union[List[float], List[List[float]]]
     ) -> None:
-        """Plot profolio curve.
+        """Plot portfolio curve.
 
         Args:
             weights_for_equations (Union[List[float], List[List[float]]]): weights for equations
@@ -96,7 +96,7 @@ class ProfolioPlotter:
             weights_for_equation = cast(List[float], weights_for_equations)
             self._plot_single(weights_for_equation, self.colors[0])
         plt.ylabel("Expected Return")
-        plt.xlabel("Profolio Efficiency")
-        plt.title("Expected Return v.s. Profolio Efficiency")
+        plt.xlabel("Portfolio Efficiency")
+        plt.title("Expected Return v.s. Portfolio Efficiency")
         plt.grid(True)
         plt.show()

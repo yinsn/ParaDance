@@ -10,7 +10,7 @@ from .base import BaseObjective
 
 class MultipleObjective(BaseObjective):
     """
-    This class provides methods to optimize the profolio objective.
+    This class provides methods to optimize the portfolio objective.
     """
 
     def __init__(
@@ -80,7 +80,7 @@ class MultipleObjective(BaseObjective):
 
         Args:
             calculator (Calculator): calculator building blocks.
-            flag (str ["wuauc", "profolio", "logmse", ..., ect.]): type of calculator.
+            flag (str ["wuauc", "portfolio", "logmse", ..., ect.]): type of calculator.
             target_column (str): target column to calculate.
         """
         self.calculators.append(calculator)
@@ -162,8 +162,8 @@ class MultipleObjective(BaseObjective):
             calculator.get_overall_score(
                 weights_for_equation=weights,
             )
-            if flag == "profolio":
-                _, concentration = calculator.calculate_profolio_concentration(
+            if flag == "portfolio":
+                _, concentration = calculator.calculate_portfolio_concentration(
                     target_column=target_column,
                     expected_return=hyperparameter,
                 )

@@ -194,10 +194,10 @@ class Calculator:
         mse = np.mean((log_true - log_pred) ** 2)
         return float(mse)
 
-    def calculate_profolio_concentration(
+    def calculate_portfolio_concentration(
         self, target_column: str, expected_return: Optional[float] = 0.95
     ) -> Tuple[float, float]:
-        """Calculate profolio concentration.
+        """Calculate portfolio concentration.
 
         :param target_column: target column
         :param expected_return: expected return
