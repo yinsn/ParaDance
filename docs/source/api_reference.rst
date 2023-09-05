@@ -2,7 +2,7 @@
 API References
 ==============
 
-.. currentmodule:: hiveviewer.evaluation
+.. currentmodule:: paradance.evaluation
 
 Calculators
 -----------
@@ -13,7 +13,7 @@ Calculators
     Calculator
 
 
-.. currentmodule:: hiveviewer.optimization
+.. currentmodule:: paradance.optimization
 
 Optimizations
 -------------
@@ -24,7 +24,7 @@ Optimizations
     BaseObjective
     MultipleObjective
 
-.. currentmodule:: hiveviewer.sampling
+.. currentmodule:: paradance.sampling
 
 Sampling
 --------
@@ -36,7 +36,7 @@ Sampling
     FrequencySampler
     GiniSampler
 
-.. currentmodule:: hiveviewer.visualization
+.. currentmodule:: paradance.visualization
 
 Visualization
 -------------
@@ -51,7 +51,7 @@ Visualization
     TrisurfPloter
     ProfolioPlotter
 
-.. currentmodule:: hiveviewer.dataloader
+.. currentmodule:: paradance.dataloader
 
 Dataloader
 ----------

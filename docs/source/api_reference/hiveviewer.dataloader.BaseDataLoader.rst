@@ -1,7 +1,7 @@
-﻿hiveviewer.dataloader.BaseDataLoader
+﻿paradance.dataloader.BaseDataLoader
 ====================================
 
-.. currentmodule:: hiveviewer.dataloader
+.. currentmodule:: paradance.dataloader
 
 .. autoclass:: BaseDataLoader
 

@@ -1,7 +1,7 @@
-﻿hiveviewer.visualization.TrisurfPloter
+﻿paradance.visualization.TrisurfPloter
 ======================================
 
-.. currentmodule:: hiveviewer.visualization
+.. currentmodule:: paradance.visualization
 
 .. autoclass:: TrisurfPloter
 

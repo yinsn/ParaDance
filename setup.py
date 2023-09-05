@@ -24,13 +24,13 @@ install_requires = (
 __version__ = "0.2.11"
 
 setup(
-    name="hiveviewer",
+    name="paradance",
     version=__version__,
     author="Yin Cheng",
     author_email="yin.sjtu@gmail.com",
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
-    url="https://github.com/yinsn/hiveviewer",
+    url="https://github.com/yinsn/paradance",
     python_requires=">=3.6",
     description="Offers a toolset for comprehensive, multi-faceted analysis of data exported from Hive, accompanied by powerful data visualization capabilities.",
     packages=find_packages("src"),

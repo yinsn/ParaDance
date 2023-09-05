@@ -52,7 +52,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "hiveviewer"
+project = "paradance"
 copyright = "2023, Yin Cheng, Jie Cui"  # pylint: disable=redefined-builtin
 author = "Yin Cheng, Jie Cui"
 
@@ -61,7 +61,7 @@ author = "Yin Cheng, Jie Cui"
 # built documents.
 #
 # The short X.Y version.
-# import hiveviewer  # noqa
+# import paradance  # noqa
 
 # The full version, including alpha/beta/rc tags.
 # release = "0.2.8"

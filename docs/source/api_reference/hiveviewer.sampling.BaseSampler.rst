@@ -1,7 +1,7 @@
-﻿hiveviewer.sampling.BaseSampler
+﻿paradance.sampling.BaseSampler
 ===============================
 
-.. currentmodule:: hiveviewer.sampling
+.. currentmodule:: paradance.sampling
 
 .. autoclass:: BaseSampler
 

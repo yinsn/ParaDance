@@ -1,7 +1,7 @@
-﻿hiveviewer.dataloader.ExcelLoader
+﻿paradance.dataloader.ExcelLoader
 =================================
 
-.. currentmodule:: hiveviewer.dataloader
+.. currentmodule:: paradance.dataloader
 
 .. autoclass:: ExcelLoader
 

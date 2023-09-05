@@ -1,10 +1,10 @@
-.. hiveviewer documentation master file
+.. paradance documentation master file
 
-HiveViewer - Data Visualization and Optimization
+ParaDance - Data Visualization and Optimization
 =============================================================================
-HiveViewer is a Python toolkit specialized in large-scale data analysis with a focus on multi-objective Bayesian optimization. It supports various aggregation formulas and calculators, streamlining data loading, processing, and visualization.
+ParaDance is a Python toolkit specialized in large-scale data analysis with a focus on multi-objective Bayesian optimization. It supports various aggregation formulas and calculators, streamlining data loading, processing, and visualization.
 
-HiveViewer's unique optimization capabilities make it an essential tool for data scientists and researchers seeking advanced, flexible solutions.
+ParaDance's unique optimization capabilities make it an essential tool for data scientists and researchers seeking advanced, flexible solutions.
 
 * **Large-Scale Data Analysis**: Tailored for handling extensive datasets, providing a comprehensive toolset.
 * **Data Loading and Processing**: Offers functionalities for efficient data ingestion and manipulation.

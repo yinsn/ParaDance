@@ -1,7 +1,7 @@
-﻿hiveviewer.sampling.FrequencySampler
+﻿paradance.sampling.FrequencySampler
 ====================================
 
-.. currentmodule:: hiveviewer.sampling
+.. currentmodule:: paradance.sampling
 
 .. autoclass:: FrequencySampler
 

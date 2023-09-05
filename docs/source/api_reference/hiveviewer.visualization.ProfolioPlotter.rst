@@ -1,7 +1,7 @@
-﻿hiveviewer.visualization.ProfolioPlotter
+﻿paradance.visualization.ProfolioPlotter
 ========================================
 
-.. currentmodule:: hiveviewer.visualization
+.. currentmodule:: paradance.visualization
 
 .. autoclass:: ProfolioPlotter
 

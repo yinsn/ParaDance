@@ -1,7 +1,7 @@
-﻿hiveviewer.optimization.MultipleObjective
+﻿paradance.optimization.MultipleObjective
 =========================================
 
-.. currentmodule:: hiveviewer.optimization
+.. currentmodule:: paradance.optimization
 
 .. autoclass:: MultipleObjective
 

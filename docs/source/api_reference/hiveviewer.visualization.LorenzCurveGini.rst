@@ -1,7 +1,7 @@
-﻿hiveviewer.visualization.LorenzCurveGini
+﻿paradance.visualization.LorenzCurveGini
 ========================================
 
-.. currentmodule:: hiveviewer.visualization
+.. currentmodule:: paradance.visualization
 
 .. autoclass:: LorenzCurveGini
 

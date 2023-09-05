@@ -1,6 +1,6 @@
 .DS_Store
 build/*
 dist/*
-src/hiveviewer.egg-info/*
+src/paradance.egg-info/*
 .vscode/*
 *.pyc

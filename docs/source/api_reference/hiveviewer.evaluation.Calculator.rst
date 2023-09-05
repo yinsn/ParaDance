@@ -1,7 +1,7 @@
-﻿hiveviewer.evaluation.Calculator
+﻿paradance.evaluation.Calculator
 ================================
 
-.. currentmodule:: hiveviewer.evaluation
+.. currentmodule:: paradance.evaluation
 
 .. autoclass:: Calculator
 

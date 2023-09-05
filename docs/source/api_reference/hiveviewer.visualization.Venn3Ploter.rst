@@ -1,7 +1,7 @@
-﻿hiveviewer.visualization.Venn3Ploter
+﻿paradance.visualization.Venn3Ploter
 ====================================
 
-.. currentmodule:: hiveviewer.visualization
+.. currentmodule:: paradance.visualization
 
 .. autoclass:: Venn3Ploter
 

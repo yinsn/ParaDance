@@ -1,7 +1,7 @@
-﻿hiveviewer.dataloader.CSVLoader
+﻿paradance.dataloader.CSVLoader
 ===============================
 
-.. currentmodule:: hiveviewer.dataloader
+.. currentmodule:: paradance.dataloader
 
 .. autoclass:: CSVLoader
 

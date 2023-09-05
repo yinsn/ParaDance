@@ -1,7 +1,7 @@
-﻿hiveviewer.sampling.GiniSampler
+﻿paradance.sampling.GiniSampler
 ===============================
 
-.. currentmodule:: hiveviewer.sampling
+.. currentmodule:: paradance.sampling
 
 .. autoclass:: GiniSampler
 

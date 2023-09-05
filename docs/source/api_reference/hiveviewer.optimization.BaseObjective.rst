@@ -1,7 +1,7 @@
-﻿hiveviewer.optimization.BaseObjective
+﻿paradance.optimization.BaseObjective
 =====================================
 
-.. currentmodule:: hiveviewer.optimization
+.. currentmodule:: paradance.optimization
 
 .. autoclass:: BaseObjective
 
