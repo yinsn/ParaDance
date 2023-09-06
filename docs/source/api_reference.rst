@@ -49,7 +49,7 @@ Visualization
     Venn3Ploter
     Venn2Ploter
     TrisurfPloter
-    ProfolioPlotter
+    PortfolioPlotter
 
 .. currentmodule:: paradance.dataloader
 
