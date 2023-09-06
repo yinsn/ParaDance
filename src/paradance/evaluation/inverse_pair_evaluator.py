@@ -36,8 +36,9 @@ def merge_and_count(
         """
         Helper function to merge two ranges and count inverse pairs based on the provided weights type.
         """
+
         result = 0.0
-        batch_size = target_queue.shape[0]
+        batch_size, _ = target_queue.shape
 
         for k in range(batch_size):
             idx_temporary, idx_left, idx_right = i, i, j
@@ -55,14 +56,9 @@ def merge_and_count(
                     elif weight_type == "exponential":
                         result += (j - idx_left) * (0.8**k)
                 idx_temporary += 1
-            while idx_left < j:
-                temporary_queue[k, idx_temporary] = target_queue[k, idx_left]
-                idx_left += 1
-                idx_temporary += 1
-            while idx_right < end:
-                temporary_queue[k, idx_temporary] = target_queue[k, idx_right]
-                idx_right += 1
-                idx_temporary += 1
+
+            temporary_queue[k, idx_temporary:j] = target_queue[k, idx_left:j]
+            temporary_queue[k, idx_temporary:end] = target_queue[k, idx_right:end]
 
         return float(result)
 
