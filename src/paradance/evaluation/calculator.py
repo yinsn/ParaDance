@@ -6,6 +6,7 @@ import pandas as pd
 from sklearn.metrics import roc_auc_score
 from tqdm import tqdm
 
+from .inverse_pair_evaluator import calculate_inverse_pairs
 from .wuauc_evaluator import calculate_wuauc
 
 
@@ -13,6 +14,7 @@ class Calculator:
     """Calculator class for calculating various metrics."""
 
     calculate_wuauc = partialmethod(calculate_wuauc)
+    calculate_inverse_pairs = partialmethod(calculate_inverse_pairs)
 
     def __init__(
         self,
