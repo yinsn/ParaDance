@@ -1,5 +1,5 @@
 ﻿paradance.visualization.TrisurfPloter
-======================================
+=====================================
 
 .. currentmodule:: paradance.visualization
 

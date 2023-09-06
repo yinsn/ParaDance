@@ -1,5 +1,5 @@
 ﻿paradance.optimization.MultipleObjective
-=========================================
+========================================
 
 .. currentmodule:: paradance.optimization
 

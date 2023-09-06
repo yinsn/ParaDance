@@ -1,5 +1,5 @@
 ﻿paradance.dataloader.ExcelLoader
-=================================
+================================
 
 .. currentmodule:: paradance.dataloader
 

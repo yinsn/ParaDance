@@ -1,5 +1,5 @@
 ﻿paradance.sampling.GiniSampler
-===============================
+==============================
 
 .. currentmodule:: paradance.sampling
 

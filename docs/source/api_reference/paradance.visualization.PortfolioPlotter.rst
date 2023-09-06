@@ -1,9 +1,9 @@
-﻿paradance.visualization.ProfolioPlotter
+﻿paradance.visualization.PortfolioPlotter
 ========================================
 
 .. currentmodule:: paradance.visualization
 
-.. autoclass:: ProfolioPlotter
+.. autoclass:: PortfolioPlotter
 
 
    .. automethod:: __init__
@@ -13,5 +13,5 @@
 
    .. autosummary::
 
-      ~ProfolioPlotter.__init__
-      ~ProfolioPlotter.plot
+      ~PortfolioPlotter.__init__
+      ~PortfolioPlotter.plot
