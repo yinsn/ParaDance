@@ -1,3 +1,4 @@
+from functools import partialmethod
 from typing import List, Optional, Tuple
 
 import numpy as np
@@ -5,9 +6,13 @@ import pandas as pd
 from sklearn.metrics import roc_auc_score
 from tqdm import tqdm
 
+from .wuauc_evaluator import calculate_wuauc
+
 
 class Calculator:
     """Calculator class for calculating various metrics."""
+
+    calculate_wuauc = partialmethod(calculate_wuauc)
 
     def __init__(
         self,
@@ -75,41 +80,6 @@ class Calculator:
                 )
             else:
                 raise ValueError("equation_eval_str is not defined.")
-
-    def calculate_wuauc(
-        self,
-        groupby: Optional[str],
-        weights_for_equation: List,
-        weights_for_groups: Optional[pd.Series] = None,
-        label_column: str = "label",
-        auc: bool = False,
-    ) -> float:
-        """Calculate weighted user AUC.
-
-        :param groupby: groupby column
-        :param weights_for_equation: weights for equation
-        :param weights_for_groups: weights for group
-        :param label_column: label column
-        :param auc: bool, optional, default: False
-        :return: AUC/WUAUC/UAUC
-        """
-
-        self.get_overall_score(weights_for_equation)
-        if auc:
-            result = float(
-                roc_auc_score(self.df[label_column], self.df["overall_score"])
-            )
-        else:
-            if groupby is not None:
-                grouped = self.df.groupby(groupby).apply(
-                    lambda x: float(roc_auc_score(x[label_column], x["overall_score"]))
-                )
-                if weights_for_groups is not None:
-                    counts_sorted = weights_for_groups.loc[grouped.index]
-                    result = float(np.average(grouped, weights=counts_sorted.values))
-                else:
-                    result = float(np.mean(grouped))
-        return result
 
     def create_score_columns(
         self, boundary_dict: dict, score_column: str = "score"
