@@ -9,6 +9,7 @@ from tqdm import tqdm
 from .inverse_pair_evaluator import calculate_inverse_pairs
 from .neg_rank_ratio_evaluator import calculate_neg_rank_ratio
 from .portfolio_evaluator import calculate_portfolio_concentration
+from .woauc_evaluator import calculate_woauc
 from .wuauc_evaluator import calculate_wuauc
 
 
@@ -16,6 +17,7 @@ class Calculator:
     """Calculator class for calculating various metrics."""
 
     calculate_wuauc = partialmethod(calculate_wuauc)
+    calculate_woauc = partialmethod(calculate_woauc)
     calculate_inverse_pairs = partialmethod(calculate_inverse_pairs)
     calculate_neg_rank_ratio = partialmethod(calculate_neg_rank_ratio)
     calculate_portfolio_concentration = partialmethod(calculate_portfolio_concentration)
@@ -135,30 +137,6 @@ class Calculator:
         self.woauc_dict[score_column] = self.df[
             slice_from_condition & slice_to_condition
         ].index
-
-    def calculate_woauc(
-        self,
-        target_column: str,
-        weights_for_equation: List,
-    ) -> List[float]:
-        """Calculate weighted ordinal user AUC.
-
-        :param weights_for_equation: weights for equation
-        :param target_column: score column
-        """
-        self.get_overall_score(weights_for_equation)
-        woauc_indices = self.woauc_dict[target_column]
-        woauc = []
-        sampler = self.samplers[target_column]
-        for k, _ in sampler.boundary_dict.items():
-            paritial_auc = float(
-                roc_auc_score(
-                    self.df.loc[woauc_indices][f"{target_column}_lt_{k}"],
-                    self.df.loc[woauc_indices]["overall_score"],
-                )
-            )
-            woauc.append(paritial_auc)
-        return woauc
 
     def calculate_log_mse(self, target_column: str) -> float:
         """Calculate log mean squared error.
