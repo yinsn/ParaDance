@@ -7,6 +7,7 @@ from sklearn.metrics import roc_auc_score
 from tqdm import tqdm
 
 from .inverse_pair_evaluator import calculate_inverse_pairs
+from .neg_rank_ratio_evaluator import calculate_neg_rank_ratio
 from .wuauc_evaluator import calculate_wuauc
 
 
@@ -15,6 +16,7 @@ class Calculator:
 
     calculate_wuauc = partialmethod(calculate_wuauc)
     calculate_inverse_pairs = partialmethod(calculate_inverse_pairs)
+    calculate_neg_rank_ratio = partialmethod(calculate_neg_rank_ratio)
 
     def __init__(
         self,
