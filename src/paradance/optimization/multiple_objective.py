@@ -194,6 +194,11 @@ class MultipleObjective(BaseObjective):
                     target_column=target_column,
                 )
                 targets.append(mse)
+            elif flag == "neg_rank_ratio":
+                neg_rank_ratio = calculator.calculate_neg_rank_ratio(
+                    weights_for_equation=weights, label_column=target_column
+                )
+                targets.append(neg_rank_ratio)
 
         local_vars = {"targets": targets, "sum": sum, "max": max, "min": min}
         result = float(eval(self.formula, {"__builtins__": None}, local_vars))
