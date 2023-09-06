@@ -6,6 +6,7 @@ from optuna.trial import Trial
 
 from ..evaluation.calculator import Calculator
 from .base import BaseObjective
+from .evaluate_targets import evaluate_targets
 
 
 class MultipleObjective(BaseObjective):
@@ -154,50 +155,14 @@ class MultipleObjective(BaseObjective):
             weights_for_equation=weights,
         )
 
-        targets: List[float] = []
-        for flag, hyperparameter, groupby, target_column in zip(
+        targets = evaluate_targets(
+            self.calculator,
             self.evaluator_flags,
             self.hyperparameters,
             self.groupbys,
             self.target_columns,
-        ):
-            if flag == "portfolio":
-                _, concentration = self.calculator.calculate_portfolio_concentration(
-                    target_column=target_column,
-                    expected_return=hyperparameter,
-                )
-                targets.append(concentration)
-            elif flag == "wuauc":
-                wuauc = self.calculator.calculate_wuauc(
-                    groupby=groupby,
-                    label_column=target_column,
-                    weights_for_equation=weights,
-                )
-                targets.append(wuauc)
-            elif flag == "auc":
-                auc = self.calculator.calculate_wuauc(
-                    groupby=groupby,
-                    label_column=target_column,
-                    weights_for_equation=weights,
-                    auc=True,
-                )
-                targets.append(auc)
-            elif flag == "woauc":
-                woauc = self.calculator.calculate_woauc(
-                    target_column=target_column,
-                    weights_for_equation=weights,
-                )
-                targets.append(sum(woauc))
-            elif flag == "logmse":
-                mse = self.calculator.calculate_log_mse(
-                    target_column=target_column,
-                )
-                targets.append(mse)
-            elif flag == "neg_rank_ratio":
-                neg_rank_ratio = self.calculator.calculate_neg_rank_ratio(
-                    weights_for_equation=weights, label_column=target_column
-                )
-                targets.append(neg_rank_ratio)
+            weights,
+        )
 
         local_vars = {"targets": targets, "sum": sum, "max": max, "min": min}
         result = float(eval(self.formula, {"__builtins__": None}, local_vars))
