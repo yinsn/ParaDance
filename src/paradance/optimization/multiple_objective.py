@@ -15,6 +15,7 @@ class MultipleObjective(BaseObjective):
 
     def __init__(
         self,
+        calculator: Calculator,
         direction: str,
         weights_num: int,
         formula: str,
@@ -37,19 +38,19 @@ class MultipleObjective(BaseObjective):
             dirichlet (bool, optional): Use dirichlet distribution or not. Defaults to True.
         """
         super().__init__(direction, formula, first_order, dirichlet)
-        self.calculator_flags: List[str] = []
-        self.calculators: List[Calculator] = []
-        self.first_order = first_order
-        self.first_order_lower_bound = first_order_lower_bound
-        self.first_order_upper_bound = first_order_upper_bound
-        self.formula = formula
-        self.groupbys: List[Optional[str]] = []
-        self.hyperparameters: List[Optional[float]] = []
         self.power = power
+        self.formula = formula
+        self.first_order = first_order
+        self.weights_num = weights_num
+        self.target_columns: List[str] = []
+        self.evaluator_flags: List[str] = []
+        self.groupbys: List[Optional[str]] = []
+        self.calculator: Calculator = calculator
         self.power_lower_bound = power_lower_bound
         self.power_upper_bound = power_upper_bound
-        self.target_columns: List[str] = []
-        self.weights_num = weights_num
+        self.hyperparameters: List[Optional[float]] = []
+        self.first_order_lower_bound = first_order_lower_bound
+        self.first_order_upper_bound = first_order_upper_bound
         if self.power_lower_bound < 0:
             self.dirichlet = False
         else:
@@ -68,9 +69,8 @@ class MultipleObjective(BaseObjective):
         self.logger = optuna.logging.get_logger("optuna")
         self.logger.addHandler(file_handler)
 
-    def add_calculator(
+    def add_evaluator(
         self,
-        calculator: Calculator,
         flag: str,
         target_column: str,
         hyperparameter: Optional[float] = None,
@@ -83,8 +83,7 @@ class MultipleObjective(BaseObjective):
             flag (str ["wuauc", "portfolio", "logmse", ..., ect.]): type of calculator.
             target_column (str): target column to calculate.
         """
-        self.calculators.append(calculator)
-        self.calculator_flags.append(flag)
+        self.evaluator_flags.append(flag)
         self.target_columns.append(target_column)
         if hyperparameter is not None:
             self.hyperparameters.append(hyperparameter)
@@ -142,41 +141,41 @@ class MultipleObjective(BaseObjective):
                     )
                 )
 
+        weights: List[float] = []
+        if not (self.first_order):
+            weights = power_weights
+        elif self.calculator.equation_type == "product" and self.power:
+            weights = power_weights + first_order_weights
+        elif self.calculator.equation_type == "sum":
+            weights = first_order_weights
+        elif self.calculator.equation_type == "free_style":
+            weights = first_order_weights
+        self.calculator.get_overall_score(
+            weights_for_equation=weights,
+        )
+
         targets: List[float] = []
-        for calculator, flag, hyperparameter, groupby, target_column in zip(
-            self.calculators,
-            self.calculator_flags,
+        for flag, hyperparameter, groupby, target_column in zip(
+            self.evaluator_flags,
             self.hyperparameters,
             self.groupbys,
             self.target_columns,
         ):
-            weights: List[float] = []
-            if not (self.first_order):
-                weights = power_weights
-            elif calculator.equation_type == "product" and self.power:
-                weights = power_weights + first_order_weights
-            elif calculator.equation_type == "sum":
-                weights = first_order_weights
-            elif calculator.equation_type == "free_style":
-                weights = first_order_weights
-            calculator.get_overall_score(
-                weights_for_equation=weights,
-            )
             if flag == "portfolio":
-                _, concentration = calculator.calculate_portfolio_concentration(
+                _, concentration = self.calculator.calculate_portfolio_concentration(
                     target_column=target_column,
                     expected_return=hyperparameter,
                 )
                 targets.append(concentration)
             elif flag == "wuauc":
-                wuauc = calculator.calculate_wuauc(
+                wuauc = self.calculator.calculate_wuauc(
                     groupby=groupby,
                     label_column=target_column,
                     weights_for_equation=weights,
                 )
                 targets.append(wuauc)
             elif flag == "auc":
-                auc = calculator.calculate_wuauc(
+                auc = self.calculator.calculate_wuauc(
                     groupby=groupby,
                     label_column=target_column,
                     weights_for_equation=weights,
@@ -184,18 +183,18 @@ class MultipleObjective(BaseObjective):
                 )
                 targets.append(auc)
             elif flag == "woauc":
-                woauc = calculator.calculate_woauc(
+                woauc = self.calculator.calculate_woauc(
                     target_column=target_column,
                     weights_for_equation=weights,
                 )
                 targets.append(sum(woauc))
             elif flag == "logmse":
-                mse = calculator.calculate_log_mse(
+                mse = self.calculator.calculate_log_mse(
                     target_column=target_column,
                 )
                 targets.append(mse)
             elif flag == "neg_rank_ratio":
-                neg_rank_ratio = calculator.calculate_neg_rank_ratio(
+                neg_rank_ratio = self.calculator.calculate_neg_rank_ratio(
                     weights_for_equation=weights, label_column=target_column
                 )
                 targets.append(neg_rank_ratio)
