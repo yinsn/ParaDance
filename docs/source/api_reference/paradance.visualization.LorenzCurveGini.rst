@@ -1,5 +1,5 @@
 ﻿paradance.visualization.LorenzCurveGini
-========================================
+=======================================
 
 .. currentmodule:: paradance.visualization
 

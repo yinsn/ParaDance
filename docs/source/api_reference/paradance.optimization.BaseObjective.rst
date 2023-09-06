@@ -1,5 +1,5 @@
 ﻿paradance.optimization.BaseObjective
-=====================================
+====================================
 
 .. currentmodule:: paradance.optimization
 

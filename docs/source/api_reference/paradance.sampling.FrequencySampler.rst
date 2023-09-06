@@ -1,5 +1,5 @@
 ﻿paradance.sampling.FrequencySampler
-====================================
+===================================
 
 .. currentmodule:: paradance.sampling
 

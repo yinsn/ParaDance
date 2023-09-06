@@ -1,5 +1,5 @@
 ﻿paradance.dataloader.CSVLoader
-===============================
+==============================
 
 .. currentmodule:: paradance.dataloader
 

@@ -1,5 +1,5 @@
 ﻿paradance.sampling.BaseSampler
-===============================
+==============================
 
 .. currentmodule:: paradance.sampling
 
