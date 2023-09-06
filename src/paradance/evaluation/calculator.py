@@ -6,6 +6,7 @@ import pandas as pd
 
 from .auc_triple_parameters_evaluator import calculate_auc_triple_parameters
 from .inverse_pair_evaluator import calculate_inverse_pairs
+from .log_mse_evaluator import calculate_log_mse
 from .neg_rank_ratio_evaluator import calculate_neg_rank_ratio
 from .portfolio_evaluator import calculate_portfolio_concentration
 from .woauc_evaluator import calculate_woauc
@@ -17,6 +18,7 @@ class Calculator:
 
     calculate_wuauc = partialmethod(calculate_wuauc)
     calculate_woauc = partialmethod(calculate_woauc)
+    calculate_log_mse = partialmethod(calculate_log_mse)
     calculate_inverse_pairs = partialmethod(calculate_inverse_pairs)
     calculate_neg_rank_ratio = partialmethod(calculate_neg_rank_ratio)
     calculate_auc_triple_parameters = partialmethod(calculate_auc_triple_parameters)
@@ -137,13 +139,3 @@ class Calculator:
         self.woauc_dict[score_column] = self.df[
             slice_from_condition & slice_to_condition
         ].index
-
-    def calculate_log_mse(self, target_column: str) -> float:
-        """Calculate log mean squared error.
-
-        :param target_column: target column
-        """
-        log_true = np.log(self.df[target_column] + 1)
-        log_pred = np.log(self.df["overall_score"] + 1)
-        mse = np.mean((log_true - log_pred) ** 2)
-        return float(mse)
