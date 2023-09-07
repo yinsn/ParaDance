@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 from .auc_triple_parameters_evaluator import calculate_auc_triple_parameters
-from .inverse_pair_evaluator import calculate_inverse_pairs
+from .inverse_pair_evaluator import calculate_inverse_pair
 from .log_mse_evaluator import calculate_log_mse
 from .neg_rank_ratio_evaluator import calculate_neg_rank_ratio
 from .portfolio_evaluator import calculate_portfolio_concentration
@@ -19,7 +19,7 @@ class Calculator:
     calculate_wuauc = partialmethod(calculate_wuauc)
     calculate_woauc = partialmethod(calculate_woauc)
     calculate_log_mse = partialmethod(calculate_log_mse)
-    calculate_inverse_pairs = partialmethod(calculate_inverse_pairs)
+    calculate_inverse_pair = partialmethod(calculate_inverse_pair)
     calculate_neg_rank_ratio = partialmethod(calculate_neg_rank_ratio)
     calculate_auc_triple_parameters = partialmethod(calculate_auc_triple_parameters)
     calculate_portfolio_concentration = partialmethod(calculate_portfolio_concentration)

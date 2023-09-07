@@ -7,13 +7,14 @@ def evaluate_targets(
     calculator: Calculator,
     evaluator_flags: List[str],
     hyperparameters: List[Optional[float]],
+    evaluator_propertys: List[Optional[str]],
     groupbys: List[Optional[str]],
     target_columns: List[str],
     weights: List[float],
 ) -> List[float]:
     targets = []
-    for flag, hyperparameter, groupby, target_column in zip(
-        evaluator_flags, hyperparameters, groupbys, target_columns
+    for flag, hyperparameter, evaluator_property, groupby, target_column in zip(
+        evaluator_flags, hyperparameters, evaluator_propertys, groupbys, target_columns
     ):
         if flag == "portfolio":
             _, concentration = calculator.calculate_portfolio_concentration(
@@ -52,4 +53,11 @@ def evaluate_targets(
                 weights_for_equation=weights, label_column=target_column
             )
             targets.append(neg_rank_ratio)
+        elif flag == "inverse_pairs":
+            inverse_score = calculator.calculate_inverse_pair(
+                calculator=calculator,
+                weights_for_equation=weights,
+                weights_type=evaluator_property,
+            )
+            targets.append(inverse_score)
     return targets

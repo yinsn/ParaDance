@@ -54,6 +54,7 @@ class MultipleObjective(BaseObjective):
         self.power_lower_bound = power_lower_bound
         self.power_upper_bound = power_upper_bound
         self.hyperparameters: List[Optional[float]] = []
+        self.evaluator_propertys: List[Optional[str]] = []
         self.first_order_lower_bound = first_order_lower_bound
         self.first_order_upper_bound = first_order_upper_bound
         if self.power_lower_bound < 0:
@@ -79,6 +80,7 @@ class MultipleObjective(BaseObjective):
         flag: str,
         target_column: str,
         hyperparameter: Optional[float] = None,
+        evaluator_property: Optional[str] = None,
         groupby: Optional[str] = None,
     ) -> None:
         """Add calculators to the objective.
@@ -98,6 +100,10 @@ class MultipleObjective(BaseObjective):
             self.groupbys.append(groupby)
         else:
             self.groupbys.append(None)
+        if evaluator_property is not None:
+            self.evaluator_propertys.append(evaluator_property)
+        else:
+            self.evaluator_propertys.append(None)
 
     def objective(
         self,
@@ -113,12 +119,13 @@ class MultipleObjective(BaseObjective):
         """
         weights = construct_weights(self, trial)
         targets = evaluate_targets(
-            self.calculator,
-            self.evaluator_flags,
-            self.hyperparameters,
-            self.groupbys,
-            self.target_columns,
-            weights,
+            calculator=self.calculator,
+            evaluator_flags=self.evaluator_flags,
+            hyperparameters=self.hyperparameters,
+            evaluator_propertys=self.evaluator_propertys,
+            groupbys=self.groupbys,
+            target_columns=self.target_columns,
+            weights=weights,
         )
 
         local_vars = {"targets": targets, "sum": sum, "max": max, "min": min}
