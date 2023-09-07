@@ -1,4 +1,5 @@
 import logging
+from functools import partialmethod
 from typing import List, Optional
 
 import optuna
@@ -6,6 +7,7 @@ from optuna.trial import Trial
 
 from ..evaluation.calculator import Calculator
 from .base import BaseObjective
+from .construct_weights import construct_weights
 from .evaluate_targets import evaluate_targets
 
 
@@ -13,6 +15,8 @@ class MultipleObjective(BaseObjective):
     """
     This class provides methods to optimize the portfolio objective.
     """
+
+    construct_weights = partialmethod(construct_weights)
 
     def __init__(
         self,
@@ -107,54 +111,7 @@ class MultipleObjective(BaseObjective):
         Returns:
             float: objective value.
         """
-        power_weights: List[float] = []
-        first_order_weights: List[float] = []
-
-        if self.power:
-            if self.dirichlet:
-                for i in range(self.weights_num - 1):
-                    power_weights.append(
-                        trial.suggest_float(
-                            f"w_po_{i+1}", 0, max((1 - sum(power_weights), 0.1))
-                        )
-                    )
-                power_weights.append(1 - sum(power_weights))
-            else:
-                for i in range(self.weights_num):
-                    power_weights.append(
-                        trial.suggest_float(
-                            f"w{i+1}", self.power_lower_bound, self.power_upper_bound
-                        )
-                    )
-
-        if self.first_order:
-            if self.first_order_lower_bound < 0:
-                log = False
-            else:
-                log = True
-            for i in range(self.weights_num):
-                first_order_weights.append(
-                    trial.suggest_float(
-                        f"w_fo_{i+1}",
-                        self.first_order_lower_bound,
-                        self.first_order_upper_bound,
-                        log=log,
-                    )
-                )
-
-        weights: List[float] = []
-        if not (self.first_order):
-            weights = power_weights
-        elif self.calculator.equation_type == "product" and self.power:
-            weights = power_weights + first_order_weights
-        elif self.calculator.equation_type == "sum":
-            weights = first_order_weights
-        elif self.calculator.equation_type == "free_style":
-            weights = first_order_weights
-        self.calculator.get_overall_score(
-            weights_for_equation=weights,
-        )
-
+        weights = construct_weights(self, trial)
         targets = evaluate_targets(
             self.calculator,
             self.evaluator_flags,
@@ -170,6 +127,4 @@ class MultipleObjective(BaseObjective):
             self.logger.info(f"Trial {trial.number} finished with result: {result}")
             self.logger.info(f"targets: {targets}")
             self.logger.info(f"weights: {weights}")
-            if self.first_order:
-                self.logger.info(f"first_order_weights: {first_order_weights}")
         return result
