@@ -25,8 +25,6 @@ def calculate_wuauc(
     :param auc: bool, optional, default: False
     :return: AUC/WUAUC/UAUC
     """
-
-    calculator.get_overall_score(weights_for_equation)
     if auc:
         result = float(
             roc_auc_score(calculator.df[label_column], calculator.df["overall_score"])

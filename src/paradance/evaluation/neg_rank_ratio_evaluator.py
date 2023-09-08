@@ -11,7 +11,6 @@ def calculate_neg_rank_ratio(
     :param weights_for_equation: weights for equation
     :param label_column: target column, its values must be 0 or 1
     """
-    calculator.get_overall_score(weights_for_equation)
     neg_targets_rows = calculator.df[label_column].sum()
     total_rows = calculator.df.shape[0]
     neg_rank_sum = (

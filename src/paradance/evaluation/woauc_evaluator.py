@@ -16,7 +16,6 @@ def calculate_woauc(
     :param weights_for_equation: weights for equation
     :param target_column: score column
     """
-    calculator.get_overall_score(weights_for_equation)
     woauc_indices = calculator.woauc_dict[target_column]
     woauc = []
     sampler = calculator.samplers[target_column]

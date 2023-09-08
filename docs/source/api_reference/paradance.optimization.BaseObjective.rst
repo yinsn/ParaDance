@@ -14,5 +14,6 @@
    .. autosummary::
 
       ~BaseObjective.__init__
+      ~BaseObjective.build_logger
       ~BaseObjective.objective
       ~BaseObjective.optimize
