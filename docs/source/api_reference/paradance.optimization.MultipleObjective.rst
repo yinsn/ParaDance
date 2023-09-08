@@ -14,7 +14,8 @@
    .. autosummary::
 
       ~MultipleObjective.__init__
-      ~MultipleObjective.add_calculator
+      ~MultipleObjective.add_evaluator
       ~MultipleObjective.build_logger
+      ~MultipleObjective.construct_weights
       ~MultipleObjective.objective
       ~MultipleObjective.optimize

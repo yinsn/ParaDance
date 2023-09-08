@@ -1,8 +1,6 @@
-import logging
 from functools import partialmethod
 from typing import List, Optional
 
-import optuna
 from optuna.trial import Trial
 
 from ..evaluation.calculator import Calculator
@@ -31,7 +29,8 @@ class MultipleObjective(BaseObjective):
         power_lower_bound: float = 0,
         power_upper_bound: float = 1,
         dirichlet: bool = True,
-        log_file: Optional[str] = None,
+        study_name: Optional[str] = None,
+        study_path: Optional[str] = None,
     ) -> None:
         """
         Initialize with direction, weights_num, formula and dirichlet.
@@ -42,7 +41,7 @@ class MultipleObjective(BaseObjective):
             formula (str): formula of targets to calculate the objective.
             dirichlet (bool, optional): Use dirichlet distribution or not. Defaults to True.
         """
-        super().__init__(direction, formula, first_order, dirichlet)
+        super().__init__(direction=direction, formula=formula)
         self.power = power
         self.formula = formula
         self.first_order = first_order
@@ -61,19 +60,6 @@ class MultipleObjective(BaseObjective):
             self.dirichlet = False
         else:
             self.dirichlet = dirichlet
-        if log_file:
-            self.build_logger(log_file)
-
-    def build_logger(self, log_file: str) -> None:
-        """Build logger for optuna.
-
-        Args:
-            log_file (str): log file path.
-        """
-        file_handler = logging.FileHandler(log_file)
-        file_handler.setLevel(logging.INFO)
-        self.logger = optuna.logging.get_logger("optuna")
-        self.logger.addHandler(file_handler)
 
     def add_evaluator(
         self,
@@ -127,7 +113,6 @@ class MultipleObjective(BaseObjective):
             target_columns=self.target_columns,
             weights=weights,
         )
-
         local_vars = {"targets": targets, "sum": sum, "max": max, "min": min}
         result = float(eval(self.formula, {"__builtins__": None}, local_vars))
         if self.logger:

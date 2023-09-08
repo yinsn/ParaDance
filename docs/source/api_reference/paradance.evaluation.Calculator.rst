@@ -15,7 +15,7 @@
 
       ~Calculator.__init__
       ~Calculator.calculate_auc_triple_parameters
-      ~Calculator.calculate_inverse_pairs
+      ~Calculator.calculate_inverse_pair
       ~Calculator.calculate_log_mse
       ~Calculator.calculate_neg_rank_ratio
       ~Calculator.calculate_portfolio_concentration

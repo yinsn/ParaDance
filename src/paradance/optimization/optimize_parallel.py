@@ -1,0 +1,49 @@
+from joblib import Parallel, delayed
+
+from .get_processors import get_logical_processors_count
+from .multiple_objective import MultipleObjective
+from .save_study import save_study
+
+
+def parallel_optimize(
+    multiple_objective: MultipleObjective, i: int, ntrials: int
+) -> None:
+    """
+    Optimize a multiple objective instance for a certain number of trials.
+
+    Args:
+        multiple_objective (MultipleObjective): The multiple objective instance to be optimized.
+        i (int): The identifier for this parallel run, useful for tasks that require unique identifiers or handling per run.
+        ntrials (int): The number of trials for optimization.
+
+    Returns:
+        None
+    """
+    multiple_objective.optimize(ntrials)
+
+
+def optimize_run(
+    multiple_objective: MultipleObjective, n_trials: int, parallel: bool = True
+) -> None:
+    """
+    Optimize the multiple objective in parallel using all available logical processors.
+
+    Args:
+        multiple_objective (MultipleObjective): The multiple objective instance to be optimized.
+        n_trials (int): Total number of trials for optimization, distributed across cores.
+
+    Returns:
+        None
+    """
+    ob = multiple_objective
+    if not parallel:
+        multiple_objective.optimize(n_trials)
+        save_study(ob)
+    if parallel:
+        n_cores = get_logical_processors_count()
+        unit_n_trials = n_trials // n_cores
+
+        Parallel(n_jobs=n_cores)(
+            delayed(parallel_optimize)(ob, i, unit_n_trials) for i in range(n_cores)
+        )
+        save_study(ob)
