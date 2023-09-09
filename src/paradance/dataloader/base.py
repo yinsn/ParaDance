@@ -8,11 +8,16 @@ class BaseDataLoader(ABC):
     """Base class for data loaders."""
 
     def __init__(
-        self, file_path: str, file_name: Optional[str] = None, file_type: str = "csv"
+        self,
+        file_path: str,
+        file_name: Optional[str] = None,
+        file_type: str = "csv",
+        max_rows: Optional[int] = None,
     ) -> None:
         self.file_path = file_path
         self.file_type = file_type
         self.file_name = file_name
+        self.max_rows = max_rows
         self.df = self.load_data()
 
     @abstractmethod

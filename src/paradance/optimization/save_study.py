@@ -37,31 +37,35 @@ def get_best_trials(multiple_objective: MultipleObjective) -> None:
                         targets_line = lines[idx - 2]
                         weights_line = lines[idx - 1]
 
-                        results = float(results_line.split("result:")[1].strip())
-                        targets_str = [
-                            val
-                            for val in targets_line.split(":")[1]
-                            .strip()
-                            .strip("[]\n")
-                            .split(",")
-                        ]
-                        weights_str = [
-                            val
-                            for val in weights_line.split(":")[1]
-                            .strip()
-                            .strip("[]\n")
-                            .split(", ")
-                        ]
+                        try:
+                            results = float(results_line.split("result:")[1].strip())
+                            targets_str = [
+                                val
+                                for val in targets_line.split(":")[1]
+                                .strip()
+                                .strip("[]\n")
+                                .split(",")
+                            ]
+                            weights_str = [
+                                val
+                                for val in weights_line.split(":")[1]
+                                .strip()
+                                .strip("[]\n")
+                                .split(", ")
+                            ]
 
-                        if len(weights_str) != 1:
-                            targets = [float(val) for val in targets_str]
-                            weights = [float(val) for val in weights_str]
-                            extracted_data.append(
-                                (results, trial_number, targets, weights)
-                            )
+                            if len(weights_str) != 1:
+                                targets = [float(val) for val in targets_str]
+                                weights = [float(val) for val in weights_str]
+                                extracted_data.append(
+                                    (results, trial_number, targets, weights)
+                                )
 
-                            last_trial_number = trial_number
-                            last_best_value = current_best_value
+                                last_trial_number = trial_number
+
+                                last_best_value = current_best_value
+                        except:
+                            pass
 
     with open(output_path, "w", newline="") as csvfile:
         writer = csv.writer(csvfile)
@@ -77,7 +81,7 @@ def save_study(multiple_objective: MultipleObjective) -> None:
         multiple_objective (MultipleObjective): An instance of the MultipleObjective class containing the study to be saved.
     """
     ob = multiple_objective
-    get_best_trials(ob)
     ob.study.trials_dataframe().to_csv(f"{ob.full_path}/paradance_full_trials.csv")
     with open(f"{ob.full_path}/study.pkl", "wb") as f:
         pickle.dump(ob.study, f)
+    get_best_trials(ob)
