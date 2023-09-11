@@ -39,6 +39,7 @@ def evaluate_targets(
             targets.append(auc)
         elif flag == "woauc":
             woauc = calculator.calculate_woauc(
+                groupby=groupby,
                 target_column=target_column,
                 weights_for_equation=weights,
             )
