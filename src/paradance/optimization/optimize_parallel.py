@@ -1,3 +1,5 @@
+from typing import Union
+
 from joblib import Parallel, delayed
 
 from .get_processors import get_logical_processors_count
@@ -23,27 +25,34 @@ def parallel_optimize(
 
 
 def optimize_run(
-    multiple_objective: MultipleObjective, n_trials: int, parallel: bool = True
+    multiple_objective: MultipleObjective,
+    n_trials: int,
+    parallel: Union[bool, int] = True,
 ) -> None:
     """
-    Optimize the multiple objective in parallel using all available logical processors.
+    Optimize the multiple objective in parallel using specified number of processors or all available ones.
 
     Args:
         multiple_objective (MultipleObjective): The multiple objective instance to be optimized.
         n_trials (int): Total number of trials for optimization, distributed across cores.
+        parallel (Union[bool, int]): If True, use all available cores. If False, don't use parallelism.
+                                    If int, use the specified number of cores.
 
     Returns:
         None
     """
     ob = multiple_objective
-    if not parallel:
+
+    if isinstance(parallel, bool) and not parallel:
         multiple_objective.optimize(n_trials)
-        save_study(ob)
-    if parallel:
-        n_cores = get_logical_processors_count()
+    else:
+        n_cores = (
+            get_logical_processors_count() if isinstance(parallel, bool) else parallel
+        )
         unit_n_trials = n_trials // n_cores
 
         Parallel(n_jobs=n_cores)(
             delayed(parallel_optimize)(ob, i, unit_n_trials) for i in range(n_cores)
         )
-        save_study(ob)
+
+    save_study(ob)
