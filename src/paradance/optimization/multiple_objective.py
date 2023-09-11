@@ -41,7 +41,12 @@ class MultipleObjective(BaseObjective):
             formula (str): formula of targets to calculate the objective.
             dirichlet (bool, optional): Use dirichlet distribution or not. Defaults to True.
         """
-        super().__init__(direction=direction, formula=formula)
+        super().__init__(
+            direction=direction,
+            formula=formula,
+            study_name=study_name,
+            study_path=study_path,
+        )
         self.power = power
         self.formula = formula
         self.first_order = first_order

@@ -19,8 +19,12 @@ def ensure_study_directory(study_path: Optional[str], study_name: Optional[str])
     if study_path is None:
         study_path = os.getcwd()
 
+    date_string = datetime.now().strftime("%Y_%m_%d_%H_%M")
+
     if study_name is None:
-        study_name = datetime.now().strftime("%Y_%m_%d_%H_%M")
+        study_name = date_string
+    else:
+        study_name = f"{date_string}_{study_name}"
 
     full_path = os.path.join(study_path, study_name)
 
