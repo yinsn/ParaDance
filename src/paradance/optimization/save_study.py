@@ -74,6 +74,42 @@ def get_best_trials(multiple_objective: MultipleObjective) -> None:
             writer.writerow([data[0], data[1], str(data[2]), str(data[3])])
 
 
+def save_multiple_objective_info(ob: MultipleObjective, filename: str) -> None:
+    """Save the parameters and evaluator info of a MultipleObjective object to a txt file.
+
+    Args:
+        ob (MultipleObjective): The object whose info needs to be saved.
+        filename (str): The name of the txt file.
+    """
+
+    with open(filename, "w") as file:
+        file.write(f"Direction: {ob.direction}\n")
+        file.write(f"Formula: {ob.formula}\n")
+        file.write(f"Weights Number: {ob.weights_num}\n")
+        file.write(f"Power: {ob.power}\n")
+        file.write(f"First Order: {ob.first_order}\n")
+        file.write(f"First Order Lower Bound: {ob.first_order_lower_bound}\n")
+        file.write(f"First Order Upper Bound: {ob.first_order_upper_bound}\n")
+        file.write(f"Power Lower Bound: {ob.power_lower_bound}\n")
+        file.write(f"Power Upper Bound: {ob.power_upper_bound}\n")
+        file.write(f"Dirichlet: {ob.dirichlet}\n")
+
+        file.write("\nEvaluators Info:\n")
+        for flag, target_column, hyperparameter, evaluator_property, groupby in zip(
+            ob.evaluator_flags,
+            ob.target_columns,
+            ob.hyperparameters,
+            ob.evaluator_propertys,
+            ob.groupbys,
+        ):
+            file.write(f"Flag: {flag}\n")
+            file.write(f"Target Column: {target_column}\n")
+            file.write(f"Hyperparameter: {hyperparameter}\n")
+            file.write(f"Evaluator Property: {evaluator_property}\n")
+            file.write(f"Groupby: {groupby}\n")
+            file.write("-" * 50 + "\n")
+
+
 def save_study(multiple_objective: MultipleObjective) -> None:
     """Save the study results of the given multiple objective optimization.
 
@@ -81,6 +117,7 @@ def save_study(multiple_objective: MultipleObjective) -> None:
         multiple_objective (MultipleObjective): An instance of the MultipleObjective class containing the study to be saved.
     """
     ob = multiple_objective
+    save_multiple_objective_info(ob, f"{ob.full_path}/objective_info.txt")
     ob.study.trials_dataframe().to_csv(f"{ob.full_path}/paradance_full_trials.csv")
     with open(f"{ob.full_path}/study.pkl", "wb") as f:
         pickle.dump(ob.study, f)

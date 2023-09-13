@@ -22,11 +22,11 @@ class MultipleObjective(BaseObjective):
         direction: str,
         weights_num: int,
         formula: str,
-        power: bool = False,
+        power: bool = True,
         first_order: bool = False,
         first_order_lower_bound: float = 1e-3,
         first_order_upper_bound: float = 1e6,
-        power_lower_bound: float = -1,
+        power_lower_bound: float = 0,
         power_upper_bound: float = 1,
         dirichlet: bool = False,
         study_name: Optional[str] = None,
@@ -42,19 +42,19 @@ class MultipleObjective(BaseObjective):
             dirichlet (bool, optional): Use dirichlet distribution or not. Defaults to False.
         """
         super().__init__(
-            direction=direction,
-            formula=formula,
-            study_name=study_name,
-            study_path=study_path,
+            calculator,
+            direction,
+            weights_num,
+            formula,
+            first_order,
+            power,
+            dirichlet,
+            study_name,
+            study_path,
         )
-        self.power = power
-        self.formula = formula
-        self.first_order = first_order
-        self.weights_num = weights_num
         self.target_columns: List[str] = []
         self.evaluator_flags: List[str] = []
         self.groupbys: List[Optional[str]] = []
-        self.calculator: Calculator = calculator
         self.power_lower_bound = power_lower_bound
         self.power_upper_bound = power_upper_bound
         self.hyperparameters: List[Optional[float]] = []

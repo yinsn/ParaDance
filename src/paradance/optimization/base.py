@@ -4,6 +4,7 @@ from typing import Optional
 
 import optuna
 
+from ..evaluation.calculator import Calculator
 from .set_path import ensure_study_directory
 
 
@@ -14,13 +15,25 @@ class BaseObjective(metaclass=ABCMeta):
 
     def __init__(
         self,
+        calculator: Calculator,
         direction: str,
+        weights_num: int,
         formula: str,
-        fist_order: bool = False,
+        first_order: bool = False,
+        power: bool = True,
         dirichlet: bool = True,
         study_name: Optional[str] = None,
         study_path: Optional[str] = None,
     ) -> None:
+        self.calculator = calculator
+        self.direction = direction
+        self.weights_num = weights_num
+        self.formula = formula
+        self.first_order = first_order
+        self.power = power
+        self.dirichlet = dirichlet
+        self.study_name = study_name
+        self.study_path = study_path
         self.full_path = ensure_study_directory(study_path, study_name)
         storage_path = f"sqlite:///{self.full_path}/paradance_storage.db"
         self.study = optuna.create_study(
