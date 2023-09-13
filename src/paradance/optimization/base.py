@@ -10,7 +10,31 @@ from .set_path import ensure_study_directory
 
 class BaseObjective(metaclass=ABCMeta):
     """
-    This class provides methods to optimize obejective.
+    BaseObjective serves as an abstract base class for objective optimization.
+    It provides core functionalities for setting up and optimizing objectives
+    using the `optuna` library.
+
+    Attributes:
+        calculator (Calculator): An instance of Calculator for various evaluations.
+        direction (str): Direction for optimization (e.g., "minimize" or "maximize").
+        weights_num (int): Number of weights for optimization.
+        formula (str): Mathematical formula representing the objective.
+        first_order (bool): Whether to use first order optimization or not. Default is False.
+        power (bool): If True, includes power in the optimization. Default is True.
+        dirichlet (bool): If True, uses Dirichlet distribution for optimization. Default is True.
+        study_name (Optional[str]): Name of the study.
+        study_path (Optional[str]): Path to the study directory.
+        full_path (str): Full path combining study_path and study_name.
+        study (Study): Optuna study object for optimization.
+        logger (logging.Logger): Logger object for logging optimization progress.
+
+    Methods:
+        build_logger(process_id) -> None:
+            Constructs a logger for the optimization process.
+        objective(trial) -> float:
+            Abstract method for objective function to be overridden in derived classes.
+        optimize(n_trials) -> None:
+            Optimize the objective for a specified number of trials.
     """
 
     def __init__(
@@ -25,6 +49,20 @@ class BaseObjective(metaclass=ABCMeta):
         study_name: Optional[str] = None,
         study_path: Optional[str] = None,
     ) -> None:
+        """
+        Initializes the BaseObjective class with necessary parameters.
+
+        Args:
+            calculator (Calculator): Calculator for evaluations.
+            direction (str): Direction of optimization.
+            weights_num (int): Number of weights.
+            formula (str): Formula for objective.
+            first_order (bool, optional): Use first order optimization or not. Defaults to False.
+            power (bool, optional): Include power in optimization. Defaults to True.
+            dirichlet (bool, optional): Use Dirichlet distribution. Defaults to True.
+            study_name (Optional[str], optional): Name of the study. Defaults to None.
+            study_path (Optional[str], optional): Path to the study directory. Defaults to None.
+        """
         self.calculator = calculator
         self.direction = direction
         self.weights_num = weights_num
@@ -44,11 +82,12 @@ class BaseObjective(metaclass=ABCMeta):
         )
 
     def build_logger(self, process_id: Optional[int] = None) -> None:
-        """Build logger for paradance.
+        """
+        Constructs a logger for the optimization process.
 
         Args:
-            log_file (str): log file path.
-            process_id (int, optional): ID of the process. Used to create unique log filenames in parallel execution.
+            process_id (Optional[int], optional): ID of the process, used for creating unique log filenames.
+                                                  Defaults to None.
         """
 
         if process_id is not None:
@@ -65,10 +104,23 @@ class BaseObjective(metaclass=ABCMeta):
 
     @abstractmethod
     def objective(self, trial: optuna.trial.Trial) -> float:
-        """Objective function to optimize."""
+        """
+        Abstract method for the objective function. Must be overridden in derived classes.
+
+        Args:
+            trial (Trial): Optuna trial instance.
+
+        Returns:
+            float: Objective value for the given trial.
+        """
         raise NotImplementedError
 
     def optimize(self, n_trials: int) -> None:
-        """Optimize the objective."""
+        """
+        Optimizes the objective for a set number of trials.
+
+        Args:
+            n_trials (int): Number of trials for optimization.
+        """
         self.build_logger()
         self.study.optimize(self.objective, n_trials=n_trials)
