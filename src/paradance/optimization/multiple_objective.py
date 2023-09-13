@@ -1,9 +1,8 @@
 from functools import partialmethod
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from optuna.trial import Trial
 
-from ..evaluation.calculator import Calculator
 from .base import BaseObjective
 from .construct_weights import construct_weights
 from .evaluate_targets import evaluate_targets
@@ -18,40 +17,23 @@ class MultipleObjective(BaseObjective):
 
     def __init__(
         self,
-        calculator: Calculator,
-        direction: str,
-        weights_num: int,
-        formula: str,
-        power: bool = True,
-        first_order: bool = False,
         first_order_lower_bound: float = 1e-3,
         first_order_upper_bound: float = 1e6,
         power_lower_bound: float = -1,
         power_upper_bound: float = 1,
-        dirichlet: bool = False,
-        study_name: Optional[str] = None,
-        study_path: Optional[str] = None,
+        **kwargs: Any,
     ) -> None:
         """
-        Initialize with direction, weights_num, formula and dirichlet.
+        Initialize with direction, weights_num, formula, and dirichlet.
 
         Args:
-            direction (str ["minimize", "maximize"]): direction to optimize.
-            weights_num (int): numbers of weights to search.
-            formula (str): formula of targets to calculate the objective.
-            dirichlet (bool, optional): Use dirichlet distribution or not. Defaults to False.
+            first_order_lower_bound (float, optional): Lower bound for first order value. Defaults to 1e-3.
+            first_order_upper_bound (float, optional): Upper bound for first order value. Defaults to 1e6.
+            power_lower_bound (float, optional): Lower bound for power value. Defaults to -1.
+            power_upper_bound (float, optional): Upper bound for power value. Defaults to 1.
+            **kwargs: Arbitrary keyword arguments for the parent class.
         """
-        super().__init__(
-            calculator,
-            direction,
-            weights_num,
-            formula,
-            first_order,
-            power,
-            dirichlet,
-            study_name,
-            study_path,
-        )
+        super().__init__(**kwargs)
         self.target_columns: List[str] = []
         self.evaluator_flags: List[str] = []
         self.groupbys: List[Optional[str]] = []
@@ -63,8 +45,6 @@ class MultipleObjective(BaseObjective):
         self.first_order_upper_bound = first_order_upper_bound
         if self.power_lower_bound < 0:
             self.dirichlet = False
-        else:
-            self.dirichlet = dirichlet
 
     def add_evaluator(
         self,
@@ -74,12 +54,15 @@ class MultipleObjective(BaseObjective):
         evaluator_property: Optional[str] = None,
         groupby: Optional[str] = None,
     ) -> None:
-        """Add calculators to the objective.
+        """
+        Adds evaluators to the objective.
 
         Args:
-            calculator (Calculator): calculator building blocks.
-            flag (str ["wuauc", "portfolio", "logmse", ..., ect.]): type of calculator.
-            target_column (str): target column to calculate.
+            flag (str): Type of calculator. Expected values include ["wuauc", "portfolio", "logmse", ...].
+            target_column (str): The target column for calculation.
+            hyperparameter (Optional[float], optional): Hyperparameter for the calculator. Defaults to None.
+            evaluator_property (Optional[str], optional): Property of the evaluator. Defaults to None.
+            groupby (Optional[str], optional): Grouping criteria. Defaults to None.
         """
         self.evaluator_flags.append(flag)
         self.target_columns.append(target_column)
@@ -100,13 +83,14 @@ class MultipleObjective(BaseObjective):
         self,
         trial: Trial,
     ) -> float:
-        """Objective function for optuna.
+        """
+        Objective function to be optimized by optuna.
 
         Args:
-            trial (Trial): optuna trial.
+            trial (Trial): Optuna trial instance.
 
         Returns:
-            float: objective value.
+            float: Computed objective value based on the provided trial.
         """
         weights = construct_weights(self, trial)
         targets = evaluate_targets(
