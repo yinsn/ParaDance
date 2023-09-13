@@ -17,11 +17,11 @@ class BaseObjective(metaclass=ABCMeta):
     Attributes:
         calculator (Calculator): An instance of Calculator for various evaluations.
         direction (str): Direction for optimization (e.g., "minimize" or "maximize").
-        weights_num (int): Number of weights for optimization.
         formula (str): Mathematical formula representing the objective.
         first_order (bool): Whether to use first order optimization or not. Default is False.
         power (bool): If True, includes power in the optimization. Default is True.
         dirichlet (bool): If True, uses Dirichlet distribution for optimization. Default is True.
+        weights_num (Optional[int]): Number of weights for optimization.
         study_name (Optional[str]): Name of the study.
         study_path (Optional[str]): Path to the study directory.
         full_path (str): Full path combining study_path and study_name.
@@ -41,11 +41,11 @@ class BaseObjective(metaclass=ABCMeta):
         self,
         calculator: Calculator,
         direction: str,
-        weights_num: int,
         formula: str,
         first_order: bool = False,
         power: bool = True,
         dirichlet: bool = True,
+        weights_num: Optional[int] = None,
         study_name: Optional[str] = None,
         study_path: Optional[str] = None,
     ) -> None:
@@ -65,7 +65,6 @@ class BaseObjective(metaclass=ABCMeta):
         """
         self.calculator = calculator
         self.direction = direction
-        self.weights_num = weights_num
         self.formula = formula
         self.first_order = first_order
         self.power = power
@@ -80,6 +79,10 @@ class BaseObjective(metaclass=ABCMeta):
             storage=storage_path,
             load_if_exists=True,
         )
+        if weights_num is not None:
+            self.weights_num = weights_num
+        else:
+            self.weights_num = self.get_weights_num()
 
     def build_logger(self, process_id: Optional[int] = None) -> None:
         """
@@ -114,6 +117,15 @@ class BaseObjective(metaclass=ABCMeta):
             float: Objective value for the given trial.
         """
         raise NotImplementedError
+
+    def get_weights_num(self) -> int:
+        """
+        Returns the number of weights.
+
+        Returns:
+            int: Number of weights.
+        """
+        return len(self.calculator.selected_columns)
 
     def optimize(self, n_trials: int) -> None:
         """
