@@ -14,6 +14,8 @@ def calculate_portfolio_concentration(
     :param target_column: target column
     :param expected_return: expected return
     """
+    if expected_return is None:
+        expected_return = 0.95
     df = calculator.df.sort_values("overall_score", ascending=False)
     sum_all = df[target_column].sum()
     df["cumulative_sum"] = df[target_column].cumsum()

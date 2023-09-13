@@ -26,7 +26,7 @@ class MultipleObjective(BaseObjective):
         first_order: bool = False,
         first_order_lower_bound: float = 1e-3,
         first_order_upper_bound: float = 1e6,
-        power_lower_bound: float = 0,
+        power_lower_bound: float = -1,
         power_upper_bound: float = 1,
         dirichlet: bool = False,
         study_name: Optional[str] = None,

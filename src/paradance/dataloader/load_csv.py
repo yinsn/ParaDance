@@ -1,5 +1,5 @@
 import os
-from typing import Optional
+from typing import Any
 
 import pandas as pd
 
@@ -9,8 +9,8 @@ from .base import BaseDataLoader
 class CSVLoader(BaseDataLoader):
     "CSVLoader class for loading CSV files"
 
-    def __init__(self, max_rows: Optional[int] = None, **kwargs: str):
-        super().__init__(**kwargs, max_rows=max_rows)
+    def __init__(self, **kwargs: Any) -> None:
+        super().__init__(**kwargs)
         self.column_name_spliting()
 
     def load_data(self) -> pd.DataFrame:

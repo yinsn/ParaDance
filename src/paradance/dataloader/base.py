@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple, Union
 
 import pandas as pd
 
@@ -13,12 +13,15 @@ class BaseDataLoader(ABC):
         file_name: Optional[str] = None,
         file_type: str = "csv",
         max_rows: Optional[int] = None,
+        clean_zero_columns: Union[bool, List] = False,
     ) -> None:
         self.file_path = file_path
         self.file_type = file_type
         self.file_name = file_name
         self.max_rows = max_rows
         self.df = self.load_data()
+        if clean_zero_columns:
+            self.clean_columns_zero(clean_zero_columns)
 
     @abstractmethod
     def load_data(self) -> pd.DataFrame:
@@ -40,6 +43,16 @@ class BaseDataLoader(ABC):
         """
         if self.df is not None:
             self.df[column] = self.df[column] + 1
+
+    def clean_columns_zero(self, columns: Union[bool, List] = False) -> None:
+        """Clean columns with all zeros.
+
+        :param columns: columns to clean
+        """
+        if self.df is not None and columns is not False:
+            self.df = self.df.fillna(0)
+            self.df = self.df[~self.df[columns].eq(0).any(axis=1)]
+            self.df.reset_index(drop=True, inplace=True)
 
     @staticmethod
     def clip_and_sum_with_group(
