@@ -26,9 +26,9 @@ class MultipleObjective(BaseObjective):
         first_order: bool = False,
         first_order_lower_bound: float = 1e-3,
         first_order_upper_bound: float = 1e6,
-        power_lower_bound: float = 0,
+        power_lower_bound: float = -1,
         power_upper_bound: float = 1,
-        dirichlet: bool = True,
+        dirichlet: bool = False,
         study_name: Optional[str] = None,
         study_path: Optional[str] = None,
     ) -> None:
@@ -39,7 +39,7 @@ class MultipleObjective(BaseObjective):
             direction (str ["minimize", "maximize"]): direction to optimize.
             weights_num (int): numbers of weights to search.
             formula (str): formula of targets to calculate the objective.
-            dirichlet (bool, optional): Use dirichlet distribution or not. Defaults to True.
+            dirichlet (bool, optional): Use dirichlet distribution or not. Defaults to False.
         """
         super().__init__(
             direction=direction,
