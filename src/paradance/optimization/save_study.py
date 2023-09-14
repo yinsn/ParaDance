@@ -83,18 +83,22 @@ def save_multiple_objective_info(ob: MultipleObjective, filename: str) -> None:
     """
 
     with open(filename, "w") as file:
-        file.write(f"Direction: {ob.direction}\n")
+        file.write(f"Study Name: {ob.study_name}\n")
+        file.write("-" * 50 + "\n")
         file.write(f"Formula: {ob.formula}\n")
+        file.write(f"Selected Columns: {ob.calculator.selected_columns}\n")
+        file.write(f"Direction: {ob.direction}\n")
         file.write(f"Weights Number: {ob.weights_num}\n")
+        file.write(f"Dirichlet: {ob.dirichlet}\n")
         file.write(f"Power: {ob.power}\n")
+        file.write(f"Power Lower Bound: {ob.power_lower_bound}\n")
+        file.write(f"Power Upper Bound: {ob.power_upper_bound}\n")
         file.write(f"First Order: {ob.first_order}\n")
         file.write(f"First Order Lower Bound: {ob.first_order_lower_bound}\n")
         file.write(f"First Order Upper Bound: {ob.first_order_upper_bound}\n")
-        file.write(f"Power Lower Bound: {ob.power_lower_bound}\n")
-        file.write(f"Power Upper Bound: {ob.power_upper_bound}\n")
-        file.write(f"Dirichlet: {ob.dirichlet}\n")
 
         file.write("\nEvaluators Info:\n")
+        file.write("-" * 50 + "\n")
         for flag, target_column, hyperparameter, evaluator_property, groupby in zip(
             ob.evaluator_flags,
             ob.target_columns,
@@ -107,7 +111,7 @@ def save_multiple_objective_info(ob: MultipleObjective, filename: str) -> None:
             file.write(f"Hyperparameter: {hyperparameter}\n")
             file.write(f"Evaluator Property: {evaluator_property}\n")
             file.write(f"Groupby: {groupby}\n")
-            file.write("-" * 50 + "\n")
+            file.write("\n")
 
 
 def save_study(multiple_objective: MultipleObjective) -> None:
