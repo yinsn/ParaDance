@@ -7,9 +7,6 @@ from .multiple_objective import MultipleObjective
 def get_best_trials(multiple_objective: MultipleObjective) -> None:
     """
     Extracts and saves the best trials from the provided log content.
-
-    Args:
-        log_content (str): The log content to be processed.
     """
     ob = multiple_objective
     file_path = f"{ob.full_path}/paradance.log"
@@ -33,33 +30,46 @@ def get_best_trials(multiple_objective: MultipleObjective) -> None:
             for sub_idx in range(idx, -1, -1):
                 if f"Trial {trial_number} finished with result:" in lines[sub_idx]:
                     results_line = lines[sub_idx]
-                    targets_line = lines[sub_idx + 1]
-                    weights_line = lines[sub_idx + 2]
+                    sub_idx += 1
+
+                    while "targets:" not in lines[sub_idx]:
+                        sub_idx += 1
+                    targets_line = (
+                        lines[sub_idx].split("targets:")[1].strip().strip("[]")
+                    )
+
+                    while "weights:" not in lines[sub_idx]:
+                        sub_idx += 1
+                    weights_line = (
+                        lines[sub_idx].split("weights:")[1].strip().strip("[]")
+                    )
 
                     results = float(results_line.split("result:")[1].strip())
                     targets_str = [
-                        val
-                        for val in targets_line.split(":")[1]
-                        .strip()
-                        .strip("[]\n")
-                        .split(",")
+                        val.strip() for val in targets_line.split(",") if val.strip()
                     ]
                     weights_str = [
-                        val
-                        for val in weights_line.split(":")[1]
-                        .strip()
-                        .strip("[]\n")
-                        .split(", ")
+                        val.strip() for val in weights_line.split(",") if val.strip()
                     ]
 
-                    targets = [float(val) for val in targets_str]
-                    weights = [float(val) for val in weights_str]
-                    extracted_data.append((results, trial_number, targets, weights))
+                    try:
+                        targets = [float(val) for val in targets_str]
+                        weights = [float(val) for val in weights_str]
+                        extracted_data.append((results, trial_number, targets, weights))
+                    except ValueError as e:
+                        print(f"Error processing line: {sub_idx}, error: {e}")
                     break
 
     with open(output_path, "w", newline="") as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(["Result", "Trial", "Targets", "Weights"])
+        writer.writerow(
+            [
+                f"{ob.formula}",
+                "Trial",
+                f"{ob.evaluator_flags}",
+                f"{ob.calculator.selected_columns}",
+            ]
+        )
         for data in extracted_data:
             writer.writerow([data[0], data[1], str(data[2]), str(data[3])])
 
