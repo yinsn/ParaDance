@@ -6,66 +6,56 @@ from .multiple_objective import MultipleObjective
 
 def get_best_trials(multiple_objective: MultipleObjective) -> None:
     """
-    Extracts and saves the best trials from the given MultipleObjective's log file.
-
-    This function reads the 'paradance.log' file associated with the provided MultipleObjective object,
-    and identifies the best trials based on the comparison of values. These trials, along with their
-    results, targets, and weights are then saved to a CSV file named 'paradance_best_trials.csv' in
-    the same directory.
+    Extracts and saves the best trials from the provided log content.
 
     Args:
-        multiple_objective (MultipleObjective): An instance of the MultipleObjective class containing the study to be saved.
+        log_content (str): The log content to be processed.
     """
     ob = multiple_objective
     file_path = f"{ob.full_path}/paradance.log"
     output_path = f"{ob.full_path}/paradance_best_trials.csv"
 
-    last_best_value = None
-    last_trial_number = -1
-    extracted_data = []
-
     with open(file_path, "r") as file:
         lines = file.readlines()
 
-        for idx, line in enumerate(lines):
-            if "Best is trial" in line:
-                current_best_value = float(line.split("with value:")[1].split(" ")[1])
-                if last_best_value is None or last_best_value != current_best_value:
-                    trial_number = int(line.split("Best is trial")[1].split(" ")[1])
-                    if trial_number > last_trial_number:
-                        results_line = lines[idx - 3]
-                        targets_line = lines[idx - 2]
-                        weights_line = lines[idx - 1]
+    best_trials = set()
+    extracted_data = []
 
-                        try:
-                            results = float(results_line.split("result:")[1].strip())
-                            targets_str = [
-                                val
-                                for val in targets_line.split(":")[1]
-                                .strip()
-                                .strip("[]\n")
-                                .split(",")
-                            ]
-                            weights_str = [
-                                val
-                                for val in weights_line.split(":")[1]
-                                .strip()
-                                .strip("[]\n")
-                                .split(", ")
-                            ]
+    for idx, line in enumerate(lines):
+        if "Best is trial" in line:
+            trial_number = int(line.split("Best is trial")[1].split(" ")[1])
 
-                            if len(weights_str) != 1:
-                                targets = [float(val) for val in targets_str]
-                                weights = [float(val) for val in weights_str]
-                                extracted_data.append(
-                                    (results, trial_number, targets, weights)
-                                )
+            if trial_number in best_trials:
+                continue
 
-                                last_trial_number = trial_number
+            best_trials.add(trial_number)
 
-                                last_best_value = current_best_value
-                        except:
-                            pass
+            for sub_idx in range(idx, -1, -1):
+                if f"Trial {trial_number} finished with result:" in lines[sub_idx]:
+                    results_line = lines[sub_idx]
+                    targets_line = lines[sub_idx + 1]
+                    weights_line = lines[sub_idx + 2]
+
+                    results = float(results_line.split("result:")[1].strip())
+                    targets_str = [
+                        val
+                        for val in targets_line.split(":")[1]
+                        .strip()
+                        .strip("[]\n")
+                        .split(",")
+                    ]
+                    weights_str = [
+                        val
+                        for val in weights_line.split(":")[1]
+                        .strip()
+                        .strip("[]\n")
+                        .split(", ")
+                    ]
+
+                    targets = [float(val) for val in targets_str]
+                    weights = [float(val) for val in weights_str]
+                    extracted_data.append((results, trial_number, targets, weights))
+                    break
 
     with open(output_path, "w", newline="") as csvfile:
         writer = csv.writer(csvfile)
