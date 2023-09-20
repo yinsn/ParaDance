@@ -15,6 +15,7 @@
 
       ~BaseDataLoader.__init__
       ~BaseDataLoader.add_one_smoothing
+      ~BaseDataLoader.clean_columns_zero
       ~BaseDataLoader.clean_one_label_users
       ~BaseDataLoader.clip_and_sum_with_group
       ~BaseDataLoader.clip_clean_count_with_group

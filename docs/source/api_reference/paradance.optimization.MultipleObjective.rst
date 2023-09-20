@@ -17,5 +17,6 @@
       ~MultipleObjective.add_evaluator
       ~MultipleObjective.build_logger
       ~MultipleObjective.construct_weights
+      ~MultipleObjective.get_weights_num
       ~MultipleObjective.objective
       ~MultipleObjective.optimize

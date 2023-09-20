@@ -15,5 +15,6 @@
 
       ~BaseObjective.__init__
       ~BaseObjective.build_logger
+      ~BaseObjective.get_weights_num
       ~BaseObjective.objective
       ~BaseObjective.optimize

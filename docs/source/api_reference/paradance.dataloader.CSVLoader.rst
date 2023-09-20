@@ -15,6 +15,7 @@
 
       ~CSVLoader.__init__
       ~CSVLoader.add_one_smoothing
+      ~CSVLoader.clean_columns_zero
       ~CSVLoader.clean_one_label_users
       ~CSVLoader.clip_and_sum_with_group
       ~CSVLoader.clip_clean_count_with_group
