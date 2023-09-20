@@ -18,6 +18,7 @@ install_requires = (
         "pandas",
         "scikit-learn",
         "tqdm",
+        "sqlalchemy>=2.0.15",
     ],
 )
 

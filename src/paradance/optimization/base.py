@@ -72,11 +72,14 @@ class BaseObjective(metaclass=ABCMeta):
         self.study_name = study_name
         self.study_path = study_path
         self.full_path = ensure_study_directory(study_path, study_name)
-        storage_path = f"sqlite:///{self.full_path}/paradance_storage.db"
+        storage = optuna.storages.RDBStorage(
+            url=f"sqlite:///{self.full_path}/paradance_storage.db",
+            engine_kwargs={"connect_args": {"timeout": 30}},
+        )
         self.study = optuna.create_study(
             direction=direction,
             study_name=study_name,
-            storage=storage_path,
+            storage=storage,
             load_if_exists=True,
         )
         if weights_num is not None:
