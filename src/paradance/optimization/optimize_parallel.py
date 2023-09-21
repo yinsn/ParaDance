@@ -55,7 +55,7 @@ def optimize_run(
         Parallel(n_jobs=n_cores)(
             delayed(parallel_optimize)(ob, i, unit_n_trials) for i in range(n_cores)
         )
-    if ob.save_study:
-        save_study(ob)
-    else:
+
+    save_study(ob)
+    if not ob.save_study:
         subprocess.run(["rm", "-rf", ob.full_path])

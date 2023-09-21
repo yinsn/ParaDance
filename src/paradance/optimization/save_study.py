@@ -1,5 +1,6 @@
 import csv
 import pickle
+import sys
 
 from .multiple_objective import MultipleObjective
 
@@ -17,7 +18,9 @@ def get_best_trials(multiple_objective: MultipleObjective) -> None:
 
     best_trials = set()
     extracted_data = []
-
+    sys.stdout.write(f"\nFormula:\t{ob.formula}\n")
+    sys.stdout.write(f"Evaluators:\t{ob.evaluator_flags}\n")
+    sys.stdout.write(f"Features:\t{ob.calculator.selected_columns}\n")
     for idx, line in enumerate(lines):
         if "Best is trial" in line:
             trial_number = int(line.split("Best is trial")[1].split(" ")[1])
@@ -55,9 +58,14 @@ def get_best_trials(multiple_objective: MultipleObjective) -> None:
                     try:
                         targets = [float(val) for val in targets_str]
                         weights = [float(val) for val in weights_str]
+                        sys.stdout.write(f"\ntrail {trial_number}:\t{results}\n")
+                        sys.stdout.write(f"targets:\t{targets}\n")
+                        sys.stdout.write(f"features:\t{weights}\n")
                         extracted_data.append((results, trial_number, targets, weights))
                     except ValueError as e:
-                        print(f"Error processing line: {sub_idx}, error: {e}")
+                        sys.stdout.write(
+                            f"Error processing line: {sub_idx}, error: {e}\n"
+                        )
                     break
 
     with open(output_path, "w", newline="") as csvfile:
