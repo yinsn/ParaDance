@@ -22,7 +22,7 @@ install_requires = (
     ],
 )
 
-__version__ = "0.3.9"
+__version__ = "0.3.10"
 
 setup(
     name="paradance",
