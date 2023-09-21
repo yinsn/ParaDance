@@ -74,7 +74,7 @@ class BaseObjective(metaclass=ABCMeta):
         self.full_path = ensure_study_directory(study_path, study_name)
         storage = optuna.storages.RDBStorage(
             url=f"sqlite:///{self.full_path}/paradance_storage.db",
-            engine_kwargs={"connect_args": {"timeout": 30}},
+            engine_kwargs={"connect_args": {"timeout": 60}},
         )
         self.study = optuna.create_study(
             direction=direction,
