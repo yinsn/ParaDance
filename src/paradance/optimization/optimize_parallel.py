@@ -1,3 +1,4 @@
+import subprocess
 from typing import Union
 
 from joblib import Parallel, delayed
@@ -54,5 +55,7 @@ def optimize_run(
         Parallel(n_jobs=n_cores)(
             delayed(parallel_optimize)(ob, i, unit_n_trials) for i in range(n_cores)
         )
-
-    save_study(ob)
+    if ob.save_study:
+        save_study(ob)
+    else:
+        subprocess.run(["rm", "-rf", ob.full_path])

@@ -48,6 +48,7 @@ class BaseObjective(metaclass=ABCMeta):
         weights_num: Optional[int] = None,
         study_name: Optional[str] = None,
         study_path: Optional[str] = None,
+        save_study: bool = True,
     ) -> None:
         """
         Initializes the BaseObjective class with necessary parameters.
@@ -71,6 +72,7 @@ class BaseObjective(metaclass=ABCMeta):
         self.dirichlet = dirichlet
         self.study_name = study_name
         self.study_path = study_path
+        self.save_study = save_study
         self.full_path = ensure_study_directory(study_path, study_name)
         storage = optuna.storages.RDBStorage(
             url=f"sqlite:///{self.full_path}/paradance_storage.db",
