@@ -4,18 +4,20 @@ from typing import List, Optional
 import numpy as np
 import pandas as pd
 
-from .auc_triple_parameters_evaluator import calculate_auc_triple_parameters
-from .inverse_pair_evaluator import calculate_inverse_pair
-from .log_mse_evaluator import calculate_log_mse
-from .neg_rank_ratio_evaluator import calculate_neg_rank_ratio
-from .portfolio_evaluator import calculate_portfolio_concentration
+from .tau_evaluator import calculate_tau
 from .woauc_evaluator import calculate_woauc
 from .wuauc_evaluator import calculate_wuauc
+from .log_mse_evaluator import calculate_log_mse
+from .inverse_pair_evaluator import calculate_inverse_pair
+from .neg_rank_ratio_evaluator import calculate_neg_rank_ratio
+from .portfolio_evaluator import calculate_portfolio_concentration
+from .auc_triple_parameters_evaluator import calculate_auc_triple_parameters
 
 
 class Calculator:
     """Calculator class for calculating various metrics."""
 
+    calculate_tau = partialmethod(calculate_tau)
     calculate_wuauc = partialmethod(calculate_wuauc)
     calculate_woauc = partialmethod(calculate_woauc)
     calculate_log_mse = partialmethod(calculate_log_mse)
@@ -47,6 +49,7 @@ class Calculator:
         self.selected_columns = selected_columns
         self.selected_values = self.df[selected_columns].values
         self.woauc_dict: dict = {}
+        self.bin_mappings: dict = {}
         if weights_for_groups is None:
             self.weights_for_groups = pd.Series(
                 np.ones(len(self.df)), index=self.df.index

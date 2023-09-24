@@ -61,4 +61,11 @@ def evaluate_targets(
                 weights_type=evaluator_property,
             )
             targets.append(inverse_score)
+        elif flag == "tau":
+            tau = calculator.calculate_tau(
+                groupby=groupby,
+                target_column=target_column,
+                num_bins=hyperparameter,
+            )
+            targets.append(tau)
     return targets
