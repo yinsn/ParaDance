@@ -56,7 +56,7 @@ def calculate_tau(
     :param groupby: Optional string. The column name to group by.
     :param weights_for_groups: Optional pd.Series. Weights for each group.
     :param num_bins: Optional integer, default 100. The number of bins to use for the mapping.
-    :returns: float. The calculated Kendall's Tau.
+    :returns: float. The calculated Kendall's Tau noralized to [0, 1].
     """
     if num_bins is None:
         num_bins = 100
@@ -82,4 +82,5 @@ def calculate_tau(
     else:
         overall_score_bins = map_to_bins(calculator.df["overall_score"], num_bins)
         tau, _ = kendalltau(label_bins, overall_score_bins)
-    return tau
+        normalized_tau = tau * 0.5 + 0.5
+    return normalized_tau
