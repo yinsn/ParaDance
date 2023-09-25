@@ -9,20 +9,20 @@ with (SETUP_DIRECTORY / "README.md").open() as ifs:
 
 install_requires = (
     [
-        "imageio",
-        "matplotlib_venn",
-        "matplotlib",
-        "numpy",
-        "openpyxl",
-        "optuna",
-        "pandas",
-        "scikit-learn",
-        "tqdm",
+        "imageio>=2.31.1",
+        "joblib>=1.2.0",
+        "matplotlib>=3.7.1",
+        "numpy>=1.24.3",
+        "openpyxl>=3.1.2",
+        "optuna>=3.1.1",
+        "pandas>=2.0.1",
+        "scikit-learn>=1.2.2",
         "sqlalchemy>=2.0.15",
+        "tqdm>=4.65.0",
     ],
 )
 
-__version__ = "0.3.12"
+__version__ = "0.3.13"
 
 setup(
     name="paradance",
