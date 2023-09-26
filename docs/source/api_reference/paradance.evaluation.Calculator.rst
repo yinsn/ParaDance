@@ -19,6 +19,7 @@
       ~Calculator.calculate_log_mse
       ~Calculator.calculate_neg_rank_ratio
       ~Calculator.calculate_portfolio_concentration
+      ~Calculator.calculate_tau
       ~Calculator.calculate_woauc
       ~Calculator.calculate_wuauc
       ~Calculator.create_score_columns
