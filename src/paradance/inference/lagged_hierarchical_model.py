@@ -52,7 +52,7 @@ class LaggedHierarchicalModel(BayesianBaseModel):
             }
 
         max_time_lag = max(self.max_time_lags)
-        n_obs = self.primary_series.shape[0]
+        primary_series_length = self.primary_series.shape[1]
 
         with pm.Model():
             baseline_offset = self.baseline_offset_prior or pm.Normal(
@@ -74,7 +74,7 @@ class LaggedHierarchicalModel(BayesianBaseModel):
             )
 
             mu_list = []
-            for t in range(max_time_lag, n_obs):
+            for t in range(max_time_lag, primary_series_length):
                 mu_t = baseline_offset
                 for j in range(self.number_of_side_series):
                     temp_sum = pm.math.sum(
@@ -91,12 +91,13 @@ class LaggedHierarchicalModel(BayesianBaseModel):
                 mu_list.append(mu_t)
 
             mu = pm.math.stack(mu_list)
+            mu_broad = mu[np.newaxis, :]
 
             pm.Normal(
                 "observed_data",
-                mu=mu,
+                mu=mu_broad,
                 sigma=noise_stddev,
-                observed=self.primary_series[max_time_lag:],
+                observed=self.primary_series[:, max_time_lag:],
             )
 
             self.trace = pm.sample(sample_size)
