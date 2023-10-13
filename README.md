@@ -1,3 +1,5 @@
+<div align="center"><img src="https://raw.githubusercontent.com/paradance/paradance/develop/docs/image/paradance-log.pdf" width="800"/></div>
+
 # ParaDance
 
 [![Python](https://img.shields.io/badge/python3.6%7C3.7%7C3.8%7C3.9-red?logo=Python&logoColor=white)](https://www.python.org)
