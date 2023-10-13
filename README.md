@@ -1,4 +1,4 @@
-<div align="center"><img src="https://github.com/yinsn/ParaDance/blob/develop/docs/image/para.pdf" width="800"/></div>
+<div align="center"><img src="https://github.com/yinsn/ParaDance/blob/develop/docs/image/para.svg" width="800"/></div>
 
 # ParaDance
 
