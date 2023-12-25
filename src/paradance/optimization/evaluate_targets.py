@@ -22,6 +22,16 @@ def evaluate_targets(
                 expected_return=hyperparameter,
             )
             targets.append(concentration)
+
+        elif flag == "distinct_count_portfolio":
+            (
+                _,
+                concentration,
+            ) = calculator.calculate_distinct_count_portfolio_concentration(
+                target_column=target_column,
+                expected_coverage=hyperparameter,
+            )
+            targets.append(concentration)
         elif flag == "wuauc":
             wuauc = calculator.calculate_wuauc(
                 groupby=groupby,
