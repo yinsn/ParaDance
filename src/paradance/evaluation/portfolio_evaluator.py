@@ -7,12 +7,25 @@ if TYPE_CHECKING:
 def calculate_portfolio_concentration(
     calculator: "Calculator",
     target_column: str,
-    expected_return: Optional[float] = 0.95,
+    expected_return: Optional[float] = None,
 ) -> Tuple[float, float]:
-    """Calculate portfolio concentration.
+    """
+    Calculate the threshold and concentration of a portfolio based on a target column and expected return.
 
-    :param target_column: target column
-    :param expected_return: expected return
+    This function sorts the DataFrame within a Calculator object based on 'overall_score' and calculates
+    the cumulative sum and ratio of the target column. It determines the maximum 'overall_score' where
+    the cumulative ratio exceeds the expected return. The concentration is the proportion of data points
+    with an 'overall_score' higher than this threshold.
+
+    Args:
+        calculator: An instance of Calculator, expected to contain a DataFrame and an attribute 'df_len' for the length of the DataFrame.
+        target_column: The column name in the DataFrame for which concentration is calculated.
+        expected_return: The expected cumulative ratio, defaults to 0.95. If None, it's set to 0.95.
+
+    Returns:
+        A tuple containing:
+        - threshold (float): The 'overall_score' value above which the expected return is met or exceeded.
+        - concentration (float): The proportion of data points with 'overall_score' greater than the threshold.
     """
     if expected_return is None:
         expected_return = 0.95
