@@ -21,14 +21,17 @@ from .group_topk_evaluator import calculate_group_topk
 class Calculator:
     """Calculator class for calculating various metrics."""
 
-    calculate_tau = partialmethod(calculate_tau)
-    calculate_wuauc = partialmethod(calculate_wuauc)
-    calculate_woauc = partialmethod(calculate_woauc)
-    calculate_log_mse = partialmethod(calculate_log_mse)
-    calculate_inverse_pair = partialmethod(calculate_inverse_pair)
-    calculate_neg_rank_ratio = partialmethod(calculate_neg_rank_ratio)
     calculate_auc_triple_parameters = partialmethod(calculate_auc_triple_parameters)
+    calculate_distinct_count_portfolio_concentration = partialmethod(
+        calculate_distinct_count_portfolio_concentration
+    )
+    calculate_inverse_pair = partialmethod(calculate_inverse_pair)
+    calculate_log_mse = partialmethod(calculate_log_mse)
+    calculate_neg_rank_ratio = partialmethod(calculate_neg_rank_ratio)
     calculate_portfolio_concentration = partialmethod(calculate_portfolio_concentration)
+    calculate_tau = partialmethod(calculate_tau)
+    calculate_woauc = partialmethod(calculate_woauc)
+    calculate_wuauc = partialmethod(calculate_wuauc)
     calculate_group_topk = partialmethod(calculate_group_topk)
 
     def __init__(
