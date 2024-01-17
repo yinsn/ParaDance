@@ -5,6 +5,9 @@ import numpy as np
 import pandas as pd
 
 from .auc_triple_parameters_evaluator import calculate_auc_triple_parameters
+from .distinct_portfolio_evaluator import (
+    calculate_distinct_count_portfolio_concentration,
+)
 from .inverse_pair_evaluator import calculate_inverse_pair
 from .log_mse_evaluator import calculate_log_mse
 from .neg_rank_ratio_evaluator import calculate_neg_rank_ratio
