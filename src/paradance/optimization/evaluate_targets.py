@@ -22,16 +22,6 @@ def evaluate_targets(
                 expected_return=hyperparameter,
             )
             targets.append(concentration)
-
-        elif flag == "distinct_count_portfolio":
-            (
-                _,
-                concentration,
-            ) = calculator.calculate_distinct_count_portfolio_concentration(
-                target_column=target_column,
-                expected_coverage=hyperparameter,
-            )
-            targets.append(concentration)
         elif flag == "wuauc":
             wuauc = calculator.calculate_wuauc(
                 groupby=groupby,
@@ -78,4 +68,10 @@ def evaluate_targets(
                 num_bins=hyperparameter,
             )
             targets.append(tau)
+        elif flag == "group_topk":
+            group_topk = calculator.calculate_group_topk(
+                groupby=groupby,
+                label_column=target_column,
+                group_top_k=hyperparameter,
+            )
     return targets
