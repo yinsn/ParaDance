@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING, List, Optional
 
 import numpy as np
 import pandas as pd
-from sklearn.metrics import roc_auc_score
 
 if TYPE_CHECKING:
     from .calculator import Calculator

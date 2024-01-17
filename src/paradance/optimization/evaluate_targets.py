@@ -84,4 +84,5 @@ def evaluate_targets(
                 label_column=target_column,
                 group_top_k=hyperparameter,
             )
+            targets.append(group_topk)
     return targets
