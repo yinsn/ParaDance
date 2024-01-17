@@ -78,4 +78,11 @@ def evaluate_targets(
                 num_bins=hyperparameter,
             )
             targets.append(tau)
+        elif flag == "group_topk":
+            group_topk = calculator.calculate_group_topk(
+                groupby=groupby,
+                label_column=target_column,
+                group_top_k=hyperparameter,
+            )
+            targets.append(group_topk)
     return targets

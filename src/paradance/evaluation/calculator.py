@@ -15,6 +15,7 @@ from .portfolio_evaluator import calculate_portfolio_concentration
 from .tau_evaluator import calculate_tau
 from .woauc_evaluator import calculate_woauc
 from .wuauc_evaluator import calculate_wuauc
+from .group_topk_evaluator import calculate_group_topk
 
 
 class Calculator:
@@ -31,6 +32,7 @@ class Calculator:
     calculate_tau = partialmethod(calculate_tau)
     calculate_woauc = partialmethod(calculate_woauc)
     calculate_wuauc = partialmethod(calculate_wuauc)
+    calculate_group_topk = partialmethod(calculate_group_topk)
 
     def __init__(
         self,
