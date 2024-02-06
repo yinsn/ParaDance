@@ -12,11 +12,11 @@ install_requires = (
         "imageio>=2.31.1",
         "joblib>=1.2.0",
         "matplotlib>=3.7.1",
+        "matplotlib_venn>=0.11.10",
         "numpy>=1.20.3",
         "openpyxl>=3.1.2",
         "optuna>=3.1.1",
         "pandas>=2.0.1",
-        "pymc>=5.9.0",
         "scikit-learn>=1.2.2",
         "scipy>=1.11.3",
         "sqlalchemy>=2.0.15",
@@ -24,7 +24,7 @@ install_requires = (
     ],
 )
 
-__version__ = "0.3.16"
+__version__ = "0.3.17"
 
 setup(
     name="paradance",
