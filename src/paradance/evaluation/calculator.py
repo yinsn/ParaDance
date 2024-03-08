@@ -62,6 +62,19 @@ class Calculator:
             )
         else:
             self.weights_for_groups = weights_for_groups
+        self.value_scale()
+
+    def value_scale(self) -> None:
+        """
+        Calculates the negative average log10 magnitude of absolute values for selected columns in the dataframe,
+        storing the result in `self.value_scales`.
+        """
+        magnitudes = np.log10(self.df[self.selected_columns].abs().replace(0, np.nan))
+
+        avg_magnitude = magnitudes.mean(skipna=True)
+        magnitudes = [-magnitude for magnitude in avg_magnitude]
+
+        self.value_scales = np.asarray(magnitudes)
 
     def get_overall_score(
         self,

@@ -19,6 +19,7 @@ class MultipleObjective(BaseObjective):
         self,
         first_order_lower_bound: float = 1e-3,
         first_order_upper_bound: float = 1e6,
+        first_order_scale_bound: Optional[float] = None,
         power_lower_bound: float = -1,
         power_upper_bound: float = 1,
         **kwargs: Any,
@@ -31,6 +32,7 @@ class MultipleObjective(BaseObjective):
             first_order_upper_bound (float, optional): Upper bound for first order value. Defaults to 1e6.
             power_lower_bound (float, optional): Lower bound for power value. Defaults to -1.
             power_upper_bound (float, optional): Upper bound for power value. Defaults to 1.
+            first_order_scale_bound (Optional[float], optional): Scale bound for first order value. Defaults to None.
             **kwargs: Arbitrary keyword arguments for the parent class.
         """
         super().__init__(**kwargs)
@@ -39,6 +41,7 @@ class MultipleObjective(BaseObjective):
         self.groupbys: List[Optional[str]] = []
         self.power_lower_bound = power_lower_bound
         self.power_upper_bound = power_upper_bound
+        self.first_order_scale_bound = first_order_scale_bound
         self.hyperparameters: List[Optional[float]] = []
         self.evaluator_propertys: List[Optional[str]] = []
         self.first_order_lower_bound = first_order_lower_bound

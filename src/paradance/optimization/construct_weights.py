@@ -1,5 +1,6 @@
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, List, Optional
 
+import numpy as np
 import optuna
 
 if TYPE_CHECKING:
@@ -56,15 +57,29 @@ def construct_first_order_weights(
     first_order_weights: List[float] = []
     log = ob.first_order_lower_bound >= 0
 
-    for i in range(ob.weights_num):
-        first_order_weights.append(
-            trial.suggest_float(
-                f"w_fo_{i+1}",
-                ob.first_order_lower_bound,
-                ob.first_order_upper_bound,
-                log=log,
+    scale_bound = ob.first_order_scale_bound
+
+    if scale_bound is not None:
+        value_scales = ob.calculator.value_scales
+        for i in range(ob.weights_num):
+            first_order_weights.append(
+                trial.suggest_float(
+                    f"w_fo_{i+1}",
+                    np.power(10, value_scales[i] - scale_bound),
+                    np.power(10, value_scales[i] + scale_bound),
+                    log=False,
+                )
             )
-        )
+    else:
+        for i in range(ob.weights_num):
+            first_order_weights.append(
+                trial.suggest_float(
+                    f"w_fo_{i+1}",
+                    ob.first_order_lower_bound,
+                    ob.first_order_upper_bound,
+                    log=log,
+                )
+            )
 
     return first_order_weights
 
