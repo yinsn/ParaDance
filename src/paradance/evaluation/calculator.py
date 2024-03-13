@@ -69,9 +69,11 @@ class Calculator:
         Calculates the negative average log10 magnitude of absolute values for selected columns in the dataframe,
         storing the result in `self.value_scales`.
         """
-        magnitudes = np.log10(self.df[self.selected_columns].abs().replace(0, np.nan))
+        dataframe = self.df[self.selected_columns].abs().replace(0, np.nan)
+        magnitudes = np.log10(dataframe.values)
 
-        avg_magnitude = magnitudes.mean(skipna=True)
+        avg_magnitude = magnitudes.mean(axis=0)
+        print(avg_magnitude)
         magnitudes = [-magnitude for magnitude in avg_magnitude]
 
         self.value_scales = np.asarray(magnitudes)
@@ -88,13 +90,13 @@ class Calculator:
         if len(weights_for_equation) == 2 * len(self.selected_columns):
             powers_for_equation = weights_for_equation[: len(self.selected_columns)]
             first_order_weights = weights_for_equation[len(self.selected_columns) :]
-            self.df["overall_score"] = np.product(
+            self.df["overall_score"] = np.prod(
                 (1 + np.asarray(first_order_weights) * np.asarray(self.selected_values))
                 ** powers_for_equation,
                 axis=1,
             )
         elif self.equation_type == "product":
-            self.df["overall_score"] = np.product(
+            self.df["overall_score"] = np.prod(
                 self.selected_values**weights_for_equation, axis=1
             )
         elif self.equation_type == "sum":
