@@ -73,7 +73,6 @@ class Calculator:
         magnitudes = np.log10(dataframe.values)
 
         avg_magnitude = magnitudes.mean(axis=0)
-        print(avg_magnitude)
         magnitudes = [-magnitude for magnitude in avg_magnitude]
 
         self.value_scales = np.asarray(magnitudes)

@@ -19,7 +19,7 @@ class MultipleObjective(BaseObjective):
         self,
         first_order_lower_bound: float = 1e-3,
         first_order_upper_bound: float = 1e6,
-        first_order_scale_bound: Optional[float] = None,
+        first_order_scale_bound: Optional[float] = 0.5,
         power_lower_bound: float = -1,
         power_upper_bound: float = 1,
         **kwargs: Any,

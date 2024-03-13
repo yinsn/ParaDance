@@ -27,7 +27,9 @@ def calculate_wuauc(
     """
     if auc:
         result = float(
-            roc_auc_score(calculator.df[label_column], calculator.df["overall_score"])
+            roc_auc_score(
+                calculator.df[label_column].values, calculator.df["overall_score"]
+            )
         )
     else:
         if groupby is not None:
