@@ -59,8 +59,8 @@ def get_best_trials(multiple_objective: MultipleObjective) -> None:
                         targets = [float(val) for val in targets_str]
                         weights = [float(val) for val in weights_str]
                         sys.stdout.write(f"\ntrail {trial_number}:\t{results}\n")
-                        sys.stdout.write(f"targets:\t{targets}\n")
-                        sys.stdout.write(f"features:\t{weights}\n")
+                        sys.stdout.write(f"sub-target:\t{targets}\n")
+                        sys.stdout.write(f"parameters:\t{weights}\n")
                         extracted_data.append((results, trial_number, targets, weights))
                     except ValueError as e:
                         sys.stdout.write(
