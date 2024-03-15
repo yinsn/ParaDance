@@ -1,6 +1,7 @@
 import subprocess
 from typing import Union
 
+import numpy as np
 from joblib import Parallel, delayed
 
 from .get_processors import get_logical_processors_count
@@ -55,7 +56,7 @@ def optimize_run(
         Parallel(n_jobs=n_cores)(
             delayed(parallel_optimize)(ob, i, unit_n_trials) for i in range(n_cores)
         )
-
+    ob.best_params = np.asarray(list(ob.study.best_params.values()))
     save_study(ob)
     if not ob.save_study:
         subprocess.run(["rm", "-rf", ob.full_path])

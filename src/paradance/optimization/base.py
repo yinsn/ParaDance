@@ -2,6 +2,7 @@ import logging
 from abc import ABCMeta, abstractmethod
 from typing import Optional
 
+import numpy as np
 import optuna
 
 from ..evaluation.calculator import Calculator
@@ -88,6 +89,7 @@ class BaseObjective(metaclass=ABCMeta):
             self.weights_num = weights_num
         else:
             self.weights_num = self.get_weights_num()
+        self.best_params: np.ndarray = np.zeros(self.weights_num)
 
     def build_logger(self, process_id: Optional[int] = None) -> None:
         """

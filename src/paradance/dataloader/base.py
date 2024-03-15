@@ -1,7 +1,29 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import pandas as pd
+from pydantic import BaseModel
+
+
+class BaseDataLoaderConfig(BaseModel):
+    """Configuration model for data loaders.
+
+    This class defines the configuration settings for data loaders, including file
+    path, file name, file type, and maximum rows to be loaded. It utilizes Pydantic's
+    BaseModel for data validation and settings management.
+
+    Attributes:
+        file_path (Optional[str]): The path to the file to be loaded. Defaults to None.
+        file_name (Optional[str]): The name of the file to be loaded. Defaults to None.
+        file_type (Optional[str]): The type of the file to be loaded. Defaults to 'csv'.
+        max_rows (Optional[int]): The maximum number of rows to load from the file.
+                                  Defaults to None, indicating no limit.
+    """
+
+    file_path: Optional[str] = None
+    file_name: Optional[str] = None
+    file_type: Optional[str] = "csv"
+    max_rows: Optional[int] = None
 
 
 class BaseDataLoader(ABC):
@@ -9,16 +31,27 @@ class BaseDataLoader(ABC):
 
     def __init__(
         self,
-        file_path: str,
+        file_path: Optional[str] = None,
         file_name: Optional[str] = None,
-        file_type: str = "csv",
+        file_type: Optional[str] = "csv",
         max_rows: Optional[int] = None,
         clean_zero_columns: Union[bool, List] = False,
+        config: Optional[Dict] = None,
     ) -> None:
-        self.file_path = file_path
-        self.file_type = file_type
-        self.file_name = file_name
-        self.max_rows = max_rows
+        if config is not None:
+            self.config = BaseDataLoaderConfig(**config)
+        else:
+            self.config = BaseDataLoaderConfig(
+                file_path=file_path,
+                file_name=file_name,
+                file_type=file_type,
+                max_rows=max_rows,
+            )
+
+        self.file_path = self.config.file_path
+        self.file_name = self.config.file_name
+        self.file_type = self.config.file_type
+        self.max_rows = self.config.max_rows
         self.df = self.load_data()
         if clean_zero_columns:
             self.clean_columns_zero(clean_zero_columns)
