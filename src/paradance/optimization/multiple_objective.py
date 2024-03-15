@@ -22,6 +22,8 @@ class MultipleObjective(BaseObjective):
         first_order_scale_bound: Optional[float] = 0.5,
         power_lower_bound: float = -1,
         power_upper_bound: float = 1,
+        pca_importance_lower_bound: float = -1,
+        pca_importance_upper_bound: float = 10,
         **kwargs: Any,
     ) -> None:
         """
@@ -32,6 +34,8 @@ class MultipleObjective(BaseObjective):
             first_order_upper_bound (float, optional): Upper bound for first order value. Defaults to 1e6.
             power_lower_bound (float, optional): Lower bound for power value. Defaults to -1.
             power_upper_bound (float, optional): Upper bound for power value. Defaults to 1.
+            pca_importance_lower_bound (float, optional): Lower bound for pca importance value. Defaults to -1.
+            pca_importance_upper_bound (float, optional): Upper bound for pca importance value. Defaults to 10.
             first_order_scale_bound (Optional[float], optional): Scale bound for first order value. Defaults to None.
             **kwargs: Arbitrary keyword arguments for the parent class.
         """
@@ -41,6 +45,8 @@ class MultipleObjective(BaseObjective):
         self.groupbys: List[Optional[str]] = []
         self.power_lower_bound = power_lower_bound
         self.power_upper_bound = power_upper_bound
+        self.pca_importance_lower_bound = pca_importance_lower_bound
+        self.pca_importance_upper_bound = pca_importance_upper_bound
         self.first_order_scale_bound = first_order_scale_bound
         self.hyperparameters: List[Optional[float]] = []
         self.evaluator_propertys: List[Optional[str]] = []

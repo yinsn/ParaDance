@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, List
 
 import numpy as np
 import optuna
@@ -84,6 +84,27 @@ def construct_first_order_weights(
     return first_order_weights
 
 
+def construct_log_pca_weights(
+    ob: "MultipleObjective", trial: optuna.Trial
+) -> List[float]:
+    """
+    Constructs a list of weights for log PCA components based on the optimization trial.
+
+    This function generates a list of floating-point numbers representing the weights
+    for log PCA components. Each weight is suggested by the trial within the bounds
+    defined in the MultipleObjective instance.
+
+    """
+    log_pca_weights: List[float] = []
+    for i in range(ob.weights_num):
+        log_pca_weights.append(
+            trial.suggest_float(
+                f"w{i+1}", ob.pca_importance_lower_bound, ob.pca_importance_upper_bound
+            )
+        )
+    return log_pca_weights
+
+
 def construct_weights(ob: "MultipleObjective", trial: optuna.Trial) -> List[float]:
     """
     Construct weights by combining power and first order weights as required by the MultipleObjective instance.
@@ -96,8 +117,9 @@ def construct_weights(ob: "MultipleObjective", trial: optuna.Trial) -> List[floa
         List[float]: A list of weights constructed based on the given MultipleObjective instance and the current trial.
     """
     weights = []
-
-    if not (ob.first_order):
+    if ob.calculator.equation_type == "log_pca":
+        weights = construct_log_pca_weights(ob, trial)
+    elif not (ob.first_order):
         weights = construct_power_weights(ob, trial)
     elif ob.calculator.equation_type == "product" and ob.power:
         weights = construct_power_weights(ob, trial) + construct_first_order_weights(
