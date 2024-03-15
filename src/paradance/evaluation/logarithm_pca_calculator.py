@@ -2,8 +2,10 @@ from typing import List
 
 from mixician import SelfBalancingLogarithmPCACalculator
 
+from .base_calculator import BaseCalculator
 
-class PCACalculator:
+
+class PCACalculator(BaseCalculator):
     """A calculator for performing PCA (Principal Component Analysis) operations.
 
     This calculator uses an instance of a SelfBalancingLogarithmPCACalculator to perform
@@ -17,7 +19,9 @@ class PCACalculator:
 
     def __init__(self, pca_calculator: SelfBalancingLogarithmPCACalculator):
         self.pca_calculator = pca_calculator
+        self.selected_columns = self.pca_calculator.score_columns
         self.df = self.pca_calculator.clean_dataframe.copy()
+        self.df_len = len(self.df)
 
     def get_overall_score(
         self,
