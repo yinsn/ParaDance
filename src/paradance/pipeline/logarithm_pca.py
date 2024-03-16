@@ -30,7 +30,7 @@ class LogarithmPCAPipeline(BasePipeline):
             n_trials (int): Number of optimization trials to perform. Defaults to 200.
         """
         super().__init__(config_path, n_trials)
-        self.file_type = self.config["DataLoader"]["file_type"]
+        self.file_type = self.config["DataLoader"].get("file_type", "csv")
         self.run()
 
     def _load_dataset(self) -> None:
@@ -86,3 +86,4 @@ class LogarithmPCAPipeline(BasePipeline):
             pca_weights=self.objective.best_params,
         )
         self.calculator.pca_calculator.show_weights()
+        self.calculator.pca_calculator.show_equation()
