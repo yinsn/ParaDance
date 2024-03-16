@@ -1,12 +1,12 @@
 import logging
 from abc import ABCMeta, abstractmethod
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 
 import numpy as np
 import optuna
 from pydantic import BaseModel
 
-from ..evaluation.calculator import Calculator
+from ..evaluation import Calculator, LogarithmPCACalculator
 from .set_path import ensure_study_directory
 
 
@@ -53,7 +53,7 @@ class BaseObjective(metaclass=ABCMeta):
 
     def __init__(
         self,
-        calculator: Calculator,
+        calculator: Union[Calculator, LogarithmPCACalculator],
         direction: Optional[str] = None,
         formula: Optional[str] = None,
         first_order: Optional[bool] = False,

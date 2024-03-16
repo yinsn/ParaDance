@@ -1,10 +1,10 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
-from ..evaluation.calculator import Calculator
+from ..evaluation import Calculator, LogarithmPCACalculator
 
 
 def evaluate_targets(
-    calculator: Calculator,
+    calculator: Union[Calculator, LogarithmPCACalculator],
     evaluator_flags: List[str],
     hyperparameters: List[Optional[float]],
     evaluator_propertys: List[Optional[str]],

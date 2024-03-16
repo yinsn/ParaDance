@@ -3,6 +3,8 @@ from typing import TYPE_CHECKING, List
 import numpy as np
 import optuna
 
+from ..evaluation import Calculator
+
 if TYPE_CHECKING:
     from .multiple_objective import MultipleObjective
 
@@ -64,7 +66,7 @@ def construct_first_order_weights(
 
     scale_bound = ob.first_order_scale_bound
 
-    if scale_bound is not None:
+    if scale_bound is not None and isinstance(ob.calculator, Calculator):
         value_scales = ob.calculator.value_scales
         for i in range(ob.weights_num):
             first_order_weights.append(

@@ -1785,16 +1785,17 @@ files = [
 
 [[package]]
 name = "mixician"
-version = "0.1.4"
+version = "0.1.5"
 description = "An advanced hybrid ranking engine for recommendation systems, designed to automate the optimization of algorithms and parameters tailored to diverse business objectives."
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "mixician-0.1.4-py3-none-any.whl", hash = "sha256:155e862b5aea813027d62dd1c94a3a56238d249439a56f43ec1fb090433d66e0"},
-    {file = "mixician-0.1.4.tar.gz", hash = "sha256:ceb449bf9e2c47b6f3791550b0a4f9b96aeadeaa56d08e9da9ea475d3579a56c"},
+    {file = "mixician-0.1.5-py3-none-any.whl", hash = "sha256:0aa75e42a1959eb3c931f4082cd3d78fad1930a38609e8cb04711430f8919052"},
+    {file = "mixician-0.1.5.tar.gz", hash = "sha256:005ea900a5999e11129787dadacf5442c3fc1a2b7dad466070b51b8130cfcb7f"},
 ]
 
 [package.dependencies]
+ipykernel = ">=6.29.3,<7.0.0"
 jax = ">=0.4.24,<0.5.0"
 matplotlib = ">=3.8.3,<4.0.0"
 numpyro = ">=0.13.2,<0.14.0"
@@ -2864,13 +2865,13 @@ test = ["pytest (>=6,!=7.0.0,!=7.0.1)", "pytest-cov (>=3.0.0)", "pytest-qt"]
 
 [[package]]
 name = "referencing"
-version = "0.33.0"
+version = "0.34.0"
 description = "JSON Referencing + Python"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "referencing-0.33.0-py3-none-any.whl", hash = "sha256:39240f2ecc770258f28b642dd47fd74bc8b02484de54e1882b74b35ebd779bd5"},
-    {file = "referencing-0.33.0.tar.gz", hash = "sha256:c775fedf74bc0f9189c2a3be1c12fd03e8c23f4d371dce795df44e06c5b412f7"},
+    {file = "referencing-0.34.0-py3-none-any.whl", hash = "sha256:d53ae300ceddd3169f1ffa9caf2cb7b769e92657e4fafb23d34b93679116dfd4"},
+    {file = "referencing-0.34.0.tar.gz", hash = "sha256:5773bd84ef41799a5a8ca72dc34590c041eb01bf9aa02632b4a973fb0181a844"},
 ]
 
 [package.dependencies]

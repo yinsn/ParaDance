@@ -1,9 +1,9 @@
 from functools import partialmethod
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 from optuna.trial import Trial
 
-from ..evaluation.calculator import Calculator
+from ..evaluation import Calculator, LogarithmPCACalculator
 from .base import BaseObjective
 from .construct_weights import construct_weights
 from .evaluate_targets import evaluate_targets
@@ -18,7 +18,7 @@ class MultipleObjective(BaseObjective):
 
     def __init__(
         self,
-        calculator: Calculator,
+        calculator: Union[Calculator, LogarithmPCACalculator],
         direction: Optional[str] = None,
         formula: Optional[str] = None,
         first_order: Optional[bool] = False,

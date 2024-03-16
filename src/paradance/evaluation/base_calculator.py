@@ -36,9 +36,9 @@ class BaseCalculator(metaclass=ABCMeta):
     calculate_woauc = partialmethod(calculate_woauc)
     calculate_wuauc = partialmethod(calculate_wuauc)
 
-    def __init__(self) -> None:
+    def __init__(self, selected_columns: List[str]) -> None:
         """Initializes the BaseCalculator."""
-        pass
+        self.selected_columns = selected_columns
 
     @abstractmethod
     def get_overall_score(self, weights_for_equation: List[float]) -> None:
