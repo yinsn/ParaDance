@@ -21,6 +21,8 @@ def construct_power_weights(
         List[float]: A list of power weights constructed based on the given MultipleObjective instance and the current trial.
     """
     power_weights: List[float] = []
+    if ob.weights_num is None:
+        ob.weights_num = ob.get_weights_num()
 
     if ob.dirichlet:
         for i in range(ob.weights_num - 1):
@@ -56,6 +58,9 @@ def construct_first_order_weights(
     """
     first_order_weights: List[float] = []
     log = ob.first_order_lower_bound >= 0
+
+    if ob.weights_num is None:
+        ob.weights_num = ob.get_weights_num()
 
     scale_bound = ob.first_order_scale_bound
 
@@ -96,6 +101,8 @@ def construct_log_pca_weights(
 
     """
     log_pca_weights: List[float] = []
+    if ob.weights_num is None:
+        ob.weights_num = ob.get_weights_num()
     for i in range(ob.weights_num):
         log_pca_weights.append(
             trial.suggest_float(

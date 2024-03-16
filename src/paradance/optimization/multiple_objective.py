@@ -1,8 +1,9 @@
 from functools import partialmethod
-from typing import Any, List, Optional
+from typing import Dict, List, Optional
 
 from optuna.trial import Trial
 
+from ..evaluation.calculator import Calculator
 from .base import BaseObjective
 from .construct_weights import construct_weights
 from .evaluate_targets import evaluate_targets
@@ -17,6 +18,16 @@ class MultipleObjective(BaseObjective):
 
     def __init__(
         self,
+        calculator: Calculator,
+        direction: Optional[str] = None,
+        formula: Optional[str] = None,
+        first_order: Optional[bool] = False,
+        power: Optional[bool] = True,
+        dirichlet: Optional[bool] = True,
+        weights_num: Optional[int] = None,
+        study_name: Optional[str] = None,
+        study_path: Optional[str] = None,
+        save_study: Optional[bool] = True,
         first_order_lower_bound: float = 1e-3,
         first_order_upper_bound: float = 1e6,
         first_order_scale_bound: Optional[float] = 0.5,
@@ -24,7 +35,7 @@ class MultipleObjective(BaseObjective):
         power_upper_bound: float = 1,
         pca_importance_lower_bound: float = -1,
         pca_importance_upper_bound: float = 10,
-        **kwargs: Any,
+        config: Optional[Dict] = None,
     ) -> None:
         """
         Initialize with direction, weights_num, formula, and dirichlet.
@@ -37,9 +48,20 @@ class MultipleObjective(BaseObjective):
             pca_importance_lower_bound (float, optional): Lower bound for pca importance value. Defaults to -1.
             pca_importance_upper_bound (float, optional): Upper bound for pca importance value. Defaults to 10.
             first_order_scale_bound (Optional[float], optional): Scale bound for first order value. Defaults to None.
-            **kwargs: Arbitrary keyword arguments for the parent class.
         """
-        super().__init__(**kwargs)
+        super().__init__(
+            calculator=calculator,
+            direction=direction,
+            formula=formula,
+            first_order=first_order,
+            power=power,
+            dirichlet=dirichlet,
+            weights_num=weights_num,
+            study_name=study_name,
+            study_path=study_path,
+            save_study=save_study,
+            config=config,
+        )
         self.target_columns: List[str] = []
         self.evaluator_flags: List[str] = []
         self.groupbys: List[Optional[str]] = []
@@ -112,7 +134,7 @@ class MultipleObjective(BaseObjective):
             weights=weights,
         )
         local_vars = {"targets": targets, "sum": sum, "max": max, "min": min}
-        result = float(eval(self.formula, {"__builtins__": None}, local_vars))
+        result = float(eval(str(self.formula), {"__builtins__": None}, local_vars))
         if self.logger:
             self.logger.info(f"Trial {trial.number} finished with result: {result}")
             self.logger.info(f"targets: {targets}")
