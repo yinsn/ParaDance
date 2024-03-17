@@ -1,8 +1,10 @@
 import logging
 from abc import ABCMeta, abstractmethod
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 
-from ..dataloader import load_config
+from ..dataloader import CSVLoader, ExcelLoader, load_config
+from ..evaluation import Calculator, LogarithmPCACalculator
+from ..optimization import MultipleObjective, optimize_run
 
 logging.basicConfig(
     level=logging.INFO,
@@ -27,19 +29,21 @@ class BasePipeline(metaclass=ABCMeta):
 
     def __init__(self, config_path: Optional[str] = None, n_trials: int = 200) -> None:
         self.config: Dict = load_config(config_path)
+        self.file_type = self.config["DataLoader"].get("file_type", "csv")
         self.n_trials = n_trials
 
-    @abstractmethod
     def _load_dataset(self) -> None:
-        """Load the dataset required for the pipeline operations.
+        """Loads the dataset based on the file type specified in the configuration.
 
-        This method should be implemented to load and possibly preprocess the dataset
-        needed for further steps in the pipeline.
+        Supports loading from CSV and Excel files.
         """
-        pass
+        if self.file_type == "csv":
+            self.dataframe = CSVLoader(config=self.config["DataLoader"]).df
+        elif self.file_type == "xlsx":
+            self.dataframe = ExcelLoader(config=self.config["DataLoader"]).df
 
     @abstractmethod
-    def _load_calculator(self) -> None:
+    def _load_calculator(self) -> Union[Calculator, LogarithmPCACalculator]:
         """Load or define the calculator for the pipeline operations.
 
         This method should be implemented to load or define the calculator, which
@@ -47,32 +51,31 @@ class BasePipeline(metaclass=ABCMeta):
         """
         pass
 
-    @abstractmethod
-    def _add_objective(self) -> None:
-        """Define the optimization objective.
+    def _add_objective(
+        self, calculator: Union[Calculator, LogarithmPCACalculator]
+    ) -> None:
+        """Defines the optimization objective for PCA."""
+        self.objective = MultipleObjective(
+            calculator=calculator,
+            config=self.config["Objective"],
+        )
 
-        This method should be implemented to define the objective function that
-        will be optimized in the pipeline.
-        """
-        pass
-
-    @abstractmethod
     def _add_evaluators(self) -> None:
-        """Add evaluators for the optimization process.
+        """Adds evaluators for optimization based on configuration settings."""
+        flags = self.config["Evaluator"]["flags"]
+        labels = self.config["Evaluator"]["labels"]
+        for flag, label in zip(flags, labels):
+            self.objective.add_evaluator(
+                flag=flag,
+                target_column=label,
+            )
 
-        This method should be implemented to add any evaluators or metrics that
-        will be used to assess the performance of the optimization process.
-        """
-        pass
-
-    @abstractmethod
     def _optimize(self) -> None:
-        """Perform the optimization process.
-
-        This method should be implemented to perform the actual optimization,
-        using the objective and evaluators defined in previous steps.
-        """
-        pass
+        """Runs the optimization process for the defined objective and evaluators."""
+        optimize_run(
+            multiple_objective=self.objective,
+            n_trials=self.n_trials,
+        )
 
     @abstractmethod
     def show_results(self) -> None:
@@ -92,7 +95,7 @@ class BasePipeline(metaclass=ABCMeta):
         """
         logger.info("Running pipeline...")
         self._load_dataset()
-        self._load_calculator()
-        self._add_objective()
+        calculator = self._load_calculator()
+        self._add_objective(calculator)
         self._add_evaluators()
         self._optimize()
