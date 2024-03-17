@@ -1,11 +1,20 @@
+import logging
 from typing import Optional
 
+import pandas as pd
 from mixician import SelfBalancingLogarithmPCACalculator
 
 from ..dataloader import CSVLoader, ExcelLoader
 from ..evaluation import LogarithmPCACalculator
 from ..optimization import MultipleObjective, optimize_run
 from .base import BasePipeline
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    datefmt="%H:%M:%S",
+)
+logger = logging.getLogger(__name__)
 
 
 class LogarithmPCAPipeline(BasePipeline):
@@ -77,13 +86,23 @@ class LogarithmPCAPipeline(BasePipeline):
             n_trials=self.n_trials,
         )
 
+    def show_raw_data(self) -> pd.DataFrame:
+        """Returns the raw dataset loaded from the file."""
+        return self.calculator.pca_calculator.dataframe
+
     def show_results(self) -> None:
         """Displays the results of the optimization process.
 
         Updates the PCA calculator with the best parameters, shows the PCA weights.
         """
+        logger.info(
+            "Plotting logarithm distributions before Logarithm PCA optimization."
+        )
+        self.calculator.pca_calculator.plot_logarithm_distributions()
         self.calculator.pca_calculator.update(
             pca_weights=self.objective.best_params,
         )
+        self.calculator.pca_calculator.plot_self_balancing_projected_distribution()
+        logger.info("Best parameters for PCA with logarithmic transformations:")
         self.calculator.pca_calculator.show_weights()
         self.calculator.pca_calculator.show_equation()
