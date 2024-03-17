@@ -1163,17 +1163,14 @@ files = [
 
 [[package]]
 name = "json5"
-version = "0.9.22"
+version = "0.9.24"
 description = "A Python implementation of the JSON5 data format."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "json5-0.9.22-py3-none-any.whl", hash = "sha256:6621007c70897652f8b5d03885f732771c48d1925591ad989aa80c7e0e5ad32f"},
-    {file = "json5-0.9.22.tar.gz", hash = "sha256:b729bde7650b2196a35903a597d2b704b8fdf8648bfb67368cfb79f1174a17bd"},
+    {file = "json5-0.9.24-py3-none-any.whl", hash = "sha256:4ca101fd5c7cb47960c055ef8f4d0e31e15a7c6c48c3b6f1473fc83b6c462a13"},
+    {file = "json5-0.9.24.tar.gz", hash = "sha256:0c638399421da959a20952782800e5c1a78c14e08e1dc9738fa10d8ec14d58c8"},
 ]
-
-[package.extras]
-dev = ["hypothesis"]
 
 [[package]]
 name = "jsonpointer"
@@ -1785,13 +1782,13 @@ files = [
 
 [[package]]
 name = "mixician"
-version = "0.1.7"
+version = "0.1.8"
 description = "An advanced hybrid ranking engine for recommendation systems, designed to automate the optimization of algorithms and parameters tailored to diverse business objectives."
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "mixician-0.1.7-py3-none-any.whl", hash = "sha256:80d0810fd1d31b086654a43991c61b703e91ea4e6ee3772938fd8630a0df0cf3"},
-    {file = "mixician-0.1.7.tar.gz", hash = "sha256:0e4386e7ef88e1c7ea36bdfca3f3eb33598c179fe38a8c7ef7689b98aa13dba2"},
+    {file = "mixician-0.1.8-py3-none-any.whl", hash = "sha256:a236bccef0db5f626a455f06245c9c347ddf28a50c7be7f4941a8627194eca38"},
+    {file = "mixician-0.1.8.tar.gz", hash = "sha256:78a354917dae6bb35ac331d66708530eb9314f7f474aa846eba3003c332333ce"},
 ]
 
 [package.dependencies]
