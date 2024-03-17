@@ -77,6 +77,11 @@ class BasePipeline(metaclass=ABCMeta):
             n_trials=self.n_trials,
         )
 
+    @abstractmethod
+    def show_results(self) -> None:
+        """Displays the results of the optimization process."""
+        pass
+
     def run(self) -> None:
         """Execute the defined pipeline operations.
 
