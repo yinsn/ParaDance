@@ -24,6 +24,7 @@ class BaseDataLoaderConfig(BaseModel):
     file_name: Optional[str] = None
     file_type: Optional[str] = "csv"
     max_rows: Optional[int] = None
+    clean_zero_columns: Optional[Union[bool, List]] = None
 
 
 class BaseDataLoader(ABC):
@@ -35,7 +36,7 @@ class BaseDataLoader(ABC):
         file_name: Optional[str] = None,
         file_type: Optional[str] = "csv",
         max_rows: Optional[int] = None,
-        clean_zero_columns: Union[bool, List] = False,
+        clean_zero_columns: Optional[Union[bool, List]] = None,
         config: Optional[Dict] = None,
     ) -> None:
         if config is not None:
@@ -46,15 +47,17 @@ class BaseDataLoader(ABC):
                 file_name=file_name,
                 file_type=file_type,
                 max_rows=max_rows,
+                clean_zero_columns=clean_zero_columns,
             )
 
         self.file_path = self.config.file_path
         self.file_name = self.config.file_name
         self.file_type = self.config.file_type
         self.max_rows = self.config.max_rows
+        self.clean_zero_columns = self.config.clean_zero_columns
         self.df = self.load_data()
-        if clean_zero_columns:
-            self.clean_columns_zero(clean_zero_columns)
+        if self.clean_zero_columns is not None:
+            self.clean_columns_zero(self.clean_zero_columns)
 
     @abstractmethod
     def load_data(self) -> pd.DataFrame:

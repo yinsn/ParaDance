@@ -46,10 +46,10 @@ class Calculator(BaseCalculator):
         Calculates the negative average log10 magnitude of absolute values for selected columns in the dataframe,
         storing the result in `self.value_scales`.
         """
-        dataframe = self.df[self.selected_columns].abs().replace(0, np.nan)
+        dataframe = self.df[self.selected_columns].abs()
         magnitudes = np.log10(dataframe.values)
 
-        avg_magnitude = magnitudes.mean(axis=0)
+        avg_magnitude = np.nanmean(magnitudes, axis=0)
         magnitudes = [-magnitude for magnitude in avg_magnitude]
 
         self.value_scales = np.asarray(magnitudes)

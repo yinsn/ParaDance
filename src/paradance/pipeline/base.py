@@ -77,15 +77,6 @@ class BasePipeline(metaclass=ABCMeta):
             n_trials=self.n_trials,
         )
 
-    @abstractmethod
-    def show_results(self) -> None:
-        """Display the results of the optimization process.
-
-        This method should be implemented to present the results of the optimization
-        in a meaningful way, which might include logging or visualization.
-        """
-        pass
-
     def run(self) -> None:
         """Execute the defined pipeline operations.
 
