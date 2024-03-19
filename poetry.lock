@@ -1315,13 +1315,13 @@ test = ["ipykernel", "pre-commit", "pytest (<8)", "pytest-cov", "pytest-timeout"
 
 [[package]]
 name = "jupyter-events"
-version = "0.9.1"
+version = "0.10.0"
 description = "Jupyter Event System library"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "jupyter_events-0.9.1-py3-none-any.whl", hash = "sha256:e51f43d2c25c2ddf02d7f7a5045f71fc1d5cb5ad04ef6db20da961c077654b9b"},
-    {file = "jupyter_events-0.9.1.tar.gz", hash = "sha256:a52e86f59eb317ee71ff2d7500c94b963b8a24f0b7a1517e2e653e24258e15c7"},
+    {file = "jupyter_events-0.10.0-py3-none-any.whl", hash = "sha256:4b72130875e59d57716d327ea70d3ebc3af1944d3717e5a498b8a06c6c159960"},
+    {file = "jupyter_events-0.10.0.tar.gz", hash = "sha256:670b8229d3cc882ec782144ed22e0d29e1c2d639263f92ca8383e66682845e22"},
 ]
 
 [package.dependencies]
@@ -1782,13 +1782,13 @@ files = [
 
 [[package]]
 name = "mixician"
-version = "0.1.9"
+version = "0.1.10"
 description = "An advanced hybrid ranking engine for recommendation systems, designed to automate the optimization of algorithms and parameters tailored to diverse business objectives."
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "mixician-0.1.9-py3-none-any.whl", hash = "sha256:fdc0273cdd88714895be5c31b10898a43f7bdcc7f70695ecadbbb3c0c2c5dcff"},
-    {file = "mixician-0.1.9.tar.gz", hash = "sha256:199912af7d77c25b2b6f5e811285b280e883bb912e348f5cfd905f562d6a0758"},
+    {file = "mixician-0.1.10-py3-none-any.whl", hash = "sha256:37c19528bb560885dc2513647db758a932c762f0f8b68545af4c51fe5bb4d3a1"},
+    {file = "mixician-0.1.10.tar.gz", hash = "sha256:4eb7a0b0682b5b8c3ce1378cca88c7243825eee8f83124589e2661cc61d93f63"},
 ]
 
 [package.dependencies]
@@ -2088,13 +2088,13 @@ tests = ["pytest", "pytest-cov", "pytest-pep8"]
 
 [[package]]
 name = "optuna"
-version = "3.5.0"
+version = "3.6.0"
 description = "A hyperparameter optimization framework"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "optuna-3.5.0-py3-none-any.whl", hash = "sha256:4c86bbcaeff9ad5b0758e87537793f66df8f9352246315d7121ea465724a44e8"},
-    {file = "optuna-3.5.0.tar.gz", hash = "sha256:ca9e1ce16aa6c6a5af0e1cc1d0cbcd98eb1c75b6a2f06be6bd9c0c5ab0698724"},
+    {file = "optuna-3.6.0-py3-none-any.whl", hash = "sha256:f33a4e4a6c446a923e8d3101a7dc58d6ed65f0ff01c587680f3d0948d3d52321"},
+    {file = "optuna-3.6.0.tar.gz", hash = "sha256:0f023303d9212916e41dce960ed4bcdf3034daac4c58160bc9262ea473484c9c"},
 ]
 
 [package.dependencies]
@@ -2107,12 +2107,11 @@ sqlalchemy = ">=1.3.0"
 tqdm = "*"
 
 [package.extras]
-benchmark = ["asv (>=0.5.0)", "botorch", "cma", "scikit-optimize", "virtualenv"]
+benchmark = ["asv (>=0.5.0)", "botorch", "cma", "virtualenv"]
 checking = ["black", "blackdoc", "flake8", "isort", "mypy", "mypy-boto3-s3", "types-PyYAML", "types-redis", "types-setuptools", "types-tqdm", "typing-extensions (>=3.10.0.0)"]
-document = ["ase", "botorch", "cma", "cmaes (>=0.10.0)", "distributed", "fvcore", "lightgbm", "matplotlib (!=3.6.0)", "mlflow", "pandas", "pillow", "plotly (>=4.9.0)", "scikit-learn", "scikit-optimize", "sphinx", "sphinx-copybutton", "sphinx-gallery", "sphinx-plotly-directive", "sphinx-rtd-theme (>=1.2.0)", "torch", "torchaudio", "torchvision"]
-integration = ["botorch (>=0.4.0)", "catboost (>=0.26)", "catboost (>=0.26,<1.2)", "cma", "distributed", "lightgbm", "lightning", "mlflow", "pandas", "pytorch-ignite", "scikit-learn (>=0.24.2)", "scikit-optimize", "shap", "tensorflow", "torch", "torchaudio", "torchvision", "wandb", "xgboost"]
-optional = ["boto3", "botorch", "cmaes (>=0.10.0)", "google-cloud-storage", "matplotlib (!=3.6.0)", "pandas", "plotly (>=4.9.0)", "redis", "scikit-learn (>=0.24.2)"]
-test = ["coverage", "fakeredis[lua]", "kaleido", "moto", "pytest", "scipy (>=1.9.2)"]
+document = ["ase", "cmaes (>=0.10.0)", "fvcore", "lightgbm", "matplotlib (!=3.6.0)", "pandas", "pillow", "plotly (>=4.9.0)", "scikit-learn", "sphinx", "sphinx-copybutton", "sphinx-gallery", "sphinx-plotly-directive", "sphinx-rtd-theme (>=1.2.0)", "torch", "torchvision"]
+optional = ["boto3", "cmaes (>=0.10.0)", "google-cloud-storage", "matplotlib (!=3.6.0)", "pandas", "plotly (>=4.9.0)", "redis", "scikit-learn (>=0.24.2)", "scipy", "torch"]
+test = ["coverage", "fakeredis[lua]", "kaleido", "moto", "pytest", "scipy (>=1.9.2)", "torch"]
 
 [[package]]
 name = "overrides"
