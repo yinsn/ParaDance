@@ -95,3 +95,4 @@ class BasePipeline(metaclass=ABCMeta):
         self._add_objective(calculator)
         self._add_evaluators()
         self._optimize()
+        self.show_results()

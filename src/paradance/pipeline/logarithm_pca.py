@@ -52,23 +52,11 @@ class LogarithmPCAPipeline(BasePipeline):
         )
         return self.calculator
 
-    def show_results(self, show_figures: bool = False) -> None:
-        """Displays the results of the optimization process.
-
-        Updates the PCA calculator with the best parameters, shows the PCA weights.
-
-        Args:
-            show_figures (bool): Flag to display plots of logarithm distributions. Defaults to False.
-        """
-        logger.info(
-            "Plotting logarithm distributions before Logarithm PCA optimization."
-        )
+    def show_results(self) -> None:
+        """Displays the results of the optimization process."""
         self.calculator.pca_calculator.update(
             pca_weights=self.objective.best_params,
         )
-        if show_figures:
-            self.calculator.pca_calculator.plot_logarithm_distributions()
-            self.calculator.pca_calculator.plot_self_balancing_projected_distribution()
         logger.info("Best parameters for PCA with logarithmic transformations:")
         self.calculator.pca_calculator.show_weights()
         self.calculator.pca_calculator.show_equation()
