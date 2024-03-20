@@ -1782,13 +1782,13 @@ files = [
 
 [[package]]
 name = "mixician"
-version = "0.1.13"
+version = "0.1.14"
 description = "An advanced hybrid ranking engine for recommendation systems, designed to automate the optimization of algorithms and parameters tailored to diverse business objectives."
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "mixician-0.1.13-py3-none-any.whl", hash = "sha256:a0a803c35ee25b9a61ff5fd39c72ce05a96c5b561a014a8265c317b3f22e1312"},
-    {file = "mixician-0.1.13.tar.gz", hash = "sha256:cc70cc6212e9a3ba512da3580318616bb364807d0ccd403afc1d808a0d2dad30"},
+    {file = "mixician-0.1.14-py3-none-any.whl", hash = "sha256:2be51bb6818debf0487f765d270c4df50dbe89d7340452129b69c3d0216f66be"},
+    {file = "mixician-0.1.14.tar.gz", hash = "sha256:e378a0c525d37d43a8213821ef6c0067455dc78db20c153f53c5857d2abe852b"},
 ]
 
 [package.dependencies]
