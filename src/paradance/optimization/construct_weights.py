@@ -64,19 +64,32 @@ def construct_first_order_weights(
     if ob.weights_num is None:
         ob.weights_num = ob.get_weights_num()
 
-    scale_bound = ob.first_order_scale_bound
+    first_order_scale_upper_bound = ob.first_order_scale_upper_bound
+    first_order_scale_lower_bound = ob.first_order_scale_lower_bound
 
-    if scale_bound is not None and isinstance(ob.calculator, Calculator):
+    if isinstance(ob.calculator, Calculator):
         value_scales = ob.calculator.value_scales
         for i in range(ob.weights_num):
             first_order_weights.append(
                 trial.suggest_float(
                     f"w_fo_{i+1}",
-                    np.power(10, value_scales[i] - scale_bound),
-                    np.power(10, value_scales[i] + scale_bound),
+                    np.power(10, value_scales[i] - first_order_scale_lower_bound),
+                    np.power(10, value_scales[i] + first_order_scale_upper_bound),
                     log=False,
                 )
             )
+        if ob.max_min_scale_ratio is not None:
+            scales_with_weights = [
+                weight * np.power(10, -value_scale)
+                for weight, value_scale in zip(first_order_weights, value_scales)
+            ]
+            scales_with_weights_ratio = max(scales_with_weights) / min(
+                scales_with_weights
+            )
+            first_order_weights = [
+                weight * ob.max_min_scale_ratio / scales_with_weights_ratio
+                for weight in first_order_weights
+            ]
     else:
         for i in range(ob.weights_num):
             first_order_weights.append(

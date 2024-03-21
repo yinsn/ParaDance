@@ -30,7 +30,9 @@ class MultipleObjective(BaseObjective):
         save_study: Optional[bool] = True,
         first_order_lower_bound: float = 1e-3,
         first_order_upper_bound: float = 1e6,
-        first_order_scale_bound: Optional[float] = 0.5,
+        max_min_scale_ratio: Optional[float] = None,
+        first_order_scale_upper_bound: float = 1,
+        first_order_scale_lower_bound: float = 1,
         power_lower_bound: float = -1,
         power_upper_bound: float = 1,
         pca_importance_lower_bound: float = -1,
@@ -69,7 +71,9 @@ class MultipleObjective(BaseObjective):
         self.power_upper_bound = power_upper_bound
         self.pca_importance_lower_bound = pca_importance_lower_bound
         self.pca_importance_upper_bound = pca_importance_upper_bound
-        self.first_order_scale_bound = first_order_scale_bound
+        self.first_order_scale_upper_bound = first_order_scale_upper_bound
+        self.first_order_scale_lower_bound = first_order_scale_lower_bound
+        self.max_min_scale_ratio = max_min_scale_ratio
         self.hyperparameters: List[Optional[float]] = []
         self.evaluator_propertys: List[Optional[str]] = []
         self.first_order_lower_bound = first_order_lower_bound
