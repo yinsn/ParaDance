@@ -83,8 +83,8 @@ def construct_first_order_weights(
                 weight * np.power(10, -value_scale)
                 for weight, value_scale in zip(first_order_weights, value_scales)
             ]
-            scales_with_weights_ratio = max(scales_with_weights) / min(
-                scales_with_weights
+            scales_with_weights_ratio = max(scales_with_weights) / (
+                min(scales_with_weights) + 1e-6
             )
             first_order_weights = [
                 weight * ob.max_min_scale_ratio / scales_with_weights_ratio
