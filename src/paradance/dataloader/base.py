@@ -56,6 +56,7 @@ class BaseDataLoader(ABC):
         self.max_rows = self.config.max_rows
         self.clean_zero_columns = self.config.clean_zero_columns
         self.df = self.load_data()
+        self.column_name_spliting()
         if self.clean_zero_columns is not None:
             self.clean_columns_zero(self.clean_zero_columns)
 
