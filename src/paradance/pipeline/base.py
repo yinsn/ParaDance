@@ -1,5 +1,6 @@
 import logging
 from abc import ABCMeta, abstractmethod
+from itertools import zip_longest
 from typing import Dict, Optional, Union
 
 from ..dataloader import CSVLoader, ExcelLoader, load_config
@@ -62,12 +63,26 @@ class BasePipeline(metaclass=ABCMeta):
 
     def _add_evaluators(self) -> None:
         """Adds evaluators for optimization based on configuration settings."""
-        flags = self.config["Evaluator"]["flags"]
-        labels = self.config["Evaluator"]["labels"]
-        for flag, label in zip(flags, labels):
+        flags = self.config["Evaluator"].get("flags", None)
+        target_columns = self.config["Evaluator"].get("target_columns", [])
+        hyperparameters = self.config["Evaluator"].get("hyperparameters", [])
+        evaluator_propertys = self.config["Evaluator"].get("evaluator_propertys", [])
+        groupbys = self.config["Evaluator"].get("groupbys", [])
+        for (
+            flag,
+            target_column,
+            hyperparameter,
+            evaluator_property,
+            groupby,
+        ) in zip_longest(
+            flags, target_columns, hyperparameters, evaluator_propertys, groupbys
+        ):
             self.objective.add_evaluator(
                 flag=flag,
-                target_column=label,
+                target_column=target_column,
+                hyperparameter=hyperparameter,
+                evaluator_property=evaluator_property,
+                groupby=groupby,
             )
 
     def _optimize(self) -> None:
