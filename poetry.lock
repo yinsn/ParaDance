@@ -1782,13 +1782,13 @@ files = [
 
 [[package]]
 name = "mixician"
-version = "0.1.14"
+version = "0.1.15"
 description = "An advanced hybrid ranking engine for recommendation systems, designed to automate the optimization of algorithms and parameters tailored to diverse business objectives."
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "mixician-0.1.14-py3-none-any.whl", hash = "sha256:2be51bb6818debf0487f765d270c4df50dbe89d7340452129b69c3d0216f66be"},
-    {file = "mixician-0.1.14.tar.gz", hash = "sha256:e378a0c525d37d43a8213821ef6c0067455dc78db20c153f53c5857d2abe852b"},
+    {file = "mixician-0.1.15-py3-none-any.whl", hash = "sha256:0b54f46eccb3595c125bf04c207ab05b50fe322ee7db56b47aae151a8286e6d5"},
+    {file = "mixician-0.1.15.tar.gz", hash = "sha256:49cd8a28c9cc60f8c3c0afc66438dbe1daf863518d1d7e46863b74323f30693b"},
 ]
 
 [package.dependencies]
@@ -3551,4 +3551,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "eca747dc799f3a0538a4ae14e6995d0ef684e3a95dbe6b1cebe3e4f562a69776"
+content-hash = "b68ed31e568cbc95e0d615e93de5921cf6b065f958f73271df6e3e535175e021"
