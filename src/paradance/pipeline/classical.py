@@ -1,6 +1,8 @@
 import logging
 from typing import Optional, Union
 
+import pandas as pd
+
 from ..evaluation import Calculator, LogarithmPCACalculator
 from ..pipeline import BasePipeline
 
@@ -21,7 +23,12 @@ class ClassicalPipeline(BasePipeline):
     the configuration, and shows the results of the calculations.
     """
 
-    def __init__(self, config_path: Optional[str] = None, n_trials: int = 200) -> None:
+    def __init__(
+        self,
+        dataframe: Optional[pd.DataFrame] = None,
+        config_path: Optional[str] = None,
+        n_trials: int = 200,
+    ) -> None:
         """Initializes the classical pipeline.
 
         Args:
@@ -29,8 +36,7 @@ class ClassicalPipeline(BasePipeline):
             n_trials: The number of trials to run, defaults to 200.
         """
         super().__init__(
-            config_path,
-            n_trials,
+            dataframe=dataframe, config_path=config_path, n_trials=n_trials
         )
         self.run()
 

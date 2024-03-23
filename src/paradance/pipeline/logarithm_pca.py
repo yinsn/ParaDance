@@ -1,6 +1,7 @@
 import logging
 from typing import Optional, Union
 
+import pandas as pd
 from mixician import SelfBalancingLogarithmPCACalculator
 
 from ..evaluation import Calculator, LogarithmPCACalculator
@@ -28,7 +29,12 @@ class LogarithmPCAPipeline(BasePipeline):
         objective (MultipleObjective): The optimization objective.
     """
 
-    def __init__(self, config_path: Optional[str] = None, n_trials: int = 200) -> None:
+    def __init__(
+        self,
+        dataframe: Optional[pd.DataFrame] = None,
+        config_path: Optional[str] = None,
+        n_trials: int = 200,
+    ) -> None:
         """Initializes the pipeline with configuration and trial settings.
 
         Args:
@@ -36,8 +42,7 @@ class LogarithmPCAPipeline(BasePipeline):
             n_trials (int): Number of optimization trials to perform. Defaults to 200.
         """
         super().__init__(
-            config_path,
-            n_trials,
+            dataframe=dataframe, config_path=config_path, n_trials=n_trials
         )
         self.run()
 

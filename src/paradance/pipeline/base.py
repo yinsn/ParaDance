@@ -3,6 +3,8 @@ from abc import ABCMeta, abstractmethod
 from itertools import zip_longest
 from typing import Dict, Optional, Union
 
+import pandas as pd
+
 from ..dataloader import CSVLoader, ExcelLoader, load_config
 from ..evaluation import Calculator, LogarithmPCACalculator
 from ..optimization import MultipleObjective, optimize_run
@@ -28,7 +30,13 @@ class BasePipeline(metaclass=ABCMeta):
 
     """
 
-    def __init__(self, config_path: Optional[str] = None, n_trials: int = 200) -> None:
+    def __init__(
+        self,
+        dataframe: Optional[pd.DataFrame] = None,
+        config_path: Optional[str] = None,
+        n_trials: int = 200,
+    ) -> None:
+        self.dataframe = dataframe
         self.config: Dict = load_config(config_path)
         self.file_type = self.config["DataLoader"].get("file_type", "csv")
         self.n_trials = n_trials
@@ -38,10 +46,11 @@ class BasePipeline(metaclass=ABCMeta):
 
         Supports loading from CSV and Excel files.
         """
-        if self.file_type == "csv":
-            self.dataframe = CSVLoader(config=self.config["DataLoader"]).df
-        elif self.file_type == "xlsx":
-            self.dataframe = ExcelLoader(config=self.config["DataLoader"]).df
+        if self.dataframe is None:
+            if self.file_type == "csv":
+                self.dataframe = CSVLoader(config=self.config["DataLoader"]).df
+            elif self.file_type == "xlsx":
+                self.dataframe = ExcelLoader(config=self.config["DataLoader"]).df
 
     @abstractmethod
     def _load_calculator(self) -> Union[Calculator, LogarithmPCACalculator]:
