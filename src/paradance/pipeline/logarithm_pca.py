@@ -1,6 +1,7 @@
 import logging
 from typing import Optional, Union
 
+import optuna
 import pandas as pd
 from mixician import SelfBalancingLogarithmPCACalculator
 
@@ -63,5 +64,9 @@ class LogarithmPCAPipeline(BasePipeline):
             pca_weights=self.objective.best_params,
         )
         logger.info("Best parameters for PCA with logarithmic transformations:")
-        self.calculator.pca_calculator.show_weights()
+        self.calculator.pca_calculator.get_weights()
+        self.objective.build_logger()
+        self.objective.logger.info(
+            f"Best parameters: {self.calculator.pca_calculator.results}"
+        )
         self.calculator.pca_calculator.show_equation()
