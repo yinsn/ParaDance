@@ -87,9 +87,10 @@ class BaseDataLoader(ABC):
         :param columns: columns to clean
         """
         if self.df is not None and columns is not False:
-            self.df = self.df.fillna(0)
-            self.df = self.df[~self.df[columns].eq(0).any(axis=1)]
+            self.df[columns] = self.df[columns].fillna(0)
+            self.df = self.df[(self.df[columns] > 0).all(axis=1)]
             self.df.reset_index(drop=True, inplace=True)
+        self.df = self.df.fillna(0)
 
     @staticmethod
     def clip_and_sum_with_group(

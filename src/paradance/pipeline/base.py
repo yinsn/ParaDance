@@ -46,11 +46,18 @@ class BasePipeline(metaclass=ABCMeta):
 
         Supports loading from CSV and Excel files.
         """
+        selected_columns = self.config["Calculator"].get("selected_columns", None)
+        config = self.config["DataLoader"]
+        config["clean_zero_columns"] = selected_columns
         if self.dataframe is None:
             if self.file_type == "csv":
-                self.dataframe = CSVLoader(config=self.config["DataLoader"]).df
+                self.dataframe = CSVLoader(
+                    config=config,
+                ).df
             elif self.file_type == "xlsx":
-                self.dataframe = ExcelLoader(config=self.config["DataLoader"]).df
+                self.dataframe = ExcelLoader(
+                    config=config,
+                ).df
 
     @abstractmethod
     def _load_calculator(self) -> Union[Calculator, LogarithmPCACalculator]:

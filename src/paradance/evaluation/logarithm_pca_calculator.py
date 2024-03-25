@@ -19,7 +19,7 @@ class LogarithmPCACalculator(BaseCalculator):
 
     def __init__(self, pca_calculator: SelfBalancingLogarithmPCACalculator):
         self.pca_calculator = pca_calculator
-        self.selected_columns = self.pca_calculator.score_columns
+        self.selected_columns = self.pca_calculator.selected_columns
         self.df = self.pca_calculator.clean_dataframe.copy()
         self.df_len = len(self.df)
         self.equation_type = "log_pca"
