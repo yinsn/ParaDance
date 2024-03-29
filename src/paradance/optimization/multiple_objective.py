@@ -35,7 +35,7 @@ class MultipleObjective(BaseObjective):
         first_order_scale_lower_bound: float = 1,
         power_lower_bound: float = -1,
         power_upper_bound: float = 1,
-        pca_importance_lower_bound: float = -1,
+        pca_importance_lower_bound: float = 0,
         pca_importance_upper_bound: float = 10,
         config: Optional[Dict] = None,
     ) -> None:
@@ -47,7 +47,7 @@ class MultipleObjective(BaseObjective):
             first_order_upper_bound (float, optional): Upper bound for first order value. Defaults to 1e6.
             power_lower_bound (float, optional): Lower bound for power value. Defaults to -1.
             power_upper_bound (float, optional): Upper bound for power value. Defaults to 1.
-            pca_importance_lower_bound (float, optional): Lower bound for pca importance value. Defaults to -1.
+            pca_importance_lower_bound (float, optional): Lower bound for pca importance value. Defaults to 0.
             pca_importance_upper_bound (float, optional): Upper bound for pca importance value. Defaults to 10.
             first_order_scale_bound (Optional[float], optional): Scale bound for first order value. Defaults to None.
         """
