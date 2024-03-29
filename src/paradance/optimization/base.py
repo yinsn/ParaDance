@@ -11,6 +11,22 @@ from .set_path import ensure_study_directory
 
 
 class BaseObjectiveConfig(BaseModel):
+    """
+    Base configuration class for defining optimization objectives.
+
+    Attributes:
+        direction (Optional[str]): Specifies the optimization direction. This can be either 'minimize' or 'maximize'.
+                                   Default is None, which should be overridden in subclass or instance.
+        formula (Optional[str]): The mathematical formula or expression used in the objective function. Default is None.
+        first_order (Optional[bool]): Indicates whether to use first-order optimization. Defaults to False.
+        power (Optional[bool]): Indicates whether to apply a power transform in the objective. Defaults to True.
+        dirichlet (Optional[bool]): Specifies if a Dirichlet process should be used. Defaults to True.
+        weights_num (Optional[int]): The number of weights or parameters to optimize. Default is None.
+        study_name (Optional[str]): The name of the optimization study. Default is None.
+        study_path (Optional[str]): Filesystem path where study results are stored. Default is None.
+        save_study (Optional[bool]): Flag indicating whether to persist the study to disk. Defaults to True.
+    """
+
     direction: Optional[str] = None
     formula: Optional[str] = None
     first_order: Optional[bool] = False
@@ -107,6 +123,21 @@ class BaseObjective(metaclass=ABCMeta):
         self._prepare_study()
 
     def _prepare_study(self) -> None:
+        """
+        Prepares the study by setting up the study directory, storage, and the study object itself.
+
+        This method configures the study by ensuring the study directory exists and initializing the study with the
+        specified direction, name, and storage backend. If `weights_num` is not already defined, it determines the number
+        of weights. Finally, it initializes the `best_params` attribute as a zero array of size `weights_num`.
+
+        Side effects:
+            - Creates or ensures the existence of a directory for the study.
+            - Initializes or loads an Optuna study with the specified configuration.
+            - Updates `self.full_path` with the path to the study directory.
+            - Initializes `self.study` with the created or loaded Optuna study.
+            - Determines `self.weights_num` if it is not already specified.
+            - Initializes `self.best_params` as a NumPy zero array of size `self.weights_num`.
+        """
         self.full_path = ensure_study_directory(self.study_path, self.study_name)
         storage = optuna.storages.RDBStorage(
             url=f"sqlite:///{self.full_path}/paradance_storage.db",

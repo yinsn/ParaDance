@@ -10,6 +10,20 @@ from .evaluate_targets import evaluate_targets
 
 
 class MutipleObjectiveConfig(BaseObjectiveConfig):
+    """Configuration for handling multiple objectives in optimization.
+
+    Attributes:
+        first_order_lower_bound (float): The lower bound for the first-order objective.
+        first_order_upper_bound (float): The upper bound for the first-order objective.
+        max_min_scale_ratio (Optional[float]): The maximum to minimum scale ratio. None indicates no specific ratio.
+        first_order_scale_upper_bound (float): The upper scale bound for the first-order objective.
+        first_order_scale_lower_bound (float): The lower scale bound for the first-order objective.
+        power_lower_bound (float): The lower bound for the power objective.
+        power_upper_bound (float): The upper bound for the power objective.
+        pca_importance_lower_bound (float): The lower bound for PCA importance.
+        pca_importance_upper_bound (float): The upper bound for PCA importance.
+    """
+
     first_order_lower_bound: float = 1e-3
     first_order_upper_bound: float = 1e6
     max_min_scale_ratio: Optional[float] = None
