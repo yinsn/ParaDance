@@ -104,7 +104,9 @@ class BaseObjective(metaclass=ABCMeta):
         self.study_name = self.config.study_name
         self.study_path = self.config.study_path
         self.save_study = self.config.save_study
+        self._prepare_study()
 
+    def _prepare_study(self) -> None:
         self.full_path = ensure_study_directory(self.study_path, self.study_name)
         storage = optuna.storages.RDBStorage(
             url=f"sqlite:///{self.full_path}/paradance_storage.db",

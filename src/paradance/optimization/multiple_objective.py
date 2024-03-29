@@ -4,9 +4,21 @@ from typing import Dict, List, Optional, Union
 from optuna.trial import Trial
 
 from ..evaluation import Calculator, LogarithmPCACalculator
-from .base import BaseObjective
+from .base import BaseObjective, BaseObjectiveConfig
 from .construct_weights import construct_weights
 from .evaluate_targets import evaluate_targets
+
+
+class MutipleObjectiveConfig(BaseObjectiveConfig):
+    first_order_lower_bound: float = 1e-3
+    first_order_upper_bound: float = 1e6
+    max_min_scale_ratio: Optional[float] = None
+    first_order_scale_upper_bound: float = 1
+    first_order_scale_lower_bound: float = 1
+    power_lower_bound: float = -1
+    power_upper_bound: float = 1
+    pca_importance_lower_bound: float = 0
+    pca_importance_upper_bound: float = 10
 
 
 class MultipleObjective(BaseObjective):
@@ -51,35 +63,60 @@ class MultipleObjective(BaseObjective):
             pca_importance_upper_bound (float, optional): Upper bound for pca importance value. Defaults to 10.
             first_order_scale_bound (Optional[float], optional): Scale bound for first order value. Defaults to None.
         """
-        super().__init__(
-            calculator=calculator,
-            direction=direction,
-            formula=formula,
-            first_order=first_order,
-            power=power,
-            dirichlet=dirichlet,
-            weights_num=weights_num,
-            study_name=study_name,
-            study_path=study_path,
-            save_study=save_study,
-            config=config,
-        )
+
+        if config is not None:
+            self.config = MutipleObjectiveConfig(**config)
+        else:
+            self.config = MutipleObjectiveConfig(
+                direction=direction,
+                formula=formula,
+                first_order=first_order,
+                power=power,
+                dirichlet=dirichlet,
+                weights_num=weights_num,
+                study_name=study_name,
+                study_path=study_path,
+                save_study=save_study,
+                first_order_lower_bound=first_order_lower_bound,
+                first_order_upper_bound=first_order_upper_bound,
+                max_min_scale_ratio=max_min_scale_ratio,
+                first_order_scale_upper_bound=first_order_scale_upper_bound,
+                first_order_scale_lower_bound=first_order_scale_lower_bound,
+                power_lower_bound=power_lower_bound,
+                power_upper_bound=power_upper_bound,
+                pca_importance_lower_bound=pca_importance_lower_bound,
+                pca_importance_upper_bound=pca_importance_upper_bound,
+            )
+        self.calculator = calculator
+        self.direction = self.config.direction
+        self.formula = self.config.formula
+        self.first_order = self.config.first_order
+        self.power = self.config.power
+        self.dirichlet = self.config.dirichlet
+        self.weights_num = self.config.weights_num
+        self.study_name = self.config.study_name
+        self.study_path = self.config.study_path
+        self.save_study = self.config.save_study
+        self.first_order_lower_bound = self.config.first_order_lower_bound
+        self.first_order_upper_bound = self.config.first_order_upper_bound
+        self.max_min_scale_ratio = self.config.max_min_scale_ratio
+        self.first_order_scale_upper_bound = self.config.first_order_scale_upper_bound
+        self.first_order_scale_lower_bound = self.config.first_order_scale_lower_bound
+        self.power_lower_bound = self.config.power_lower_bound
+        self.power_upper_bound = self.config.power_upper_bound
+        self.pca_importance_lower_bound = self.config.pca_importance_lower_bound
+        self.pca_importance_upper_bound = self.config.pca_importance_upper_bound
+
         self.target_columns: List[str] = []
         self.evaluator_flags: List[str] = []
         self.groupbys: List[Optional[str]] = []
-        self.power_lower_bound = power_lower_bound
-        self.power_upper_bound = power_upper_bound
-        self.pca_importance_lower_bound = pca_importance_lower_bound
-        self.pca_importance_upper_bound = pca_importance_upper_bound
-        self.first_order_scale_upper_bound = first_order_scale_upper_bound
-        self.first_order_scale_lower_bound = first_order_scale_lower_bound
-        self.max_min_scale_ratio = max_min_scale_ratio
         self.hyperparameters: List[Optional[float]] = []
         self.evaluator_propertys: List[Optional[str]] = []
-        self.first_order_lower_bound = first_order_lower_bound
-        self.first_order_upper_bound = first_order_upper_bound
+
         if self.power_lower_bound < 0:
             self.dirichlet = False
+
+        self._prepare_study()
 
     def add_evaluator(
         self,
