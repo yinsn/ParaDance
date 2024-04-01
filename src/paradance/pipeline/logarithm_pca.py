@@ -1,7 +1,6 @@
 import logging
 from typing import Optional, Union
 
-import optuna
 import pandas as pd
 from mixician import SelfBalancingLogarithmPCACalculator
 
