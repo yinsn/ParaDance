@@ -24,7 +24,9 @@ class Calculator(BaseCalculator):
         :param weights_for_groups: weights for group
         :param equation_eval_str: equation eval string
         """
-        super().__init__(selected_columns=selected_columns)
+        super().__init__(
+            selected_columns=selected_columns,
+        )
         self.df = df
         self.df_len = len(self.df)
         self.equation_eval_str = equation_eval_str

@@ -3,10 +3,14 @@ from typing import TYPE_CHECKING, Optional, Tuple
 if TYPE_CHECKING:
     from .calculator import Calculator
 
+from .base_evaluator import evaluation_preprocessor
 
+
+@evaluation_preprocessor
 def calculate_distinct_count_portfolio_concentration(
     calculator: "Calculator",
     target_column: str,
+    mask_column: Optional[str] = None,
     expected_coverage: Optional[float] = None,
 ) -> Tuple[float, float]:
     """
@@ -20,6 +24,7 @@ def calculate_distinct_count_portfolio_concentration(
     Args:
         calculator: An instance of Calculator which contains a DataFrame.
         target_column: The name of the column in the DataFrame to analyze.
+        mask_column: The name of the column in the DataFrame to mask the data. Defaults to None.
         expected_coverage: The expected proportion of unique values to be covered. Defaults to 0.95 if not provided.
 
     Returns:
@@ -29,7 +34,7 @@ def calculate_distinct_count_portfolio_concentration(
     """
     if expected_coverage is None:
         expected_coverage = 0.95
-    df = calculator.df.copy()
+    df = calculator.evaluated_dataframe
     total_ids = df[target_column].nunique()
 
     df_sorted = df.sort_values(by="overall_score", ascending=False).reset_index(

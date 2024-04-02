@@ -6,19 +6,33 @@ from ..evaluation import Calculator, LogarithmPCACalculator
 def evaluate_targets(
     calculator: Union[Calculator, LogarithmPCACalculator],
     evaluator_flags: List[str],
+    target_columns: List[str],
+    mask_columns: List[Optional[str]],
     hyperparameters: List[Optional[float]],
     evaluator_propertys: List[Optional[str]],
     groupbys: List[Optional[str]],
-    target_columns: List[str],
     weights: List[float],
 ) -> List[float]:
     targets = []
-    for flag, hyperparameter, evaluator_property, groupby, target_column in zip(
-        evaluator_flags, hyperparameters, evaluator_propertys, groupbys, target_columns
+    for (
+        flag,
+        mask_column,
+        hyperparameter,
+        evaluator_property,
+        groupby,
+        target_column,
+    ) in zip(
+        evaluator_flags,
+        mask_columns,
+        hyperparameters,
+        evaluator_propertys,
+        groupbys,
+        target_columns,
     ):
         if flag == "portfolio":
             _, concentration = calculator.calculate_portfolio_concentration(
                 target_column=target_column,
+                mask_column=mask_column,
                 expected_return=hyperparameter,
             )
             targets.append(concentration)
@@ -29,6 +43,7 @@ def evaluate_targets(
                 concentration,
             ) = calculator.calculate_distinct_count_portfolio_concentration(
                 target_column=target_column,
+                mask_column=mask_column,
                 expected_coverage=hyperparameter,
             )
             targets.append(concentration)

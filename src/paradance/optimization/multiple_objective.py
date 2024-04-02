@@ -122,6 +122,7 @@ class MultipleObjective(BaseObjective):
         self.pca_importance_upper_bound = self.config.pca_importance_upper_bound
 
         self.target_columns: List[str] = []
+        self.mask_columns: List[Optional[str]] = []
         self.evaluator_flags: List[str] = []
         self.groupbys: List[Optional[str]] = []
         self.hyperparameters: List[Optional[float]] = []
@@ -136,6 +137,7 @@ class MultipleObjective(BaseObjective):
         self,
         flag: str,
         target_column: str,
+        mask_column: Optional[str] = None,
         hyperparameter: Optional[float] = None,
         evaluator_property: Optional[str] = None,
         groupby: Optional[str] = None,
@@ -152,6 +154,10 @@ class MultipleObjective(BaseObjective):
         """
         self.evaluator_flags.append(flag)
         self.target_columns.append(target_column)
+        if mask_column is not None:
+            self.mask_columns.append(mask_column)
+        else:
+            self.mask_columns.append(None)
         if hyperparameter is not None:
             self.hyperparameters.append(hyperparameter)
         else:
@@ -182,6 +188,7 @@ class MultipleObjective(BaseObjective):
         targets = evaluate_targets(
             calculator=self.calculator,
             evaluator_flags=self.evaluator_flags,
+            mask_columns=self.mask_columns,
             hyperparameters=self.hyperparameters,
             evaluator_propertys=self.evaluator_propertys,
             groupbys=self.groupbys,

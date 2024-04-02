@@ -82,21 +82,29 @@ class BasePipeline(metaclass=ABCMeta):
         """Adds evaluators for optimization based on configuration settings."""
         flags = self.config["Evaluator"].get("flags", None)
         target_columns = self.config["Evaluator"].get("target_columns", [])
+        mask_columns = self.config["Evaluator"].get("mask_columns", [])
         hyperparameters = self.config["Evaluator"].get("hyperparameters", [])
         evaluator_propertys = self.config["Evaluator"].get("evaluator_propertys", [])
         groupbys = self.config["Evaluator"].get("groupbys", [])
         for (
             flag,
             target_column,
+            mask_column,
             hyperparameter,
             evaluator_property,
             groupby,
         ) in zip_longest(
-            flags, target_columns, hyperparameters, evaluator_propertys, groupbys
+            flags,
+            target_columns,
+            mask_columns,
+            hyperparameters,
+            evaluator_propertys,
+            groupbys,
         ):
             self.objective.add_evaluator(
                 flag=flag,
                 target_column=target_column,
+                mask_column=mask_column,
                 hyperparameter=hyperparameter,
                 evaluator_property=evaluator_property,
                 groupby=groupby,

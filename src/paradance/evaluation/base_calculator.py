@@ -1,6 +1,8 @@
 from abc import ABCMeta, abstractmethod
 from functools import partialmethod
-from typing import List
+from typing import List, Optional
+
+import pandas as pd
 
 from .auc_triple_parameters_evaluator import calculate_auc_triple_parameters
 from .distinct_portfolio_evaluator import (
@@ -39,6 +41,7 @@ class BaseCalculator(metaclass=ABCMeta):
     def __init__(self, selected_columns: List[str]) -> None:
         """Initializes the BaseCalculator."""
         self.selected_columns = selected_columns
+        self.evaluated_dataframe: pd.DataFrame = pd.DataFrame()
 
     @abstractmethod
     def get_overall_score(self, weights_for_equation: List[float]) -> None:
