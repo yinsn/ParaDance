@@ -50,14 +50,16 @@ def evaluate_targets(
         elif flag == "wuauc":
             wuauc = calculator.calculate_wuauc(
                 groupby=groupby,
-                label_column=target_column,
+                target_column=target_column,
+                mask_column=mask_column,
                 weights_for_equation=weights,
             )
             targets.append(wuauc)
         elif flag == "auc":
             auc = calculator.calculate_wuauc(
                 groupby=groupby,
-                label_column=target_column,
+                target_column=target_column,
+                mask_column=mask_column,
                 weights_for_equation=weights,
                 auc=True,
             )

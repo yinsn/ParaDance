@@ -7,13 +7,17 @@ from sklearn.metrics import roc_auc_score
 if TYPE_CHECKING:
     from .calculator import Calculator
 
+from .base_evaluator import evaluation_preprocessor
 
+
+@evaluation_preprocessor
 def calculate_wuauc(
     calculator: "Calculator",
     groupby: Optional[str],
     weights_for_equation: List,
     weights_for_groups: Optional[pd.Series] = None,
-    label_column: str = "label",
+    target_column: str = "label",
+    mask_column: Optional[str] = None,
     auc: bool = False,
 ) -> float:
     """Calculate weighted user AUC.
@@ -21,20 +25,17 @@ def calculate_wuauc(
     :param groupby: groupby column
     :param weights_for_equation: weights for equation
     :param weights_for_groups: weights for group
-    :param label_column: label column
+    :param target_column: label column
     :param auc: bool, optional, default: False
     :return: AUC/WUAUC/UAUC
     """
+    df = calculator.evaluated_dataframe
     if auc:
-        result = float(
-            roc_auc_score(
-                calculator.df[label_column].values, calculator.df["overall_score"]
-            )
-        )
+        result = float(roc_auc_score(df[target_column].values, df["overall_score"]))
     else:
         if groupby is not None:
-            grouped = calculator.df.groupby(groupby).apply(
-                lambda x: float(roc_auc_score(x[label_column], x["overall_score"]))
+            grouped = df.groupby(groupby).apply(
+                lambda x: float(roc_auc_score(x[target_column], x["overall_score"]))
             )
             if weights_for_groups is not None:
                 counts_sorted = weights_for_groups.loc[grouped.index]
