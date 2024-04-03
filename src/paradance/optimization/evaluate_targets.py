@@ -49,25 +49,25 @@ def evaluate_targets(
             targets.append(concentration)
         elif flag == "wuauc":
             wuauc = calculator.calculate_wuauc(
-                groupby=groupby,
                 target_column=target_column,
                 mask_column=mask_column,
+                groupby=groupby,
                 weights_for_equation=weights,
             )
             targets.append(wuauc)
         elif flag == "auc":
             auc = calculator.calculate_wuauc(
-                groupby=groupby,
                 target_column=target_column,
                 mask_column=mask_column,
+                groupby=groupby,
                 weights_for_equation=weights,
                 auc=True,
             )
             targets.append(auc)
         elif flag == "woauc":
             woauc = calculator.calculate_woauc(
-                groupby=groupby,
                 target_column=target_column,
+                groupby=groupby,
                 weights_for_equation=weights,
             )
             targets.append(sum(woauc))

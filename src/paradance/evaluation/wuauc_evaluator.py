@@ -13,11 +13,11 @@ from .base_evaluator import evaluation_preprocessor
 @evaluation_preprocessor
 def calculate_wuauc(
     calculator: "Calculator",
-    groupby: Optional[str],
-    weights_for_equation: List,
-    weights_for_groups: Optional[pd.Series] = None,
-    target_column: str = "label",
+    target_column: str,
     mask_column: Optional[str] = None,
+    groupby: Optional[str] = None,
+    weights_for_equation: List = [],
+    weights_for_groups: Optional[pd.Series] = None,
     auc: bool = False,
 ) -> float:
     """Calculate weighted user AUC.
