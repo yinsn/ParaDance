@@ -10,13 +10,11 @@ repository = "https://github.com/yinsn/paradance"
 packages = [{ include = "paradance", from = "src" }]
 
 [tool.poetry.dependencies]
-imageio = "^2.34.0"
 ipykernel = "^6.29.3"
 ipywidgets = "^8.1.2"
 joblib = "^1.3.2"
 jupyter = "^1.0.0"
 matplotlib = "^3.8.3"
-matplotlib-venn = "^0.11.10"
 mixician = "^0.1.18"
 numpy = "^1.26.4"
 openpyxl = "^3.1.2"
