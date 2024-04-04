@@ -53,8 +53,8 @@ master_doc = "index"
 
 # General information about the project.
 project = "paradance"
-copyright = "2023, Yin Cheng, Jie Cui"  # pylint: disable=redefined-builtin
-author = "Yin Cheng, Jie Cui"
+copyright = "2023, Yin Cheng"  # pylint: disable=redefined-builtin
+author = "Yin Cheng"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
