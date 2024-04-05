@@ -28,6 +28,7 @@ sqlalchemy = "^2.0.28"
 tqdm = "^4.66.2"
 sphinx-rtd-theme = "^2.0.0"
 nbsphinx = "^0.9.3"
+docutils = "^0.20.1"
 
 [build-system]
 requires = ["poetry-core>=1.9.0"]

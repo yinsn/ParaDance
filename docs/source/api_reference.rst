@@ -27,3 +27,6 @@ Evaluation
 
     BaseCalculator
     Calculator
+    calculate_portfolio_concentration
+    calculate_distinct_count_portfolio_concentration
+    calculate_wuauc
