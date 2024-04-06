@@ -7,7 +7,21 @@ from .base_calculator import BaseCalculator
 
 
 class Calculator(BaseCalculator):
-    """Calculator class for calculating various metrics."""
+    """A calculator for processing and analyzing data within a DataFrame based on specified equations and methods.
+
+    Attributes:
+        df (pd.DataFrame): The DataFrame to perform calculations on.
+        df_len (int): The length of the DataFrame.
+        equation_eval_str (Optional[str]): A string representing a custom equation to evaluate.
+        equation_type (str): The type of equation to use for calculations ("product", "sum", or "free_style").
+        samplers (Dict): A dictionary to store sampler objects by their score columns.
+        selected_columns (List[str]): Columns selected for calculations.
+        selected_values (np.ndarray): The values of the selected columns in the DataFrame.
+        value_scales (np.ndarray): The negative average log10 magnitude of absolute values for selected columns.
+        woauc_dict (Dict): A dictionary to store weighted average over/under certain conditions.
+        bin_mappings (Dict): A dictionary to store mappings of bins to specific conditions.
+        weights_for_groups (pd.Series): A Series containing weights for different groups within the DataFrame.
+    """
 
     def __init__(
         self,
@@ -17,12 +31,14 @@ class Calculator(BaseCalculator):
         weights_for_groups: Optional[pd.Series] = None,
         equation_eval_str: Optional[str] = None,
     ) -> None:
-        """Initialize Calculator.
+        """Initializes the Calculator object.
 
-        :param df: dataframe
-        :param selected_columns: selected columns
-        :param weights_for_groups: weights for group
-        :param equation_eval_str: equation eval string
+        Args:
+            df (pd.DataFrame): The DataFrame to perform calculations on.
+            selected_columns (List[str]): The names of the columns to include in calculations.
+            equation_type (str, optional): The type of equation to use for score calculation. Defaults to "product".
+            weights_for_groups (Optional[pd.Series], optional): A Series containing weights for different groups. Defaults to None, which sets equal weights.
+            equation_eval_str (Optional[str], optional): A string representing a custom equation for free-style calculations. Defaults to None.
         """
         super().__init__(
             selected_columns=selected_columns,
@@ -61,10 +77,10 @@ class Calculator(BaseCalculator):
         self,
         weights_for_equation: List[float],
     ) -> None:
-        """Calculate overall score.
+        """Calculates the overall score for each row in the DataFrame based on the specified equation type and weights.
 
-        :param powers_for_equation: powers for equation
-        :param first_order_weights: first order weights
+        Args:
+            weights_for_equation (List[float]): A list of weights to apply to each selected column for the calculation.
         """
         if len(weights_for_equation) == 2 * len(self.selected_columns):
             powers_for_equation = weights_for_equation[: len(self.selected_columns)]
@@ -97,10 +113,11 @@ class Calculator(BaseCalculator):
     def create_score_columns(
         self, boundary_dict: dict, score_column: str = "score"
     ) -> None:
-        """Create score columns.
+        """Creates new columns in the DataFrame to categorize rows based on score boundaries.
 
-        :param boundary_dict: boundary dict
-        :param score_column: score column to be converted
+        Args:
+            boundary_dict (Dict): A dictionary with score boundaries as keys and conditions as values.
+            score_column (str, optional): The name of the column to apply the boundaries to. Defaults to "score".
         """
         for k, _ in boundary_dict.items():
             self.df[f"{score_column}_lt_{k}"] = (self.df[score_column] >= k).astype(int)
@@ -114,7 +131,16 @@ class Calculator(BaseCalculator):
         log_scale: Optional[bool] = True,
         laplace_smoothing: Optional[bool] = True,
     ) -> None:
-        """Initialize frequency sampler."""
+        """Initializes a frequency sampler for a given score column and applies sampling results to create new columns.
+
+        Args:
+            sample_size (int): The size of the sample to generate.
+            score_column (str): The name of the score column to sample from.
+            slice_from (Optional[float], optional): The lower bound of the score range to sample. Defaults to None.
+            slice_to (Optional[float], optional): The upper bound of the score range to sample. Defaults to None.
+            log_scale (Optional[bool], optional): Whether to use logarithmic scaling for sampling. Defaults to True.
+            laplace_smoothing (Optional[bool], optional): Whether to apply Laplace smoothing to the sampling. Defaults to True.
+        """
         from ..sampling.frequency_sampler import FrequencySampler
 
         sampler = FrequencySampler(

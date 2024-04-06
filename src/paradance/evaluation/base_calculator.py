@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from functools import partialmethod
-from typing import List, Optional
+from typing import List
 
 import pandas as pd
 

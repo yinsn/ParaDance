@@ -27,5 +27,29 @@ Evaluation
 
     BaseCalculator
     Calculator
-    calculate_portfolio_concentration
-    calculate_distinct_count_portfolio_concentration
+    LogarithmPCACalculator
+
+.. currentmodule:: paradance.optimization
+
+Optimization
+------------
+
+.. autosummary::
+    :toctree: api_reference
+    :nosignatures:
+
+    BaseObjective
+    MultipleObjective
+
+.. currentmodule:: paradance.pipeline
+
+Pipeline
+--------
+
+.. autosummary::
+    :toctree: api_reference
+    :nosignatures:
+
+    BasePipeline
+    ClassicalPipeline
+    LogarithmPCAPipeline
