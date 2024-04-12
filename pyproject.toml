@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "paradance"
-version = "0.4.20"
+version = "0.4.21"
 description = "Offers a toolset for comprehensive, multi-faceted large-scale data analysis and optimizations."
 authors = ["Yin Cheng <yin.sjtu@gmail.com>"]
 license = "MIT"
@@ -15,7 +15,7 @@ ipywidgets = "^8.1.2"
 joblib = "^1.3.2"
 jupyter = "^1.0.0"
 matplotlib = "^3.8.3"
-mixician = "^0.1.18"
+mixician = "^0.1.19"
 numpy = "^1.26.4"
 openpyxl = "^3.1.2"
 optuna = "^3.5.0"
@@ -29,6 +29,7 @@ tqdm = "^4.66.2"
 sphinx-rtd-theme = "^2.0.0"
 nbsphinx = "^0.9.3"
 docutils = "^0.20.1"
+pyyaml = "^6.0.1"
 
 [build-system]
 requires = ["poetry-core>=1.9.0"]
