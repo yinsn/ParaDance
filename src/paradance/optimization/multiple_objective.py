@@ -49,7 +49,7 @@ class MultipleObjective(BaseObjective):
         formula: Optional[str] = None,
         first_order: Optional[bool] = False,
         power: Optional[bool] = True,
-        dirichlet: Optional[bool] = True,
+        dirichlet: Optional[bool] = False,
         weights_num: Optional[int] = None,
         study_name: Optional[str] = None,
         study_path: Optional[str] = None,

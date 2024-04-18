@@ -20,7 +20,7 @@ class BaseObjectiveConfig(BaseModel):
         formula (Optional[str]): The mathematical formula or expression used in the objective function. Default is None.
         first_order (Optional[bool]): Indicates whether to use first-order optimization. Defaults to False.
         power (Optional[bool]): Indicates whether to apply a power transform in the objective. Defaults to True.
-        dirichlet (Optional[bool]): Specifies if a Dirichlet process should be used. Defaults to True.
+        dirichlet (Optional[bool]): Specifies if a Dirichlet process should be used. Defaults to False.
         weights_num (Optional[int]): The number of weights or parameters to optimize. Default is None.
         study_name (Optional[str]): The name of the optimization study. Default is None.
         study_path (Optional[str]): Filesystem path where study results are stored. Default is None.
@@ -31,7 +31,7 @@ class BaseObjectiveConfig(BaseModel):
     formula: Optional[str] = None
     first_order: Optional[bool] = False
     power: Optional[bool] = True
-    dirichlet: Optional[bool] = True
+    dirichlet: Optional[bool] = False
     weights_num: Optional[int] = None
     study_name: Optional[str] = None
     study_path: Optional[str] = None
@@ -50,7 +50,7 @@ class BaseObjective(metaclass=ABCMeta):
         formula (Optional[str]): Mathematical formula representing the objective.
         first_order (bool): Whether to use first order optimization or not. Default is False.
         power (bool): If True, includes power in the optimization. Default is True.
-        dirichlet (bool): If True, uses Dirichlet distribution for optimization. Default is True.
+        dirichlet (bool): If True, uses Dirichlet distribution for optimization. Default is False.
         weights_num (Optional[int]): Number of weights for optimization.
         study_name (Optional[str]): Name of the study.
         study_path (Optional[str]): Path to the study directory.
@@ -74,7 +74,7 @@ class BaseObjective(metaclass=ABCMeta):
         formula: Optional[str] = None,
         first_order: Optional[bool] = False,
         power: Optional[bool] = True,
-        dirichlet: Optional[bool] = True,
+        dirichlet: Optional[bool] = False,
         weights_num: Optional[int] = None,
         study_name: Optional[str] = None,
         study_path: Optional[str] = None,
@@ -91,7 +91,7 @@ class BaseObjective(metaclass=ABCMeta):
             formula (str): Formula for objective.
             first_order (bool, optional): Use first order optimization or not. Defaults to False.
             power (bool, optional): Include power in optimization. Defaults to True.
-            dirichlet (bool, optional): Use Dirichlet distribution. Defaults to True.
+            dirichlet (bool, optional): Use Dirichlet distribution. Defaults to False.
             study_name (Optional[str], optional): Name of the study. Defaults to None.
             study_path (Optional[str], optional): Path to the study directory. Defaults to None.
         """
