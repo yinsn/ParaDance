@@ -1,6 +1,7 @@
 import logging
 from typing import Optional, Union
 
+import numpy as np
 import pandas as pd
 from mixician import SelfBalancingLogarithmPCACalculator
 
@@ -56,6 +57,21 @@ class LogarithmPCAPipeline(BasePipeline):
             pca_calculator=pca_calculator,
         )
         return self.calculator
+
+    def plot_logarithm_distributions(self) -> None:
+        """Plots the logarithmic distributions of the dataset."""
+        self.calculator.pca_calculator.plot_logarithm_distributions()
+
+    def plot_self_balancing_projected_distribution(
+        self, pca_weights: np.ndarray
+    ) -> None:
+        """This method updates the PCA weights in the calculator's PCA component and then
+        plots the distribution based on these updated weights.
+        """
+        self.calculator.pca_calculator.update_pca_weights(
+            pca_weights=pca_weights,
+        )
+        self.calculator.pca_calculator.plot_self_balancing_projected_distribution()
 
     def show_results(self) -> None:
         """Displays the results of the optimization process."""
