@@ -38,7 +38,7 @@ class ClassicalPipeline(BasePipeline):
         super().__init__(
             dataframe=dataframe, config_path=config_path, n_trials=n_trials
         )
-        self.run()
+        self._pre_run()
 
     def _load_calculator(self) -> Union[Calculator, LogarithmPCACalculator]:
         """Loads the calculator based on the configuration.

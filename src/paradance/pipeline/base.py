@@ -122,17 +122,26 @@ class BasePipeline(metaclass=ABCMeta):
         """Displays the results of the optimization process."""
         pass
 
-    def run(self) -> None:
-        """Execute the defined pipeline operations.
+    def _pre_run(self) -> None:
+        """
+        Execute the preliminary setup tasks for the pipeline.
 
-        This method orchestrates the execution of the pipeline by calling the
-        abstract methods in sequence. It logs the beginning of the process and
-        ensures that each step is performed in the correct order.
+        This method includes steps such as loading the dataset, initializing the
+        calculator, and adding objectives and evaluators to the calculator.
         """
         logger.info("Running pipeline...")
         self._load_dataset()
         calculator = self._load_calculator()
         self._add_objective(calculator)
         self._add_evaluators()
+
+    def run(self) -> None:
+        """
+        Run the main execution flow of the pipeline.
+
+        This method handles the entire flow of running the optimization after
+        performing all pre-run setup tasks. It concludes with displaying the results.
+        """
+        self._pre_run()
         self._optimize()
         self.show_results()

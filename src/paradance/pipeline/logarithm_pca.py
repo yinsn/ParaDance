@@ -44,7 +44,7 @@ class LogarithmPCAPipeline(BasePipeline):
         super().__init__(
             dataframe=dataframe, config_path=config_path, n_trials=n_trials
         )
-        self.run()
+        self._pre_run()
 
     def _load_calculator(self) -> Union[Calculator, LogarithmPCACalculator]:
         """Initializes the PCA calculator with the loaded dataset."""
