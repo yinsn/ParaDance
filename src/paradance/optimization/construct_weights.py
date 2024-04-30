@@ -139,18 +139,18 @@ def construct_weights(ob: "MultipleObjective", trial: optuna.Trial) -> List[floa
         List[float]: A list of weights constructed based on the given MultipleObjective instance and the current trial.
     """
     weights = []
-    if ob.calculator.equation_type == "log_pca":
+    if ob.calculator.equation_type == "sum":
+        weights = construct_first_order_weights(ob, trial)
+    elif ob.calculator.equation_type == "free_style":
+        weights = construct_first_order_weights(ob, trial)
+    elif ob.calculator.equation_type == "log_pca":
         weights = construct_log_pca_weights(ob, trial)
-    elif not (ob.first_order):
-        weights = construct_power_weights(ob, trial)
     elif ob.calculator.equation_type == "product" and ob.power:
         weights = construct_power_weights(ob, trial) + construct_first_order_weights(
             ob, trial
         )
-    elif ob.calculator.equation_type == "sum":
-        weights = construct_first_order_weights(ob, trial)
-    elif ob.calculator.equation_type == "free_style":
-        weights = construct_first_order_weights(ob, trial)
+    elif not (ob.first_order):
+        weights = construct_power_weights(ob, trial)
     ob.calculator.get_overall_score(
         weights_for_equation=weights,
     )
