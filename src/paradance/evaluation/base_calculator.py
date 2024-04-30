@@ -42,6 +42,9 @@ class BaseCalculator(metaclass=ABCMeta):
         """Initializes the BaseCalculator."""
         self.selected_columns = selected_columns
         self.evaluated_dataframe: pd.DataFrame = pd.DataFrame()
+        self.samplers: dict = {}
+        self.woauc_dict: dict = {}
+        self.bin_mappings: dict = {}
 
     @abstractmethod
     def get_overall_score(self, weights_for_equation: List[float]) -> None:

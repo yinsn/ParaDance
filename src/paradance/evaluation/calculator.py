@@ -14,12 +14,9 @@ class Calculator(BaseCalculator):
         df_len (int): The length of the DataFrame.
         equation_eval_str (Optional[str]): A string representing a custom equation to evaluate.
         equation_type (str): The type of equation to use for calculations ("product", "sum", or "free_style").
-        samplers (Dict): A dictionary to store sampler objects by their score columns.
         selected_columns (List[str]): Columns selected for calculations.
         selected_values (np.ndarray): The values of the selected columns in the DataFrame.
         value_scales (np.ndarray): The negative average log10 magnitude of absolute values for selected columns.
-        woauc_dict (Dict): A dictionary to store weighted average over/under certain conditions.
-        bin_mappings (Dict): A dictionary to store mappings of bins to specific conditions.
         weights_for_groups (pd.Series): A Series containing weights for different groups within the DataFrame.
     """
 
@@ -47,11 +44,9 @@ class Calculator(BaseCalculator):
         self.df_len = len(self.df)
         self.equation_eval_str = equation_eval_str
         self.equation_type = equation_type
-        self.samplers: dict = {}
         self.selected_columns = selected_columns
         self.selected_values = self.df[selected_columns].values
-        self.woauc_dict: dict = {}
-        self.bin_mappings: dict = {}
+
         if weights_for_groups is None:
             self.weights_for_groups = pd.Series(
                 np.ones(len(self.df)), index=self.df.index
