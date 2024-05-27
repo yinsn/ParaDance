@@ -50,3 +50,45 @@ def stabilize_mean_with_exponents(
         else:
             high = mid - tolerance
     return mid
+
+
+def stabilize_mean_with_additional_factors(
+    dataframe: pd.DataFrame,
+    keep_columns: List[str],
+    additional_columns: List[str],
+    compensation: float = 0.0,
+    tolerance: float = 1e-6,
+    low: float = 0.0,
+    high: float = 5.0,
+) -> float:
+    """
+    Stabilizes the mean of the product of specified columns in a DataFrame with additional factors.
+
+    Args:
+        dataframe (pd.DataFrame): The input DataFrame.
+        keep_columns (List[str]): List of column names to keep and transform.
+        additional_columns (List[str]): List of additional column names to include in the mean calculation.
+        compensation (float, optional): Compensation value to adjust the target mean. Defaults to 0.0.
+        tolerance (float, optional): Tolerance level for mean stabilization. Defaults to 1e-6.
+        low (float, optional): Lower bound of the exponent search interval. Defaults to 0.0.
+        high (float, optional): Upper bound of the exponent search interval. Defaults to 5.0.
+
+    Returns:
+        float: The exponent value that stabilizes the mean within the specified tolerance.
+    """
+    dataframe_tmp = dataframe.copy()
+    target_mean = dataframe[keep_columns].prod(axis=1).mean() + compensation
+    while low <= high:
+        mid = (low + high) / 2
+        for column in keep_columns:
+            dataframe_tmp[column] = dataframe[column] ** mid
+        transformed_mean = (
+            dataframe_tmp[keep_columns + additional_columns].prod(axis=1).mean()
+        )
+        if abs(transformed_mean - target_mean) < tolerance:
+            return mid
+        elif transformed_mean < target_mean:
+            low = mid + tolerance
+        else:
+            high = mid - tolerance
+    return mid
