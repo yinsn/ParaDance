@@ -169,7 +169,7 @@ def construct_weights(ob: "MultipleObjective", trial: optuna.Trial) -> List[floa
         weights = construct_free_style_weights(ob, trial)
     elif ob.calculator.equation_type == "log_pca":
         weights = construct_log_pca_weights(ob, trial)
-    elif ob.calculator.equation_type == "product" and ob.power:
+    elif ob.calculator.equation_type == "product" and ob.first_order:
         weights = construct_power_weights(ob, trial) + construct_first_order_weights(
             ob, trial
         )
