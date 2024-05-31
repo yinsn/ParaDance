@@ -104,6 +104,30 @@ def construct_first_order_weights(
     return first_order_weights
 
 
+def construct_free_style_weights(
+    ob: "MultipleObjective", trial: optuna.Trial
+) -> List[float]:
+    """Constructs a list of free-style weights for a given multiple objective.
+
+    Args:
+        ob (MultipleObjective): The multiple objective instance with the weight configurations.
+        trial (optuna.Trial): The optuna trial object used to suggest the weights.
+
+    Returns:
+        List[float]: A list of weights suggested by the optuna trial.
+    """
+    free_style_weights: List[float] = []
+    if ob.weights_num is None:
+        ob.weights_num = ob.get_weights_num()
+    for i in range(ob.weights_num):
+        free_style_weights.append(
+            trial.suggest_float(
+                f"w{i+1}", ob.free_style_lower_bound, ob.free_style_upper_bound
+            )
+        )
+    return free_style_weights
+
+
 def construct_log_pca_weights(
     ob: "MultipleObjective", trial: optuna.Trial
 ) -> List[float]:
@@ -142,7 +166,7 @@ def construct_weights(ob: "MultipleObjective", trial: optuna.Trial) -> List[floa
     if ob.calculator.equation_type == "sum":
         weights = construct_first_order_weights(ob, trial)
     elif ob.calculator.equation_type == "free_style":
-        weights = construct_first_order_weights(ob, trial)
+        weights = construct_free_style_weights(ob, trial)
     elif ob.calculator.equation_type == "log_pca":
         weights = construct_log_pca_weights(ob, trial)
     elif ob.calculator.equation_type == "product" and ob.power:

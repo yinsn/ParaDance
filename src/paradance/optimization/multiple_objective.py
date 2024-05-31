@@ -9,7 +9,7 @@ from .construct_weights import construct_weights
 from .evaluate_targets import evaluate_targets
 
 
-class MutipleObjectiveConfig(BaseObjectiveConfig):
+class MultipleObjectiveConfig(BaseObjectiveConfig):
     """Configuration for handling multiple objectives in optimization.
 
     Attributes:
@@ -26,6 +26,8 @@ class MutipleObjectiveConfig(BaseObjectiveConfig):
 
     first_order_lower_bound: float = 1e-3
     first_order_upper_bound: float = 1e6
+    free_style_lower_bound: float = 1e-3
+    free_style_upper_bound: float = 1e6
     max_min_scale_ratio: Optional[float] = None
     first_order_scale_upper_bound: float = 1
     first_order_scale_lower_bound: float = 1
@@ -56,6 +58,8 @@ class MultipleObjective(BaseObjective):
         save_study: Optional[bool] = True,
         first_order_lower_bound: float = 1e-3,
         first_order_upper_bound: float = 1e6,
+        free_style_lower_bound: float = 1e-3,
+        free_style_upper_bound: float = 1e6,
         max_min_scale_ratio: Optional[float] = None,
         first_order_scale_upper_bound: float = 1,
         first_order_scale_lower_bound: float = 1,
@@ -79,9 +83,9 @@ class MultipleObjective(BaseObjective):
         """
 
         if config is not None:
-            self.config = MutipleObjectiveConfig(**config)
+            self.config = MultipleObjectiveConfig(**config)
         else:
-            self.config = MutipleObjectiveConfig(
+            self.config = MultipleObjectiveConfig(
                 direction=direction,
                 formula=formula,
                 first_order=first_order,
@@ -93,6 +97,8 @@ class MultipleObjective(BaseObjective):
                 save_study=save_study,
                 first_order_lower_bound=first_order_lower_bound,
                 first_order_upper_bound=first_order_upper_bound,
+                free_style_lower_bound=free_style_lower_bound,
+                free_style_upper_bound=free_style_upper_bound,
                 max_min_scale_ratio=max_min_scale_ratio,
                 first_order_scale_upper_bound=first_order_scale_upper_bound,
                 first_order_scale_lower_bound=first_order_scale_lower_bound,
@@ -113,6 +119,8 @@ class MultipleObjective(BaseObjective):
         self.save_study = self.config.save_study
         self.first_order_lower_bound = self.config.first_order_lower_bound
         self.first_order_upper_bound = self.config.first_order_upper_bound
+        self.free_style_lower_bound = self.config.free_style_lower_bound
+        self.free_style_upper_bound = self.config.free_style_upper_bound
         self.max_min_scale_ratio = self.config.max_min_scale_ratio
         self.first_order_scale_upper_bound = self.config.first_order_scale_upper_bound
         self.first_order_scale_lower_bound = self.config.first_order_scale_lower_bound
