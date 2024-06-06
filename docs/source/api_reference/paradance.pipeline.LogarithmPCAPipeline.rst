@@ -14,5 +14,7 @@
    .. autosummary::
 
       ~LogarithmPCAPipeline.__init__
+      ~LogarithmPCAPipeline.plot_logarithm_distributions
+      ~LogarithmPCAPipeline.plot_self_balancing_projected_distribution
       ~LogarithmPCAPipeline.run
       ~LogarithmPCAPipeline.show_results

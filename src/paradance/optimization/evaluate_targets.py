@@ -29,7 +29,13 @@ def evaluate_targets(
         groupbys,
         target_columns,
     ):
-        if flag == "portfolio":
+        if flag == "pearson":
+            corrcoef = calculator.calculate_corrcoef(
+                target_column=target_column,
+                mask_column=mask_column,
+            )
+            targets.append(corrcoef)
+        elif flag == "portfolio":
             _, concentration = calculator.calculate_portfolio_concentration(
                 target_column=target_column,
                 mask_column=mask_column,
