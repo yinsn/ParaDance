@@ -15,6 +15,7 @@
 
       ~LogarithmPCACalculator.__init__
       ~LogarithmPCACalculator.calculate_auc_triple_parameters
+      ~LogarithmPCACalculator.calculate_corrcoef
       ~LogarithmPCACalculator.calculate_distinct_count_portfolio_concentration
       ~LogarithmPCACalculator.calculate_inverse_pair
       ~LogarithmPCACalculator.calculate_log_mse

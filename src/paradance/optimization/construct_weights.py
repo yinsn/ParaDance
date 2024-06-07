@@ -119,12 +119,29 @@ def construct_free_style_weights(
     free_style_weights: List[float] = []
     if ob.weights_num is None:
         ob.weights_num = ob.get_weights_num()
-    for i in range(ob.weights_num):
-        free_style_weights.append(
-            trial.suggest_float(
-                f"w{i+1}", ob.free_style_lower_bound, ob.free_style_upper_bound
+    if isinstance(ob.free_style_lower_bound, list) and isinstance(
+        ob.free_style_upper_bound, list
+    ):
+        for i in range(ob.weights_num):
+            free_style_weights.append(
+                trial.suggest_float(
+                    f"w{i+1}",
+                    ob.free_style_lower_bound[i],
+                    ob.free_style_upper_bound[i],
+                )
             )
-        )
+        return free_style_weights
+    elif isinstance(ob.free_style_lower_bound, float) and isinstance(
+        ob.free_style_upper_bound, float
+    ):
+        for i in range(ob.weights_num):
+            free_style_weights.append(
+                trial.suggest_float(
+                    f"w{i+1}", ob.free_style_lower_bound, ob.free_style_upper_bound
+                )
+            )
+    else:
+        raise ValueError("Invalid free style bounds.")
     return free_style_weights
 
 

@@ -15,6 +15,8 @@ class MultipleObjectiveConfig(BaseObjectiveConfig):
     Attributes:
         first_order_lower_bound (float): The lower bound for the first-order objective.
         first_order_upper_bound (float): The upper bound for the first-order objective.
+        free_style_lower_bound (Union[float, List[float]]): The lower bound for the free-style objective.
+        free_style_upper_bound (Union[float, List[float]]): The upper bound for the free-style objective.
         max_min_scale_ratio (Optional[float]): The maximum to minimum scale ratio. None indicates no specific ratio.
         first_order_scale_upper_bound (float): The upper scale bound for the first-order objective.
         first_order_scale_lower_bound (float): The lower scale bound for the first-order objective.
@@ -26,8 +28,8 @@ class MultipleObjectiveConfig(BaseObjectiveConfig):
 
     first_order_lower_bound: float = 1e-3
     first_order_upper_bound: float = 1e6
-    free_style_lower_bound: float = 1e-3
-    free_style_upper_bound: float = 1e6
+    free_style_lower_bound: Union[float, List[float]] = 1e-3
+    free_style_upper_bound: Union[float, List[float]] = 1e6
     max_min_scale_ratio: Optional[float] = None
     first_order_scale_upper_bound: float = 1
     first_order_scale_lower_bound: float = 1
@@ -58,8 +60,8 @@ class MultipleObjective(BaseObjective):
         save_study: Optional[bool] = True,
         first_order_lower_bound: float = 1e-3,
         first_order_upper_bound: float = 1e6,
-        free_style_lower_bound: float = 1e-3,
-        free_style_upper_bound: float = 1e6,
+        free_style_lower_bound: Union[float, List[float]] = 1e-3,
+        free_style_upper_bound: Union[float, List[float]] = 1e6,
         max_min_scale_ratio: Optional[float] = None,
         first_order_scale_upper_bound: float = 1,
         first_order_scale_lower_bound: float = 1,

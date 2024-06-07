@@ -15,6 +15,7 @@
 
       ~Calculator.__init__
       ~Calculator.calculate_auc_triple_parameters
+      ~Calculator.calculate_corrcoef
       ~Calculator.calculate_distinct_count_portfolio_concentration
       ~Calculator.calculate_inverse_pair
       ~Calculator.calculate_log_mse

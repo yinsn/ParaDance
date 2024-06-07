@@ -15,6 +15,7 @@
 
       ~BaseCalculator.__init__
       ~BaseCalculator.calculate_auc_triple_parameters
+      ~BaseCalculator.calculate_corrcoef
       ~BaseCalculator.calculate_distinct_count_portfolio_concentration
       ~BaseCalculator.calculate_inverse_pair
       ~BaseCalculator.calculate_log_mse
