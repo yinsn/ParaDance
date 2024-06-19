@@ -55,11 +55,12 @@ def calculate_tau(
     :param target_column: String. The column name in the DataFrame that you want to target.
     :param groupby: Optional string. The column name to group by.
     :param weights_for_groups: Optional pd.Series. Weights for each group.
-    :param num_bins: Optional integer, default 100. The number of bins to use for the mapping.
-    :returns: float. The calculated Kendall's Tau. Normalized to [0, 1].
+    :param num_bins: Optional; defaults to 100. The number of bins to be used in the mapping process. If not specified, the number of bins will be determined based on the number of unique elements in the `target_column` of the DataFrame, but will not exceed 100 to avoid excessive granularity.
+    :returns: float. The calculated Kendall's Tau coefficient, which is a measure of the ordinal association between two measured quantities. It evaluates the similarity of the orderings of the data when ranked by each quantity. The coefficient ranges from -1 to 1, where -1 indicates a perfect inverse ordinal correlation, 0 indicates no correlation, and 1 indicates a perfect ordinal correlation. This measure helps in understanding how similarly or oppositely the data sets are ordered.
     """
     if num_bins is None:
-        num_bins = 100
+        unique_bins = calculator.df[target_column].nunique()
+        num_bins = int(min(unique_bins, 100))
     else:
         num_bins = int(num_bins)
     if target_column in calculator.bin_mappings:
@@ -82,5 +83,4 @@ def calculate_tau(
     else:
         overall_score_bins = map_to_bins(calculator.df["overall_score"], num_bins)
         tau, _ = kendalltau(label_bins, overall_score_bins)
-        normalized_tau = tau * 0.5 + 0.5
-    return normalized_tau
+    return tau
