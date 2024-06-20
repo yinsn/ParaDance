@@ -1,6 +1,6 @@
 import logging
 from abc import ABCMeta, abstractmethod
-from typing import Dict, Optional, Union
+from typing import Dict, List, Optional, Union
 
 import numpy as np
 import optuna
@@ -173,6 +173,19 @@ class BaseObjective(metaclass=ABCMeta):
             f"paradance_{process_id}" if process_id else "optuna"
         )
         self.logger.addHandler(file_handler)
+
+    @abstractmethod
+    def evaluate_custom_weights(self, weights: List[float]) -> List[float]:
+        """
+        Evaluates the custom weights for the given list of weights.
+
+        Args:
+            weights (List[float]): List of weights to evaluate.
+
+        Returns:
+            float: Evaluation score for the given weights.
+        """
+        raise NotImplementedError
 
     @abstractmethod
     def objective(self, trial: optuna.trial.Trial) -> float:

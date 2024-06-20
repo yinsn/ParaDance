@@ -192,8 +192,5 @@ def construct_weights(ob: "MultipleObjective", trial: optuna.Trial) -> List[floa
         )
     elif not (ob.first_order):
         weights = construct_power_weights(ob, trial)
-    ob.calculator.get_overall_score(
-        weights_for_equation=weights,
-    )
 
     return weights

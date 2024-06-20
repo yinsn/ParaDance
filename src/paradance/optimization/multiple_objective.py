@@ -181,6 +181,29 @@ class MultipleObjective(BaseObjective):
         else:
             self.evaluator_propertys.append(None)
 
+    def evaluate_custom_weights(self, weights: List[float]) -> List[float]:
+        """
+        Evaluate the objective function with custom weights.
+
+        Args:
+            weights (List[float]): Custom weights to evaluate.
+        """
+        self.calculator.get_overall_score(
+            weights_for_equation=weights,
+        )
+
+        targets = evaluate_targets(
+            calculator=self.calculator,
+            evaluator_flags=self.evaluator_flags,
+            mask_columns=self.mask_columns,
+            hyperparameters=self.hyperparameters,
+            evaluator_propertys=self.evaluator_propertys,
+            groupbys=self.groupbys,
+            target_columns=self.target_columns,
+            weights=weights,
+        )
+        return targets
+
     def objective(
         self,
         trial: Trial,
@@ -195,16 +218,7 @@ class MultipleObjective(BaseObjective):
             float: Computed objective value based on the provided trial.
         """
         weights = construct_weights(self, trial)
-        targets = evaluate_targets(
-            calculator=self.calculator,
-            evaluator_flags=self.evaluator_flags,
-            mask_columns=self.mask_columns,
-            hyperparameters=self.hyperparameters,
-            evaluator_propertys=self.evaluator_propertys,
-            groupbys=self.groupbys,
-            target_columns=self.target_columns,
-            weights=weights,
-        )
+        targets = self.evaluate_custom_weights(weights)
         local_vars = {"targets": targets, "sum": sum, "max": max, "min": min}
         result = float(eval(str(self.formula), {"__builtins__": None}, local_vars))
         if self.logger:
