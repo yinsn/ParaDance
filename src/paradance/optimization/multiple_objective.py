@@ -51,7 +51,7 @@ class MultipleObjective(BaseObjective):
         calculator: Union[Calculator, LogarithmPCACalculator],
         direction: Optional[str] = None,
         formula: Optional[str] = None,
-        first_order: Optional[bool] = True,
+        first_order: Optional[bool] = False,
         power: Optional[bool] = True,
         dirichlet: Optional[bool] = False,
         weights_num: Optional[int] = None,

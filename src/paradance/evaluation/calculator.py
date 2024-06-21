@@ -14,7 +14,7 @@ class Calculator(BaseCalculator):
         df (pd.DataFrame): The DataFrame to perform calculations on.
         df_len (int): The length of the DataFrame.
         equation_eval_str (Optional[str]): A string representing a custom equation to evaluate.
-        equation_type (str): The type of equation to use for calculations ("product", "sum", or "free_style").
+        equation_type (str): The type of equation to use for calculations ("product", "sum", "free_style", or "json").
         selected_columns (List[str]): Columns selected for calculations.
         selected_values (np.ndarray): The values of the selected columns in the DataFrame.
         value_scales (np.ndarray): The negative average log10 magnitude of absolute values for selected columns.
