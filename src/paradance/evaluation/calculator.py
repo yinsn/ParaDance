@@ -1,9 +1,10 @@
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 import numpy as np
 import pandas as pd
 
 from .base_calculator import BaseCalculator
+from .calculate_json_formula import JSONFormula, calculate_formula_scores
 
 
 class Calculator(BaseCalculator):
@@ -27,6 +28,8 @@ class Calculator(BaseCalculator):
         equation_type: str = "product",
         weights_for_groups: Optional[pd.Series] = None,
         equation_eval_str: Optional[str] = None,
+        equation_json: Optional[Dict] = None,
+        delimiter: Optional[str] = "#",
     ) -> None:
         """Initializes the Calculator object.
 
@@ -43,6 +46,11 @@ class Calculator(BaseCalculator):
         self.df = df
         self.df_len = len(self.df)
         self.equation_eval_str = equation_eval_str
+
+        if equation_json is not None:
+            self.equation_json = JSONFormula(**equation_json)
+
+        self.delimiter = delimiter
         self.equation_type = equation_type
         self.selected_columns = selected_columns
         self.selected_values = self.df[selected_columns].values
@@ -53,7 +61,6 @@ class Calculator(BaseCalculator):
             )
         else:
             self.weights_for_groups = weights_for_groups
-        self.value_scale()
 
     def value_scale(self) -> None:
         """
@@ -77,15 +84,7 @@ class Calculator(BaseCalculator):
         Args:
             weights_for_equation (List[float]): A list of weights to apply to each selected column for the calculation.
         """
-        if len(weights_for_equation) == 2 * len(self.selected_columns):
-            powers_for_equation = weights_for_equation[: len(self.selected_columns)]
-            first_order_weights = weights_for_equation[len(self.selected_columns) :]
-            self.df["overall_score"] = np.prod(
-                (1 + np.asarray(first_order_weights) * np.asarray(self.selected_values))
-                ** powers_for_equation,
-                axis=1,
-            )
-        elif self.equation_type == "product":
+        if self.equation_type == "product":
             self.df["overall_score"] = np.prod(
                 self.selected_values**weights_for_equation, axis=1
             )
@@ -104,6 +103,23 @@ class Calculator(BaseCalculator):
                 )
             else:
                 raise ValueError("equation_eval_str is not defined.")
+
+        elif (self.equation_type == "json") and (self.equation_json is not None):
+            self.df["overall_score"] = calculate_formula_scores(
+                equation_json=self.equation_json,
+                selected_values=self.df[self.selected_columns],
+                weights=weights_for_equation,
+                delimiter=self.delimiter,
+            )
+
+        elif len(weights_for_equation) == 2 * len(self.selected_columns):
+            powers_for_equation = weights_for_equation[: len(self.selected_columns)]
+            first_order_weights = weights_for_equation[len(self.selected_columns) :]
+            self.df["overall_score"] = np.prod(
+                (1 + np.asarray(first_order_weights) * np.asarray(self.selected_values))
+                ** powers_for_equation,
+                axis=1,
+            )
 
     def create_score_columns(
         self, boundary_dict: dict, score_column: str = "score"

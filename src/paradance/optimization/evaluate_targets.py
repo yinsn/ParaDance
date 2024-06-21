@@ -35,6 +35,7 @@ def evaluate_targets(
                 mask_column=mask_column,
             )
             targets.append(corrcoef)
+
         elif flag == "portfolio":
             _, concentration = calculator.calculate_portfolio_concentration(
                 target_column=target_column,
@@ -53,6 +54,7 @@ def evaluate_targets(
                 expected_coverage=hyperparameter,
             )
             targets.append(concentration)
+
         elif flag == "wuauc":
             wuauc = calculator.calculate_wuauc(
                 target_column=target_column,
@@ -61,6 +63,7 @@ def evaluate_targets(
                 weights_for_equation=weights,
             )
             targets.append(wuauc)
+
         elif flag == "auc":
             auc = calculator.calculate_wuauc(
                 target_column=target_column,
@@ -70,6 +73,7 @@ def evaluate_targets(
                 auc=True,
             )
             targets.append(auc)
+
         elif flag == "woauc":
             woauc = calculator.calculate_woauc(
                 target_column=target_column,
@@ -77,6 +81,7 @@ def evaluate_targets(
                 weights_for_equation=weights,
             )
             targets.append(sum(woauc))
+
         elif flag == "logmse":
             mse = calculator.calculate_log_mse(
                 target_column=target_column,
@@ -87,6 +92,7 @@ def evaluate_targets(
                 weights_for_equation=weights, label_column=target_column
             )
             targets.append(neg_rank_ratio)
+
         elif flag == "inverse_pairs":
             inverse_score = calculator.calculate_inverse_pair(
                 calculator=calculator,
@@ -94,6 +100,7 @@ def evaluate_targets(
                 weights_type=evaluator_property,
             )
             targets.append(inverse_score)
+
         elif flag == "tau":
             tau = calculator.calculate_tau(
                 groupby=groupby,

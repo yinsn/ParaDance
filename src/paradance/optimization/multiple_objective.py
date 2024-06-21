@@ -141,6 +141,11 @@ class MultipleObjective(BaseObjective):
         if self.power_lower_bound < 0:
             self.dirichlet = False
 
+        if self.calculator.equation_type not in ["free_style", "json"] and isinstance(
+            self.calculator, Calculator
+        ):
+            self.calculator.value_scale()
+
         self._prepare_study()
 
     def add_evaluator(
@@ -202,6 +207,7 @@ class MultipleObjective(BaseObjective):
             target_columns=self.target_columns,
             weights=weights,
         )
+
         return targets
 
     def objective(
