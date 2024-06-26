@@ -84,7 +84,9 @@ class Calculator(BaseCalculator):
         Args:
             weights_for_equation (List[float]): A list of weights to apply to each selected column for the calculation.
         """
-        if self.equation_type == "product":
+        if self.equation_type == "product" and (
+            len(weights_for_equation) == len(self.selected_columns)
+        ):
             self.df["overall_score"] = np.prod(
                 self.selected_values**weights_for_equation, axis=1
             )
