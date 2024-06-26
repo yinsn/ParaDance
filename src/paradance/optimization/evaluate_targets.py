@@ -63,6 +63,14 @@ def evaluate_targets(
             )
             targets.append(top_coverage)
 
+        elif flag == "distinct_top_coverage":
+            distinct_top_coverage = calculator.calculate_distinct_top_coverage(
+                target_column=target_column,
+                mask_column=mask_column,
+                head_percentage=hyperparameter,
+            )
+            targets.append(distinct_top_coverage)
+
         elif flag == "wuauc":
             wuauc = calculator.calculate_wuauc(
                 target_column=target_column,
