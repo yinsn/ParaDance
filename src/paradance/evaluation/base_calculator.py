@@ -14,6 +14,7 @@ from .log_mse_evaluator import calculate_log_mse
 from .neg_rank_ratio_evaluator import calculate_neg_rank_ratio
 from .portfolio_evaluator import calculate_portfolio_concentration
 from .tau_evaluator import calculate_tau
+from .top_coverage_evaluator import calculate_top_coverage
 from .woauc_evaluator import calculate_woauc
 from .wuauc_evaluator import calculate_wuauc
 
@@ -36,6 +37,7 @@ class BaseCalculator(metaclass=ABCMeta):
     calculate_log_mse = partialmethod(calculate_log_mse)
     calculate_neg_rank_ratio = partialmethod(calculate_neg_rank_ratio)
     calculate_portfolio_concentration = partialmethod(calculate_portfolio_concentration)
+    calculate_top_coverage = partialmethod(calculate_top_coverage)
     calculate_tau = partialmethod(calculate_tau)
     calculate_woauc = partialmethod(calculate_woauc)
     calculate_wuauc = partialmethod(calculate_wuauc)

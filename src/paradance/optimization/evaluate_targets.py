@@ -55,6 +55,14 @@ def evaluate_targets(
             )
             targets.append(concentration)
 
+        elif flag == "top_coverage":
+            top_coverage = calculator.calculate_top_coverage(
+                target_column=target_column,
+                mask_column=mask_column,
+                head_percentage=hyperparameter,
+            )
+            targets.append(top_coverage)
+
         elif flag == "wuauc":
             wuauc = calculator.calculate_wuauc(
                 target_column=target_column,
