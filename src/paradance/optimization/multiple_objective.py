@@ -13,6 +13,7 @@ class MultipleObjectiveConfig(BaseObjectiveConfig):
     """Configuration for handling multiple objectives in optimization.
 
     Attributes:
+        first_order_with_scales (bool): Whether to use scales-control in the first-order objective. Disable 'first_order_lower_bound' and 'first_order_upper_bound' when 'first_order_with_scales' is true and use automatic configuration instead.
         first_order_lower_bound (float): The lower bound for the first-order objective.
         first_order_upper_bound (float): The upper bound for the first-order objective.
         free_style_lower_bound (Union[float, List[float]]): The lower bound for the free-style objective.
@@ -26,6 +27,7 @@ class MultipleObjectiveConfig(BaseObjectiveConfig):
         pca_importance_upper_bound (float): The upper bound for PCA importance.
     """
 
+    first_order_with_scales: bool = True
     first_order_lower_bound: float = 1e-3
     first_order_upper_bound: float = 1e6
     free_style_lower_bound: Union[float, List[float]] = 1e-3
@@ -58,6 +60,7 @@ class MultipleObjective(BaseObjective):
         study_name: Optional[str] = None,
         study_path: Optional[str] = None,
         save_study: Optional[bool] = True,
+        first_order_with_scales: bool = True,
         first_order_lower_bound: float = 1e-3,
         first_order_upper_bound: float = 1e6,
         free_style_lower_bound: Union[float, List[float]] = 1e-3,
@@ -75,6 +78,7 @@ class MultipleObjective(BaseObjective):
         Initialize with direction, weights_num, formula, and dirichlet.
 
         Args:
+            first_order_with_scales (bool, optional): Whether to use scales-control in the first-order objective. Defaults to True.
             first_order_lower_bound (float, optional): Lower bound for first order value. Defaults to 1e-3.
             first_order_upper_bound (float, optional): Upper bound for first order value. Defaults to 1e6.
             power_lower_bound (float, optional): Lower bound for power value. Defaults to -1.
@@ -97,6 +101,7 @@ class MultipleObjective(BaseObjective):
                 study_name=study_name,
                 study_path=study_path,
                 save_study=save_study,
+                first_order_with_scales=first_order_with_scales,
                 first_order_lower_bound=first_order_lower_bound,
                 first_order_upper_bound=first_order_upper_bound,
                 free_style_lower_bound=free_style_lower_bound,
@@ -121,6 +126,7 @@ class MultipleObjective(BaseObjective):
         self.save_study = self.config.save_study
         self.first_order_lower_bound = self.config.first_order_lower_bound
         self.first_order_upper_bound = self.config.first_order_upper_bound
+        self.first_order_with_scales = self.config.first_order_with_scales
         self.free_style_lower_bound = self.config.free_style_lower_bound
         self.free_style_upper_bound = self.config.free_style_upper_bound
         self.max_min_scale_ratio = self.config.max_min_scale_ratio

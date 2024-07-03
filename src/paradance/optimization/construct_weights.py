@@ -67,7 +67,7 @@ def construct_first_order_weights(
     first_order_scale_upper_bound = ob.first_order_scale_upper_bound
     first_order_scale_lower_bound = ob.first_order_scale_lower_bound
 
-    if isinstance(ob.calculator, Calculator):
+    if isinstance(ob.calculator, Calculator) and ob.first_order_with_scales:
         value_scales = ob.calculator.value_scales
         for i in range(ob.weights_num):
             first_order_weights.append(
