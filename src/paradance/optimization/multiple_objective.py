@@ -21,8 +21,8 @@ class MultipleObjectiveConfig(BaseObjectiveConfig):
         max_min_scale_ratio (Optional[float]): The maximum to minimum scale ratio. None indicates no specific ratio.
         first_order_scale_upper_bound (float): The upper scale bound for the first-order objective.
         first_order_scale_lower_bound (float): The lower scale bound for the first-order objective.
-        power_lower_bound (float): The lower bound for the power objective.
-        power_upper_bound (float): The upper bound for the power objective.
+        power_lower_bound (Union[float, List[float]]): The lower bound for the power objective.
+        power_upper_bound (Union[float, List[float]]): The upper bound for the power objective.
         pca_importance_lower_bound (float): The lower bound for PCA importance.
         pca_importance_upper_bound (float): The upper bound for PCA importance.
     """
@@ -35,8 +35,8 @@ class MultipleObjectiveConfig(BaseObjectiveConfig):
     max_min_scale_ratio: Optional[float] = None
     first_order_scale_upper_bound: float = 1
     first_order_scale_lower_bound: float = 1
-    power_lower_bound: float = -1
-    power_upper_bound: float = 1
+    power_lower_bound: Union[float, List[float]] = -1
+    power_upper_bound: Union[float, List[float]] = 1
     pca_importance_lower_bound: float = 0
     pca_importance_upper_bound: float = 10
 
@@ -68,8 +68,8 @@ class MultipleObjective(BaseObjective):
         max_min_scale_ratio: Optional[float] = None,
         first_order_scale_upper_bound: float = 1,
         first_order_scale_lower_bound: float = 1,
-        power_lower_bound: float = -1,
-        power_upper_bound: float = 1,
+        power_lower_bound: Union[float, List[float]] = -1,
+        power_upper_bound: Union[float, List[float]] = 1,
         pca_importance_lower_bound: float = 0,
         pca_importance_upper_bound: float = 10,
         config: Optional[Dict] = None,
@@ -81,8 +81,8 @@ class MultipleObjective(BaseObjective):
             first_order_with_scales (bool, optional): Whether to use scales-control in the first-order objective. Defaults to True.
             first_order_lower_bound (float, optional): Lower bound for first order value. Defaults to 1e-3.
             first_order_upper_bound (float, optional): Upper bound for first order value. Defaults to 1e6.
-            power_lower_bound (float, optional): Lower bound for power value. Defaults to -1.
-            power_upper_bound (float, optional): Upper bound for power value. Defaults to 1.
+            power_lower_bound (Union[float, List[float]]): Lower bound for power value. Defaults to -1.
+            power_upper_bound (Union[float, List[float]]): Upper bound for power value. Defaults to 1.
             pca_importance_lower_bound (float, optional): Lower bound for pca importance value. Defaults to 0.
             pca_importance_upper_bound (float, optional): Upper bound for pca importance value. Defaults to 10.
             first_order_scale_bound (Optional[float], optional): Scale bound for first order value. Defaults to None.
@@ -143,9 +143,6 @@ class MultipleObjective(BaseObjective):
         self.groupbys: List[Optional[str]] = []
         self.hyperparameters: List[Optional[float]] = []
         self.evaluator_propertys: List[Optional[str]] = []
-
-        if self.power_lower_bound < 0:
-            self.dirichlet = False
 
         if self.calculator.equation_type not in ["free_style", "json"] and isinstance(
             self.calculator, Calculator

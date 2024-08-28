@@ -34,13 +34,22 @@ def construct_power_weights(
                 )
             )
         power_weights.append(1 - sum(power_weights))
-    else:
-        for i in range(ob.weights_num):
-            power_weights.append(
-                trial.suggest_float(
-                    f"w{i+1}", ob.power_lower_bound, ob.power_upper_bound
-                )
-            )
+
+    lower_bounds = (
+        [ob.power_lower_bound] * ob.weights_num
+        if isinstance(ob.power_lower_bound, float)
+        else ob.power_lower_bound
+    )
+    upper_bounds = (
+        [ob.power_upper_bound] * ob.weights_num
+        if isinstance(ob.power_upper_bound, float)
+        else ob.power_upper_bound
+    )
+
+    for i in range(ob.weights_num):
+        power_weights.append(
+            trial.suggest_float(f"w{i+1}", lower_bounds[i], upper_bounds[i])
+        )
 
     return power_weights
 

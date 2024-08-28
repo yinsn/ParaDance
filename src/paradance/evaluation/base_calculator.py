@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from functools import partialmethod
-from typing import List
+from typing import List, Union
 
 import pandas as pd
 
@@ -60,3 +60,39 @@ class BaseCalculator(metaclass=ABCMeta):
         Calculates the overall score based on the weights provided for each evaluation metric.
         """
         pass
+
+    def clip_max(
+        self, que_a: Union[pd.Series, float, int], que_b: Union[pd.Series, float, int]
+    ) -> pd.Series:
+        print(type(que_a))
+        if isinstance(que_a, pd.Series):
+            return que_a.clip(lower=que_b)
+        elif isinstance(que_b, pd.Series):
+            return que_b.clip(lower=que_a)
+
+    @staticmethod
+    def clip_min(que_a: pd.Series, que_b: pd.Series) -> pd.Series:
+        # return pd.Series(que_a).clip(upper=2)
+        # return sum(pd.Series(que_a), 2)
+        a = pd.Series(que_a).clip(upper=2)
+        return pd.Series(a)
+        # return que_a.clip(upper=que_b)
+        # if isinstance(que_a, pd.Series):
+        #     return que_a.clip(upper=que_b)
+        # elif isinstance(que_b, pd.Series):
+        #     return que_b.clip(upper=que_a)
+
+    def initialize_local_dict(
+        self, weights_for_equation: List[float], columns: List
+    ) -> dict:
+        """
+        Initializes a dictionary that can be used for additional calculations.
+        """
+        local_dict = {
+            "weights": weights_for_equation,
+            "columns": columns,
+            "sum": sum,
+            "max": self.clip_max,
+            "min": self.clip_min,
+        }
+        return local_dict

@@ -68,7 +68,7 @@ class Calculator(BaseCalculator):
         storing the result in `self.value_scales`.
         """
         dataframe = self.df[self.selected_columns].abs()
-        magnitudes = np.log10(dataframe.values)
+        magnitudes = np.log10(dataframe.values + 1e-10)
 
         avg_magnitude = np.nanmean(magnitudes, axis=0)
         magnitudes = [-magnitude for magnitude in avg_magnitude]
@@ -98,10 +98,10 @@ class Calculator(BaseCalculator):
             columns = [
                 self.selected_values[:, i] for i in range(self.selected_values.shape[1])
             ]
-            local_dict = {"weights": weights_for_equation, "columns": columns}
+            local_dict = self.initialize_local_dict(weights_for_equation, columns)
             if self.equation_eval_str is not None:
                 self.df["overall_score"] = eval(
-                    self.equation_eval_str, globals(), local_dict
+                    self.equation_eval_str, {"__builtins__": None}, local_dict
                 )
             else:
                 raise ValueError("equation_eval_str is not defined.")
