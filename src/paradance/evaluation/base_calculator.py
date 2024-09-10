@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 from functools import partialmethod
 from typing import List, Union
 
+import numpy as np
 import pandas as pd
 
 from .auc_triple_parameters_evaluator import calculate_auc_triple_parameters
@@ -61,26 +62,19 @@ class BaseCalculator(metaclass=ABCMeta):
         """
         pass
 
+    @staticmethod
     def clip_max(
-        self, que_a: Union[pd.Series, float, int], que_b: Union[pd.Series, float, int]
-    ) -> pd.Series:
-        print(type(que_a))
-        if isinstance(que_a, pd.Series):
-            return que_a.clip(lower=que_b)
-        elif isinstance(que_b, pd.Series):
-            return que_b.clip(lower=que_a)
+        left: Union[np.ndarray, float, int], right: Union[np.ndarray, float, int]
+    ) -> np.ndarray:
+        """Clips the values in the `right` array or scalar to a maximum value specified by `left`."""
+        return np.clip(right, a_min=left, a_max=None)
 
     @staticmethod
-    def clip_min(que_a: pd.Series, que_b: pd.Series) -> pd.Series:
-        # return pd.Series(que_a).clip(upper=2)
-        # return sum(pd.Series(que_a), 2)
-        a = pd.Series(que_a).clip(upper=2)
-        return pd.Series(a)
-        # return que_a.clip(upper=que_b)
-        # if isinstance(que_a, pd.Series):
-        #     return que_a.clip(upper=que_b)
-        # elif isinstance(que_b, pd.Series):
-        #     return que_b.clip(upper=que_a)
+    def clip_min(
+        left: Union[np.ndarray, float, int], right: Union[np.ndarray, float, int]
+    ) -> np.ndarray:
+        """Clips the values in the `right` array or scalar to a minimum value specified by `left`."""
+        return np.clip(right, a_min=None, a_max=left)
 
     def initialize_local_dict(
         self, weights_for_equation: List[float], columns: List
