@@ -18,6 +18,8 @@ class MultipleObjectiveConfig(BaseObjectiveConfig):
         first_order_upper_bound (float): The upper bound for the first-order objective.
         free_style_lower_bound (Union[float, List[float]]): The lower bound for the free-style objective.
         free_style_upper_bound (Union[float, List[float]]): The upper bound for the free-style objective.
+        base_weights (Optional[List[float]]): The base weights for the first-order objective.
+        base_weights_offset_ratio (float): The offset ratio for the base weights.
         max_min_scale_ratio (Optional[float]): The maximum to minimum scale ratio. None indicates no specific ratio.
         first_order_scale_upper_bound (float): The upper scale bound for the first-order objective.
         first_order_scale_lower_bound (float): The lower scale bound for the first-order objective.
@@ -32,6 +34,8 @@ class MultipleObjectiveConfig(BaseObjectiveConfig):
     first_order_upper_bound: float = 1e6
     free_style_lower_bound: Union[float, List[float]] = 1e-3
     free_style_upper_bound: Union[float, List[float]] = 1e6
+    base_weights: Optional[List[float]] = None
+    base_weights_offset_ratio: float = 0.1
     max_min_scale_ratio: Optional[float] = None
     first_order_scale_upper_bound: float = 1
     first_order_scale_lower_bound: float = 1
@@ -65,6 +69,8 @@ class MultipleObjective(BaseObjective):
         first_order_upper_bound: float = 1e6,
         free_style_lower_bound: Union[float, List[float]] = 1e-3,
         free_style_upper_bound: Union[float, List[float]] = 1e6,
+        base_weights: Optional[List[float]] = None,
+        base_weights_offset_ratio: float = 0.1,
         max_min_scale_ratio: Optional[float] = None,
         first_order_scale_upper_bound: float = 1,
         first_order_scale_lower_bound: float = 1,
@@ -106,6 +112,8 @@ class MultipleObjective(BaseObjective):
                 first_order_upper_bound=first_order_upper_bound,
                 free_style_lower_bound=free_style_lower_bound,
                 free_style_upper_bound=free_style_upper_bound,
+                base_weights=base_weights,
+                base_weights_offset_ratio=base_weights_offset_ratio,
                 max_min_scale_ratio=max_min_scale_ratio,
                 first_order_scale_upper_bound=first_order_scale_upper_bound,
                 first_order_scale_lower_bound=first_order_scale_lower_bound,
@@ -129,6 +137,8 @@ class MultipleObjective(BaseObjective):
         self.first_order_with_scales = self.config.first_order_with_scales
         self.free_style_lower_bound = self.config.free_style_lower_bound
         self.free_style_upper_bound = self.config.free_style_upper_bound
+        self.base_weights = self.config.base_weights
+        self.base_weights_offset_ratio = self.config.base_weights_offset_ratio
         self.max_min_scale_ratio = self.config.max_min_scale_ratio
         self.first_order_scale_upper_bound = self.config.first_order_scale_upper_bound
         self.first_order_scale_lower_bound = self.config.first_order_scale_lower_bound

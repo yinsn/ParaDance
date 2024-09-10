@@ -128,6 +128,13 @@ def construct_free_style_weights(
     free_style_weights: List[float] = []
     if ob.weights_num is None:
         ob.weights_num = ob.get_weights_num()
+    if ob.base_weights is not None:
+        ob.free_style_lower_bound = [
+            (1 - ob.base_weights_offset_ratio) * weight for weight in ob.base_weights
+        ]
+        ob.free_style_upper_bound = [
+            (1 + ob.base_weights_offset_ratio) * weight for weight in ob.base_weights
+        ]
     if isinstance(ob.free_style_lower_bound, list) and isinstance(
         ob.free_style_upper_bound, list
     ):
