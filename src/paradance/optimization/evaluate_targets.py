@@ -1,5 +1,7 @@
 from typing import List, Optional, Union
 
+import pandas as pd
+
 from ..evaluation import Calculator, LogarithmPCACalculator
 
 
@@ -11,6 +13,7 @@ def evaluate_targets(
     hyperparameters: List[Optional[float]],
     evaluator_propertys: List[Optional[str]],
     groupbys: List[Optional[str]],
+    group_weights: List[Optional[pd.Series]],
 ) -> List[float]:
     targets = []
     for (
@@ -20,6 +23,7 @@ def evaluate_targets(
         evaluator_property,
         groupby,
         target_column,
+        weights_for_groups,
     ) in zip(
         evaluator_flags,
         mask_columns,
@@ -27,6 +31,7 @@ def evaluate_targets(
         evaluator_propertys,
         groupbys,
         target_columns,
+        group_weights,
     ):
         if flag == "pearson":
             corrcoef = calculator.calculate_corrcoef(
@@ -75,6 +80,7 @@ def evaluate_targets(
                 target_column=target_column,
                 mask_column=mask_column,
                 groupby=groupby,
+                weights_for_groups=weights_for_groups,
             )
             targets.append(wuauc)
 
@@ -83,6 +89,7 @@ def evaluate_targets(
                 target_column=target_column,
                 mask_column=mask_column,
                 groupby=groupby,
+                weights_for_groups=weights_for_groups,
                 auc=True,
             )
             targets.append(auc)
@@ -91,6 +98,7 @@ def evaluate_targets(
             woauc = calculator.calculate_woauc(
                 target_column=target_column,
                 groupby=groupby,
+                weights_for_groups=weights_for_groups,
             )
             targets.append(sum(woauc))
 
@@ -116,6 +124,7 @@ def evaluate_targets(
             tau = calculator.calculate_tau(
                 groupby=groupby,
                 target_column=target_column,
+                weights_for_groups=weights_for_groups,
                 num_bins=hyperparameter,
             )
             targets.append(tau)

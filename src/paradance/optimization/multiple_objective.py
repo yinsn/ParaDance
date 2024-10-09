@@ -1,6 +1,7 @@
 from functools import partialmethod
 from typing import Dict, List, Optional, Union
 
+import pandas as pd
 from optuna.trial import Trial
 
 from ..evaluation import Calculator, LogarithmPCACalculator
@@ -151,6 +152,7 @@ class MultipleObjective(BaseObjective):
         self.mask_columns: List[Optional[str]] = []
         self.evaluator_flags: List[str] = []
         self.groupbys: List[Optional[str]] = []
+        self.group_weights: List[Optional[pd.Series]] = []
         self.hyperparameters: List[Optional[float]] = []
         self.evaluator_propertys: List[Optional[str]] = []
 
@@ -169,6 +171,7 @@ class MultipleObjective(BaseObjective):
         hyperparameter: Optional[float] = None,
         evaluator_property: Optional[str] = None,
         groupby: Optional[str] = None,
+        weights_for_groups: Optional[pd.Series] = None,
     ) -> None:
         """
         Adds evaluators to the objective.
@@ -198,6 +201,10 @@ class MultipleObjective(BaseObjective):
             self.evaluator_propertys.append(evaluator_property)
         else:
             self.evaluator_propertys.append(None)
+        if weights_for_groups is not None:
+            self.group_weights.append(weights_for_groups)
+        else:
+            self.group_weights.append(None)
 
     def evaluate_custom_weights(self, weights: List[float]) -> List[float]:
         """
@@ -218,6 +225,7 @@ class MultipleObjective(BaseObjective):
             evaluator_propertys=self.evaluator_propertys,
             groupbys=self.groupbys,
             target_columns=self.target_columns,
+            group_weights=self.group_weights,
         )
 
         return targets
