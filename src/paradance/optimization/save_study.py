@@ -2,6 +2,8 @@ import csv
 import pickle
 import sys
 
+from paradance.evaluation.calculator import Calculator
+
 from .multiple_objective import MultipleObjective
 
 
@@ -123,6 +125,13 @@ def save_study(multiple_objective: MultipleObjective) -> None:
         multiple_objective (MultipleObjective): An instance of the MultipleObjective class containing the study to be saved.
     """
     ob = multiple_objective
+
+    if (
+        isinstance(ob.calculator, Calculator)
+        and ob.calculator.equation_json is not None
+    ):
+        ob.export_completed_formulas()
+
     save_multiple_objective_info(ob, f"{ob.full_path}/objective_info.txt")
     ob.study.trials_dataframe().to_csv(f"{ob.full_path}/paradance_full_trials.csv")
     with open(f"{ob.full_path}/study.pkl", "wb") as f:

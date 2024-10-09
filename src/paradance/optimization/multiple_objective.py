@@ -1,6 +1,7 @@
 from functools import partialmethod
 from typing import Dict, List, Optional, Union
 
+import numpy as np
 import pandas as pd
 from optuna.trial import Trial
 
@@ -252,3 +253,33 @@ class MultipleObjective(BaseObjective):
             self.logger.info(f"targets: {targets}")
             self.logger.info(f"weights: {weights}")
         return result
+
+    def export_completed_formulas(self, weights: Optional[np.ndarray] = None) -> None:
+        """Exports the completed formulas by replacing weight placeholders in the formulas
+        with actual values from the provided or default weights.
+
+        If `weights` is not provided, it defaults to `self.best_params`. The method updates
+        `self.completed_formulas` by replacing occurrences of `weights[i]` in the stored
+        equations with corresponding values from the weight array.
+
+        Args:
+            weights (Optional[np.ndarray]): An optional numpy array containing weight values
+                to substitute in the formulas. If None, `self.best_params` is used.
+
+        Returns:
+            None: This method does not return a value but updates `self.completed_formulas`
+            with the substituted equations.
+        """
+        json_equations = {}
+        if weights is None:
+            weights = self.best_params
+        if (
+            isinstance(self.calculator, Calculator)
+            and self.calculator.equation_json is not None
+        ):
+            json_equations = self.calculator.equation_json.formula
+            for key, expr in json_equations.items():
+                for i, param in enumerate(weights):
+                    expr = expr.replace(f"weights[{i}]", str(param))
+                json_equations[key] = expr
+        self.completed_formulas = json_equations
