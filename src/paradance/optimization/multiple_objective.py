@@ -39,8 +39,8 @@ class MultipleObjectiveConfig(BaseObjectiveConfig):
     base_weights: Optional[List[float]] = None
     base_weights_offset_ratio: float = 0.1
     max_min_scale_ratio: Optional[float] = None
-    first_order_scale_upper_bound: float = 1
-    first_order_scale_lower_bound: float = 1
+    first_order_scale_upper_bound: Union[float, List[float]] = 1
+    first_order_scale_lower_bound: Union[float, List[float]] = 1
     power_lower_bound: Union[float, List[float]] = -1
     power_upper_bound: Union[float, List[float]] = 1
     pca_importance_lower_bound: float = 0
@@ -74,8 +74,8 @@ class MultipleObjective(BaseObjective):
         base_weights: Optional[List[float]] = None,
         base_weights_offset_ratio: float = 0.1,
         max_min_scale_ratio: Optional[float] = None,
-        first_order_scale_upper_bound: float = 1,
-        first_order_scale_lower_bound: float = 1,
+        first_order_scale_upper_bound: Union[float, List[float]] = 1,
+        first_order_scale_lower_bound: Union[float, List[float]] = 1,
         power_lower_bound: Union[float, List[float]] = -1,
         power_upper_bound: Union[float, List[float]] = 1,
         pca_importance_lower_bound: float = 0,
