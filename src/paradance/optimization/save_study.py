@@ -126,9 +126,8 @@ def save_study(multiple_objective: MultipleObjective) -> None:
     """
     ob = multiple_objective
 
-    if (
-        isinstance(ob.calculator, Calculator)
-        and ob.calculator.equation_json is not None
+    if isinstance(ob.calculator, Calculator) and hasattr(
+        ob.calculator, "equation_json"
     ):
         ob.export_completed_formulas()
 

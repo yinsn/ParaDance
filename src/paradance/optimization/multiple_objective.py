@@ -273,9 +273,8 @@ class MultipleObjective(BaseObjective):
         json_equations = {}
         if weights is None:
             weights = self.best_params
-        if (
-            isinstance(self.calculator, Calculator)
-            and self.calculator.equation_json is not None
+        if isinstance(self.calculator, Calculator) and hasattr(
+            self.calculator, "equation_json"
         ):
             json_equations = self.calculator.equation_json.formula
             for key, expr in json_equations.items():
