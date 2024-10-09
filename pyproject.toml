@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "paradance"
-version = "0.5.0"
+version = "0.5.1"
 description = "Offers a toolset for comprehensive, multi-faceted large-scale data analysis and optimizations."
 authors = ["Yin Cheng <yin.sjtu@gmail.com>"]
 license = "MIT"
