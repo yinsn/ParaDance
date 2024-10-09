@@ -16,14 +16,12 @@ def calculate_wuauc(
     target_column: str,
     mask_column: Optional[str] = None,
     groupby: Optional[str] = None,
-    weights_for_equation: List = [],
     weights_for_groups: Optional[pd.Series] = None,
     auc: bool = False,
 ) -> float:
     """Calculate weighted user AUC.
 
     :param groupby: groupby column
-    :param weights_for_equation: weights for equation
     :param weights_for_groups: weights for group
     :param target_column: label column
     :param auc: bool, optional, default: False

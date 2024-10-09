@@ -11,7 +11,6 @@ def evaluate_targets(
     hyperparameters: List[Optional[float]],
     evaluator_propertys: List[Optional[str]],
     groupbys: List[Optional[str]],
-    weights: List[float],
 ) -> List[float]:
     targets = []
     for (
@@ -76,7 +75,6 @@ def evaluate_targets(
                 target_column=target_column,
                 mask_column=mask_column,
                 groupby=groupby,
-                weights_for_equation=weights,
             )
             targets.append(wuauc)
 
@@ -85,7 +83,6 @@ def evaluate_targets(
                 target_column=target_column,
                 mask_column=mask_column,
                 groupby=groupby,
-                weights_for_equation=weights,
                 auc=True,
             )
             targets.append(auc)
@@ -94,7 +91,6 @@ def evaluate_targets(
             woauc = calculator.calculate_woauc(
                 target_column=target_column,
                 groupby=groupby,
-                weights_for_equation=weights,
             )
             targets.append(sum(woauc))
 
@@ -105,14 +101,13 @@ def evaluate_targets(
             targets.append(mse)
         elif flag == "neg_rank_ratio":
             neg_rank_ratio = calculator.calculate_neg_rank_ratio(
-                weights_for_equation=weights, label_column=target_column
+                label_column=target_column
             )
             targets.append(neg_rank_ratio)
 
         elif flag == "inverse_pairs":
             inverse_score = calculator.calculate_inverse_pair(
                 calculator=calculator,
-                weights_for_equation=weights,
                 weights_type=evaluator_property,
             )
             targets.append(inverse_score)

@@ -218,7 +218,6 @@ class MultipleObjective(BaseObjective):
             evaluator_propertys=self.evaluator_propertys,
             groupbys=self.groupbys,
             target_columns=self.target_columns,
-            weights=weights,
         )
 
         return targets

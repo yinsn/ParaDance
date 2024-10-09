@@ -27,7 +27,6 @@ def calculate_woauc(
     calculator: "Calculator",
     groupby: Optional[str],
     target_column: str,
-    weights_for_equation: List[float],
     weights_for_groups: Optional[pd.Series] = None,
 ) -> List[float]:
     """
@@ -36,7 +35,6 @@ def calculate_woauc(
     :param calculator: Calculator object that contains the data and methods for calculation.
     :param groupby: Column name to group data by, or None for no grouping.
     :param target_column: Column name to use for target values in AUC calculation.
-    :param weights_for_equation: List of weights for equation.
     :param weights_for_groups: Series of weights for groups, or None.
     :return: List of calculated weighted ordinal user AUC values.
     """

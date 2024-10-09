@@ -5,10 +5,9 @@ if TYPE_CHECKING:
 
 
 def calculate_neg_rank_ratio(
-    calculator: "Calculator", weights_for_equation: List, label_column: str = "label"
+    calculator: "Calculator", label_column: str = "label"
 ) -> float:
     """Calculate the rank ratio of negative target
-    :param weights_for_equation: weights for equation
     :param label_column: target column, its values must be 0 or 1
     """
     neg_targets_rows = calculator.df[label_column].sum()

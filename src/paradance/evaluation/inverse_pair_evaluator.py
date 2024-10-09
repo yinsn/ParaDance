@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 import numpy as np
 
@@ -104,26 +104,23 @@ def calculate_inverse_pairs(
 
 def calculate_inverse_pair(
     calculator: "Calculator",
-    weights_for_equation: List[float],
+    target_column: str,
     weights_type: str = "count",
 ) -> float:
     """
     Calculates the weighted sum of inverse pairs for selected columns
     using the specified weighting scheme.
 
-    :param weights_for_equation: The list of weights to be applied to each column.
+    :pararm calculator: The calculator object containing the DataFrame and selected columns.
+    :param target_column: The target column for which the inverse pairs are calculated.
     :param weights_type: The type of weights used for inverse pair calculation.
                             Supported values are "count", "linear", and "exponential".
     :return: The computed weighted sum of inverse pairs.
     """
-    calculator.get_overall_score(weights_for_equation)
 
-    result = 0.0
-    for i, weight in enumerate(weights_for_equation):
-        score = calculate_inverse_pairs(
-            calculator.selected_values[:, i],
-            calculator.df["overall_score"],
-            weights_type,
-        )
-        result += score * weight
-    return result
+    score = calculate_inverse_pairs(
+        calculator.df[target_column],
+        calculator.df["overall_score"],
+        weights_type,
+    )
+    return score
