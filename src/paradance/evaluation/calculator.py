@@ -30,6 +30,7 @@ class Calculator(BaseCalculator):
         equation_eval_str: Optional[str] = None,
         equation_json: Optional[Dict] = None,
         delimiter: Optional[str] = "#",
+        rerank_eval_str: Optional[str] = None,
     ) -> None:
         """Initializes the Calculator object.
 
@@ -39,6 +40,7 @@ class Calculator(BaseCalculator):
             equation_type (str, optional): The type of equation to use for score calculation. Defaults to "product".
             weights_for_groups (Optional[pd.Series], optional): A Series containing weights for different groups. Defaults to None, which sets equal weights.
             equation_eval_str (Optional[str], optional): A string representing a custom equation for free-style calculations. Defaults to None.
+            rerank_eval_str (Optional[str], optional): A string representing a custom equation for reranking. Defaults to None.
         """
         super().__init__(
             selected_columns=selected_columns,
@@ -46,13 +48,13 @@ class Calculator(BaseCalculator):
         self.df = df
         self.df_len = len(self.df)
         self.equation_eval_str = equation_eval_str
+        self.rerank_eval_str = rerank_eval_str
 
         if equation_json is not None:
             self.equation_json = JSONFormula(**equation_json)
 
         self.delimiter = delimiter
         self.equation_type = equation_type
-        self.selected_columns = selected_columns
         self.selected_values = self.df[selected_columns].values
 
         if weights_for_groups is None:
@@ -122,6 +124,17 @@ class Calculator(BaseCalculator):
                 ** powers_for_equation,
                 axis=1,
             )
+
+        self.rerank_with_side_information()
+
+    def rerank_with_side_information(self) -> None:
+        """Reranks the rows in the DataFrame based on side information.
+
+        Args:
+            rerank_eval_str (str): A string representing a custom equation for reranking.
+        """
+        if self.rerank_eval_str is not None:
+            self.df["overall_score"] = self.df.eval(self.rerank_eval_str)
 
     def create_score_columns(
         self, boundary_dict: dict, score_column: str = "score"
