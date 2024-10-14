@@ -138,6 +138,7 @@ def optimize_run(
     log_listener_thread = threading.Thread(
         target=get_best_trials, args=(multiple_objective,)
     )
+    log_listener_thread.daemon = True
     log_listener_thread.start()
 
     if isinstance(parallel, bool) and not parallel:
