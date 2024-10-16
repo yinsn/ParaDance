@@ -7,6 +7,7 @@ import pandas as pd
 
 from .auc_triple_parameters_evaluator import calculate_auc_triple_parameters
 from .corrcoef_evaluator import calculate_corrcoef
+from .cumulative_deviation_evaluator import calculate_cumulative_deviation
 from .distinct_portfolio_evaluator import (
     calculate_distinct_count_portfolio_concentration,
 )
@@ -34,6 +35,7 @@ class BaseCalculator(metaclass=ABCMeta):
 
     calculate_auc_triple_parameters = partialmethod(calculate_auc_triple_parameters)
     calculate_corrcoef = partialmethod(calculate_corrcoef)
+    calculate_cumulative_deviation = partialmethod(calculate_cumulative_deviation)
     calculate_distinct_count_portfolio_concentration = partialmethod(
         calculate_distinct_count_portfolio_concentration
     )

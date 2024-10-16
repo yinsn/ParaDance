@@ -48,6 +48,14 @@ def evaluate_targets(
             )
             targets.append(concentration)
 
+        elif flag == "cumulative_deviation":
+            cumulative_deviation = calculator.calculate_cumulative_deviation(
+                target_column=target_column,
+                mask_column=mask_column,
+                n_quantiles=hyperparameter,
+            )
+            targets.append(cumulative_deviation)
+
         elif flag == "distinct_count_portfolio":
             (
                 _,
