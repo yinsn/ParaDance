@@ -18,6 +18,8 @@ class BaseObjectiveConfig(BaseModel):
         direction (Optional[str]): Specifies the optimization direction. This can be either 'minimize' or 'maximize'.
                                    Default is None, which should be overridden in subclass or instance.
         formula (Optional[str]): The mathematical formula or expression used in the objective function. Default is None.
+        warmup_formula (Optional[str]): The mathematical formula or expression used in the warmup function. Default is None.
+        warmup_trials (int): The number of warmup trials to run. Default is 200.
         first_order (Optional[bool]): Indicates whether to use first-order optimization. Defaults to False.
         power (Optional[bool]): Indicates whether to apply a power transform in the objective. Defaults to True.
         dirichlet (Optional[bool]): Specifies if a Dirichlet process should be used. Defaults to False.
@@ -29,6 +31,8 @@ class BaseObjectiveConfig(BaseModel):
 
     direction: Optional[str] = None
     formula: Optional[str] = None
+    warmup_formula: Optional[str] = None
+    warmup_trials: int = 200
     first_order: Optional[bool] = False
     power: Optional[bool] = True
     dirichlet: Optional[bool] = False
@@ -72,6 +76,8 @@ class BaseObjective(metaclass=ABCMeta):
         calculator: Union[Calculator, LogarithmPCACalculator],
         direction: Optional[str] = None,
         formula: Optional[str] = None,
+        warmup_formula: Optional[str] = None,
+        warmup_trials: int = 200,
         first_order: Optional[bool] = False,
         power: Optional[bool] = True,
         dirichlet: Optional[bool] = False,
@@ -102,6 +108,8 @@ class BaseObjective(metaclass=ABCMeta):
             self.config = BaseObjectiveConfig(
                 direction=direction,
                 formula=formula,
+                warmup_formula=warmup_formula,
+                warmup_trials=warmup_trials,
                 first_order=first_order,
                 power=power,
                 dirichlet=dirichlet,
@@ -113,6 +121,8 @@ class BaseObjective(metaclass=ABCMeta):
 
         self.direction = self.config.direction
         self.formula = self.config.formula
+        self.warmup_formula = self.config.warmup_formula
+        self.warmup_trials = self.config.warmup_trials
         self.first_order = self.config.first_order
         self.power = self.config.power
         self.dirichlet = self.config.dirichlet

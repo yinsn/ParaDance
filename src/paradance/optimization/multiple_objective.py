@@ -59,6 +59,8 @@ class MultipleObjective(BaseObjective):
         calculator: Union[Calculator, LogarithmPCACalculator],
         direction: Optional[str] = None,
         formula: Optional[str] = None,
+        warmup_formula: Optional[str] = None,
+        warmup_trials: int = 200,
         first_order: Optional[bool] = False,
         power: Optional[bool] = True,
         dirichlet: Optional[bool] = False,
@@ -102,6 +104,8 @@ class MultipleObjective(BaseObjective):
             self.config = MultipleObjectiveConfig(
                 direction=direction,
                 formula=formula,
+                warmup_formula=warmup_formula,
+                warmup_trials=warmup_trials,
                 first_order=first_order,
                 power=power,
                 dirichlet=dirichlet,
@@ -127,6 +131,8 @@ class MultipleObjective(BaseObjective):
         self.calculator = calculator
         self.direction = self.config.direction
         self.formula = self.config.formula
+        self.warmup_formula = self.config.warmup_formula
+        self.warmup_trials = self.config.warmup_trials
         self.first_order = self.config.first_order
         self.power = self.config.power
         self.dirichlet = self.config.dirichlet
@@ -247,7 +253,22 @@ class MultipleObjective(BaseObjective):
         weights = construct_weights(self, trial)
         targets = self.evaluate_custom_weights(weights)
         local_vars = {"targets": targets, "sum": sum, "max": max, "min": min}
-        result = float(eval(str(self.formula), {"__builtins__": None}, local_vars))
+
+        if self.warmup_formula is not None and trial.number < self.warmup_trials:
+            formula = str(self.warmup_formula)
+        else:
+            formula = str(self.formula)
+
+        result = float(eval(formula, {"__builtins__": None}, local_vars))
+
+        if self.warmup_formula is not None and trial.number > self.warmup_trials // 2:
+            self.warmup_best_value = self.study.best_value
+
+        if self.direction == "maximize" and trial.number > 200:
+            result += self.warmup_best_value
+        elif self.direction == "minimize" and trial.number > 200:
+            result -= self.warmup_best_value
+
         if self.logger:
             self.logger.info(f"Trial {trial.number} finished with result: {result}")
             self.logger.info(f"targets: {targets}")
