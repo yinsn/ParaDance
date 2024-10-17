@@ -68,6 +68,7 @@ class MultipleObjective(BaseObjective):
         study_name: Optional[str] = None,
         study_path: Optional[str] = None,
         save_study: Optional[bool] = True,
+        entry_point_path: Optional[str] = None,
         first_order_with_scales: bool = True,
         first_order_lower_bound: float = 1e-3,
         first_order_upper_bound: float = 1e6,
@@ -113,6 +114,7 @@ class MultipleObjective(BaseObjective):
                 study_name=study_name,
                 study_path=study_path,
                 save_study=save_study,
+                entry_point_path=entry_point_path,
                 first_order_with_scales=first_order_with_scales,
                 first_order_lower_bound=first_order_lower_bound,
                 first_order_upper_bound=first_order_upper_bound,
@@ -140,6 +142,7 @@ class MultipleObjective(BaseObjective):
         self.study_name = self.config.study_name
         self.study_path = self.config.study_path
         self.save_study = self.config.save_study
+        self.entry_point_path = self.config.entry_point_path
         self.first_order_lower_bound = self.config.first_order_lower_bound
         self.first_order_upper_bound = self.config.first_order_upper_bound
         self.first_order_with_scales = self.config.first_order_with_scales
@@ -154,7 +157,6 @@ class MultipleObjective(BaseObjective):
         self.power_upper_bound = self.config.power_upper_bound
         self.pca_importance_lower_bound = self.config.pca_importance_lower_bound
         self.pca_importance_upper_bound = self.config.pca_importance_upper_bound
-
         self.target_columns: List[str] = []
         self.mask_columns: List[Optional[str]] = []
         self.evaluator_flags: List[str] = []
@@ -261,15 +263,22 @@ class MultipleObjective(BaseObjective):
                 and trial.number > self.warmup_trials // 2
             ):
                 self.warmup_best_value = self.study.best_value
+                self.study.set_user_attr("warmup_best_value", self.warmup_best_value)
         else:
             formula = str(self.formula)
 
         result = float(eval(formula, {"__builtins__": None}, local_vars))
 
-        if self.direction == "maximize" and trial.number > self.warmup_trials:
-            result += self.warmup_best_value
-        elif self.direction == "minimize" and trial.number > self.warmup_trials:
-            result -= self.warmup_best_value
+        if self.warmup_formula and trial.number > self.warmup_trials:
+            if not hasattr(self, "warmup_best_value"):
+                self.warmup_best_value = self.study.user_attrs.get(
+                    "warmup_best_value", 0
+                )
+            print(self.warmup_best_value)
+            if self.direction == "maximize":
+                result += self.warmup_best_value
+            elif self.direction == "minimize":
+                result -= self.warmup_best_value
 
         if self.logger:
             self.logger.info(f"Trial {trial.number} finished with result: {result}")

@@ -1,4 +1,5 @@
 import logging
+import os
 from abc import ABCMeta, abstractmethod
 from typing import Dict, List, Optional, Union
 
@@ -27,6 +28,7 @@ class BaseObjectiveConfig(BaseModel):
         study_name (Optional[str]): The name of the optimization study. Default is None.
         study_path (Optional[str]): Filesystem path where study results are stored. Default is None.
         save_study (Optional[bool]): Flag indicating whether to persist the study to disk. Defaults to True.
+        entry_point_path (Optional[str]): Path to the entry point for the optimization process. Default is None.
     """
 
     direction: Optional[str] = None
@@ -40,6 +42,7 @@ class BaseObjectiveConfig(BaseModel):
     study_name: Optional[str] = None
     study_path: Optional[str] = None
     save_study: Optional[bool] = True
+    entry_point_path: Optional[str] = None
 
 
 class BaseObjective(metaclass=ABCMeta):
@@ -85,6 +88,7 @@ class BaseObjective(metaclass=ABCMeta):
         study_name: Optional[str] = None,
         study_path: Optional[str] = None,
         save_study: Optional[bool] = True,
+        entry_point_path: Optional[str] = None,
         config: Optional[Dict] = None,
     ) -> None:
         """
@@ -117,6 +121,7 @@ class BaseObjective(metaclass=ABCMeta):
                 study_name=study_name,
                 study_path=study_path,
                 save_study=save_study,
+                entry_point_path=entry_point_path,
             )
 
         self.direction = self.config.direction
@@ -130,6 +135,7 @@ class BaseObjective(metaclass=ABCMeta):
         self.study_name = self.config.study_name
         self.study_path = self.config.study_path
         self.save_study = self.config.save_study
+        self.entry_point_path = self.config.entry_point_path
         self._prepare_study()
 
     def _prepare_study(self) -> None:
@@ -149,10 +155,17 @@ class BaseObjective(metaclass=ABCMeta):
             - Initializes `self.best_params` as a NumPy zero array of size `self.weights_num`.
         """
         self.full_path = ensure_study_directory(self.study_path, self.study_name)
+
+        if self.entry_point_path is not None:
+            storage_path = os.path.join(os.getcwd(), self.entry_point_path)
+        else:
+            storage_path = self.full_path
+
         storage = optuna.storages.RDBStorage(
-            url=f"sqlite:///{self.full_path}/paradance_storage.db",
+            url=f"sqlite:///{storage_path}/paradance_storage.db",
             engine_kwargs={"connect_args": {"timeout": 120}},
         )
+
         self.study = optuna.create_study(
             direction=self.direction,
             study_name=self.study_name,
