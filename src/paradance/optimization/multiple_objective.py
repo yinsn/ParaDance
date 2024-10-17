@@ -256,17 +256,19 @@ class MultipleObjective(BaseObjective):
 
         if self.warmup_formula is not None and trial.number < self.warmup_trials:
             formula = str(self.warmup_formula)
+            if (
+                self.warmup_formula is not None
+                and trial.number > self.warmup_trials // 2
+            ):
+                self.warmup_best_value = self.study.best_value
         else:
             formula = str(self.formula)
 
         result = float(eval(formula, {"__builtins__": None}, local_vars))
 
-        if self.warmup_formula is not None and trial.number > self.warmup_trials // 2:
-            self.warmup_best_value = self.study.best_value
-
-        if self.direction == "maximize" and trial.number > 200:
+        if self.direction == "maximize" and trial.number > self.warmup_trials:
             result += self.warmup_best_value
-        elif self.direction == "minimize" and trial.number > 200:
+        elif self.direction == "minimize" and trial.number > self.warmup_trials:
             result -= self.warmup_best_value
 
         if self.logger:
