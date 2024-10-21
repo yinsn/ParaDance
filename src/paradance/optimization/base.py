@@ -28,7 +28,7 @@ class BaseObjectiveConfig(BaseModel):
         study_name (Optional[str]): The name of the optimization study. Default is None.
         study_path (Optional[str]): Filesystem path where study results are stored. Default is None.
         save_study (Optional[bool]): Flag indicating whether to persist the study to disk. Defaults to True.
-        entry_point_path (Optional[str]): Path to the entry point for the optimization process. Default is None.
+        checkpoint_path (Optional[str]): Path to the entry point for the optimization process. Default is None.
     """
 
     direction: Optional[str] = None
@@ -42,7 +42,7 @@ class BaseObjectiveConfig(BaseModel):
     study_name: Optional[str] = None
     study_path: Optional[str] = None
     save_study: Optional[bool] = True
-    entry_point_path: Optional[str] = None
+    checkpoint_path: Optional[str] = None
 
 
 class BaseObjective(metaclass=ABCMeta):
@@ -88,7 +88,7 @@ class BaseObjective(metaclass=ABCMeta):
         study_name: Optional[str] = None,
         study_path: Optional[str] = None,
         save_study: Optional[bool] = True,
-        entry_point_path: Optional[str] = None,
+        checkpoint_path: Optional[str] = None,
         config: Optional[Dict] = None,
     ) -> None:
         """
@@ -121,7 +121,7 @@ class BaseObjective(metaclass=ABCMeta):
                 study_name=study_name,
                 study_path=study_path,
                 save_study=save_study,
-                entry_point_path=entry_point_path,
+                checkpoint_path=checkpoint_path,
             )
 
         self.direction = self.config.direction
@@ -135,7 +135,7 @@ class BaseObjective(metaclass=ABCMeta):
         self.study_name = self.config.study_name
         self.study_path = self.config.study_path
         self.save_study = self.config.save_study
-        self.entry_point_path = self.config.entry_point_path
+        self.checkpoint_path = self.config.checkpoint_path
         self._prepare_study()
 
     def _prepare_study(self) -> None:
@@ -156,8 +156,8 @@ class BaseObjective(metaclass=ABCMeta):
         """
         self.full_path = ensure_study_directory(self.study_path, self.study_name)
 
-        if self.entry_point_path is not None:
-            storage_path = os.path.join(os.getcwd(), self.entry_point_path)
+        if self.checkpoint_path is not None:
+            storage_path = os.path.join(os.getcwd(), self.checkpoint_path)
         else:
             storage_path = self.full_path
 
