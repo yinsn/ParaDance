@@ -162,7 +162,7 @@ class MultipleObjective(BaseObjective):
         self.evaluator_flags: List[str] = []
         self.groupbys: List[Optional[str]] = []
         self.group_weights: List[Optional[pd.Series]] = []
-        self.hyperparameters: List[Optional[float]] = []
+        self.hyperparameters: List[Optional[Dict]] = []
         self.evaluator_propertys: List[Optional[str]] = []
 
         if self.calculator.equation_type not in ["free_style", "json"] and isinstance(
@@ -177,7 +177,7 @@ class MultipleObjective(BaseObjective):
         flag: str,
         target_column: str,
         mask_column: Optional[str] = None,
-        hyperparameter: Optional[float] = None,
+        hyperparameter: Optional[Dict] = None,
         evaluator_property: Optional[str] = None,
         groupby: Optional[str] = None,
         weights_for_groups: Optional[pd.Series] = None,
@@ -201,7 +201,7 @@ class MultipleObjective(BaseObjective):
         if hyperparameter is not None:
             self.hyperparameters.append(hyperparameter)
         else:
-            self.hyperparameters.append(None)
+            self.hyperparameters.append({})
         if groupby is not None:
             self.groupbys.append(groupby)
         else:
@@ -226,6 +226,28 @@ class MultipleObjective(BaseObjective):
             weights_for_equation=weights,
         )
 
+        targets = self._calculate_targets()
+
+        return targets
+
+    def evaluate_given_scores(self, scores: List[float]) -> List[float]:
+        """
+        Evaluate the objective function with given scores.
+
+        Args:
+            scores (List[float]): Scores to evaluate.
+        """
+        self.calculator.df["overall_score"] = scores
+        self.calculator._clip_overall_score()
+        self.calculator.rerank_with_side_information()
+        targets = self._calculate_targets()
+
+        return targets
+
+    def _calculate_targets(self) -> List[float]:
+        """
+        Calculate the targets for the objective function.
+        """
         targets = evaluate_targets(
             calculator=self.calculator,
             evaluator_flags=self.evaluator_flags,
@@ -269,12 +291,11 @@ class MultipleObjective(BaseObjective):
 
         result = float(eval(formula, {"__builtins__": None}, local_vars))
 
-        if self.warmup_formula and trial.number > self.warmup_trials:
+        if self.warmup_formula and trial.number >= self.warmup_trials:
             if not hasattr(self, "warmup_best_value"):
                 self.warmup_best_value = self.study.user_attrs.get(
                     "warmup_best_value", 0
                 )
-            print(self.warmup_best_value)
             if self.direction == "maximize":
                 result += self.warmup_best_value
             elif self.direction == "minimize":

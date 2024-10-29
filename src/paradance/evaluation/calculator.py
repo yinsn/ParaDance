@@ -12,7 +12,9 @@ class Calculator(BaseCalculator):
 
     Attributes:
         df (pd.DataFrame): The DataFrame to perform calculations on.
-        df_len (int): The length of the DataFrame.
+        selected_columns (List[str]): The names of the columns to include in calculations.
+        overall_score_lower_bound (Optional[float]): The lower bound for overall scores.
+        overall_score_upper_bound (Optional[float]): The upper bound for overall scores.
         equation_eval_str (Optional[str]): A string representing a custom equation to evaluate.
         equation_type (str): The type of equation to use for calculations ("product", "sum", "free_style", or "json").
         selected_columns (List[str]): Columns selected for calculations.
@@ -25,6 +27,8 @@ class Calculator(BaseCalculator):
         self,
         df: pd.DataFrame,
         selected_columns: List[str],
+        overall_score_lower_bound: Optional[float] = None,
+        overall_score_upper_bound: Optional[float] = None,
         equation_type: str = "product",
         weights_for_groups: Optional[pd.Series] = None,
         equation_eval_str: Optional[str] = None,
@@ -43,7 +47,11 @@ class Calculator(BaseCalculator):
             rerank_eval_str (Optional[str], optional): A string representing a custom equation for reranking. Defaults to None.
         """
         super().__init__(
+            df=df,
             selected_columns=selected_columns,
+            overall_score_lower_bound=overall_score_lower_bound,
+            overall_score_upper_bound=overall_score_upper_bound,
+            rerank_eval_str=rerank_eval_str,
         )
         self.df = df
         self.df_len = len(self.df)
@@ -125,16 +133,8 @@ class Calculator(BaseCalculator):
                 axis=1,
             )
 
+        self._clip_overall_score()
         self.rerank_with_side_information()
-
-    def rerank_with_side_information(self) -> None:
-        """Reranks the rows in the DataFrame based on side information.
-
-        Args:
-            rerank_eval_str (str): A string representing a custom equation for reranking.
-        """
-        if self.rerank_eval_str is not None:
-            self.df["overall_score"] = self.df.eval(self.rerank_eval_str)
 
     def create_score_columns(
         self, boundary_dict: dict, score_column: str = "score"

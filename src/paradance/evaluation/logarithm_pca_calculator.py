@@ -1,5 +1,6 @@
-from typing import List
+from typing import List, Optional
 
+import pandas as pd
 from mixician import SelfBalancingLogarithmPCACalculator
 
 from .base_calculator import BaseCalculator
@@ -17,8 +18,21 @@ class LogarithmPCACalculator(BaseCalculator):
         df (DataFrame): A copy of the cleaned dataframe from the `pca_calculator`.
     """
 
-    def __init__(self, pca_calculator: SelfBalancingLogarithmPCACalculator):
-        super().__init__(selected_columns=pca_calculator.selected_columns)
+    def __init__(
+        self,
+        df: pd.DataFrame,
+        pca_calculator: SelfBalancingLogarithmPCACalculator,
+        overall_score_lower_bound: Optional[float] = None,
+        overall_score_upper_bound: Optional[float] = None,
+        rerank_eval_str: Optional[str] = None,
+    ) -> None:
+        super().__init__(
+            df=df,
+            selected_columns=pca_calculator.selected_columns,
+            overall_score_lower_bound=overall_score_lower_bound,
+            overall_score_upper_bound=overall_score_upper_bound,
+            rerank_eval_str=rerank_eval_str,
+        )
         self.pca_calculator = pca_calculator
         self.df = self.pca_calculator.clean_dataframe.copy()
         self.df_len = len(self.df)

@@ -54,6 +54,7 @@ class LogarithmPCAPipeline(BasePipeline):
             config=self.config["Calculator"],
         )
         self.calculator = LogarithmPCACalculator(
+            df=self.dataframe,
             pca_calculator=pca_calculator,
         )
         return self.calculator

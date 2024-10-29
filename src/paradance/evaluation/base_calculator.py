@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from functools import partialmethod
-from typing import List, Union
+from typing import List, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -49,13 +49,24 @@ class BaseCalculator(metaclass=ABCMeta):
     calculate_woauc = partialmethod(calculate_woauc)
     calculate_wuauc = partialmethod(calculate_wuauc)
 
-    def __init__(self, selected_columns: List[str]) -> None:
+    def __init__(
+        self,
+        df: pd.DataFrame,
+        selected_columns: List[str],
+        overall_score_lower_bound: Optional[float],
+        overall_score_upper_bound: Optional[float],
+        rerank_eval_str: Optional[str] = None,
+    ) -> None:
         """Initializes the BaseCalculator."""
+        self.df = df
         self.selected_columns = selected_columns
+        self.overall_score_lower_bound = overall_score_lower_bound
+        self.overall_score_upper_bound = overall_score_upper_bound
         self.evaluated_dataframe: pd.DataFrame = pd.DataFrame()
         self.samplers: dict = {}
         self.woauc_dict: dict = {}
         self.bin_mappings: dict = {}
+        self.rerank_eval_str = rerank_eval_str
 
     @abstractmethod
     def get_overall_score(self, weights_for_equation: List[float]) -> None:
@@ -92,3 +103,24 @@ class BaseCalculator(metaclass=ABCMeta):
             "min": self.clip_min,
         }
         return local_dict
+
+    def _clip_overall_score(self) -> None:
+        """Clips the overall score based on the specified lower and upper bounds."""
+        if (
+            self.overall_score_lower_bound is not None
+            or self.overall_score_upper_bound is not None
+        ):
+            self.df["overall_score"] = self.df["overall_score"].clip(
+                lower=self.overall_score_lower_bound,
+                upper=self.overall_score_upper_bound,
+            )
+
+    def rerank_with_side_information(self) -> None:
+        """Reranks the rows in the DataFrame based on side information.
+
+        Args:
+            rerank_eval_str (str): A string representing a custom equation for reranking.
+        """
+        if self.rerank_eval_str is not None:
+            self.df["overall_score_before_rerank"] = self.df["overall_score"].copy()
+            self.df["overall_score"] = self.df.eval(self.rerank_eval_str)

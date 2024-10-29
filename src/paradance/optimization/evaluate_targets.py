@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
@@ -10,7 +10,7 @@ def evaluate_targets(
     evaluator_flags: List[str],
     target_columns: List[str],
     mask_columns: List[Optional[str]],
-    hyperparameters: List[Optional[float]],
+    hyperparameters: List[Optional[Dict]],
     evaluator_propertys: List[Optional[str]],
     groupbys: List[Optional[str]],
     group_weights: List[Optional[pd.Series]],
@@ -44,7 +44,7 @@ def evaluate_targets(
             _, concentration = calculator.calculate_portfolio_concentration(
                 target_column=target_column,
                 mask_column=mask_column,
-                expected_return=hyperparameter,
+                expected_return=hyperparameter.get("expected_return", None),
             )
             targets.append(concentration)
 
@@ -52,7 +52,8 @@ def evaluate_targets(
             cumulative_deviation = calculator.calculate_cumulative_deviation(
                 target_column=target_column,
                 mask_column=mask_column,
-                n_quantiles=hyperparameter,
+                use_rerank=hyperparameter.get("use_rerank", False),
+                n_quantiles=hyperparameter.get("n_quantiles", None),
             )
             targets.append(cumulative_deviation)
 
@@ -63,7 +64,7 @@ def evaluate_targets(
             ) = calculator.calculate_distinct_count_portfolio_concentration(
                 target_column=target_column,
                 mask_column=mask_column,
-                expected_coverage=hyperparameter,
+                expected_coverage=hyperparameter.get("expected_coverage", None),
             )
             targets.append(concentration)
 
@@ -71,7 +72,7 @@ def evaluate_targets(
             top_coverage = calculator.calculate_top_coverage(
                 target_column=target_column,
                 mask_column=mask_column,
-                head_percentage=hyperparameter,
+                head_percentage=hyperparameter.get("head_percentage", None),
             )
             targets.append(top_coverage)
 
@@ -79,7 +80,7 @@ def evaluate_targets(
             distinct_top_coverage = calculator.calculate_distinct_top_coverage(
                 target_column=target_column,
                 mask_column=mask_column,
-                head_percentage=hyperparameter,
+                head_percentage=hyperparameter.get("head_percentage", None),
             )
             targets.append(distinct_top_coverage)
 
@@ -113,6 +114,8 @@ def evaluate_targets(
         elif flag == "logmse":
             mse = calculator.calculate_log_mse(
                 target_column=target_column,
+                laplace_smoothing=hyperparameter.get("laplace_smoothing", 1.0),
+                use_rerank=hyperparameter.get("use_rerank", True),
             )
             targets.append(mse)
         elif flag == "neg_rank_ratio":
@@ -133,7 +136,7 @@ def evaluate_targets(
                 groupby=groupby,
                 target_column=target_column,
                 weights_for_groups=weights_for_groups,
-                num_bins=hyperparameter,
+                num_bins=hyperparameter.get("num_bins", 10),
             )
             targets.append(tau)
     return targets
