@@ -48,6 +48,15 @@ def evaluate_targets(
             )
             targets.append(concentration)
 
+        elif flag == "proportion":
+            proportion = calculator.calculate_proportion(
+                target_column=target_column,
+                mask_column=mask_column,
+                target_value=hyperparameter.get("target_value", 0.0),
+                use_rerank=hyperparameter.get("use_rerank", True),
+            )
+            targets.append(proportion)
+
         elif flag == "cumulative_deviation":
             cumulative_deviation = calculator.calculate_cumulative_deviation(
                 target_column=target_column,
@@ -118,6 +127,29 @@ def evaluate_targets(
                 use_rerank=hyperparameter.get("use_rerank", True),
             )
             targets.append(mse)
+
+        elif flag == "mean":
+            mean = calculator.calculate_mean(
+                target_column=target_column,
+                mask_column=mask_column,
+                target_mean=hyperparameter.get("target_mean", 0.0),
+                log_scale=hyperparameter.get("log_scale", True),
+                laplace_smoothing=hyperparameter.get("laplace_smoothing", 1.0),
+                use_rerank=hyperparameter.get("use_rerank", True),
+            )
+            targets.append(mean)
+
+        elif flag == "std":
+            std = calculator.calculate_standard_deviation(
+                target_column=target_column,
+                mask_column=mask_column,
+                target_std=hyperparameter.get("target_std", 0.0),
+                log_scale=hyperparameter.get("log_scale", True),
+                laplace_smoothing=hyperparameter.get("laplace_smoothing", 1.0),
+                use_rerank=hyperparameter.get("use_rerank", True),
+            )
+            targets.append(std)
+
         elif flag == "neg_rank_ratio":
             neg_rank_ratio = calculator.calculate_neg_rank_ratio(
                 label_column=target_column

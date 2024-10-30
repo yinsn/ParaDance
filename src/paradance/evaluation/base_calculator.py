@@ -13,8 +13,11 @@ from .distinct_portfolio_evaluator import (
 )
 from .inverse_pair_evaluator import calculate_inverse_pair
 from .log_mse_evaluator import calculate_log_mse
+from .mean_evaluator import calculate_mean
 from .neg_rank_ratio_evaluator import calculate_neg_rank_ratio
 from .portfolio_evaluator import calculate_portfolio_concentration
+from .proportion_evaluator import calculate_proportion
+from .standard_deviation_evaluator import calculate_standard_deviation
 from .tau_evaluator import calculate_tau
 from .top_coverage_evaluator import (
     calculate_distinct_top_coverage,
@@ -42,8 +45,11 @@ class BaseCalculator(metaclass=ABCMeta):
     calculate_distinct_top_coverage = partialmethod(calculate_distinct_top_coverage)
     calculate_inverse_pair = partialmethod(calculate_inverse_pair)
     calculate_log_mse = partialmethod(calculate_log_mse)
+    calculate_mean = partialmethod(calculate_mean)
     calculate_neg_rank_ratio = partialmethod(calculate_neg_rank_ratio)
     calculate_portfolio_concentration = partialmethod(calculate_portfolio_concentration)
+    calculate_proportion = partialmethod(calculate_proportion)
+    calculate_standard_deviation = partialmethod(calculate_standard_deviation)
     calculate_tau = partialmethod(calculate_tau)
     calculate_top_coverage = partialmethod(calculate_top_coverage)
     calculate_woauc = partialmethod(calculate_woauc)
