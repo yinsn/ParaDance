@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Dict, Optional
+from typing import Any, Dict, Optional, cast
 
 import yaml
 
@@ -12,7 +12,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def load_config(file_path: Optional[str] = None) -> Dict:
+def load_config(file_path: Optional[str] = None) -> Dict[str, Any]:
     """
     Extract from 'Lova' project (https://github.com/yinsn/Lova/blob/develop/src/lova/dataloaders/load_config.py).
     Load the configuration from a YAML file.
@@ -23,7 +23,7 @@ def load_config(file_path: Optional[str] = None) -> Dict:
     Returns:
         Dict[str, Any]: A dictionary containing the configuration parameters.
     """
-    config = {}
+    config: Dict[str, Any] = {}
     if file_path is None:
         logger.info(
             "No configuration file path provided, using default 'config.yml' file in current directory."
@@ -35,6 +35,16 @@ def load_config(file_path: Optional[str] = None) -> Dict:
 
     logger.info(f"Loading configuration ...")
     with open(file_path, "r") as file:
-        config = yaml.safe_load(file)
+        loaded_config = yaml.safe_load(file)
+
+    if loaded_config is None:
+        config = {}
+    elif isinstance(loaded_config, dict):
+        config = cast(Dict[str, Any], loaded_config)
+    else:
+        raise TypeError(
+            "Configuration file must contain a mapping at the top level, "
+            f"got {type(loaded_config).__name__} instead."
+        )
 
     return config
